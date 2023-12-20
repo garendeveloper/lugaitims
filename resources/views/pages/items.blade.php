@@ -66,7 +66,6 @@
                                             </tr>
                                             <tr>
                                                 <th>Select</th>
-                                                <th>Date</th>
                                                 <th>Item Name</th>
                                                 <th>Unit</th>
                                                 <th>Brand</th>
@@ -607,7 +606,7 @@
                     columnDefs: [
                         {
                             className: "text-center", // Add 'text-center' class to the targeted column
-                            targets: [0, 1, 3, 7, 8, 10, 11] // Replace 'columnIndex' with the index of your targeted column (starting from 0)
+                            targets: [0, 1, 3, 7, 8, 10] // Replace 'columnIndex' with the index of your targeted column (starting from 0)
                         },
                         {
                             className: "text-right", // Add 'text-center' class to the targeted column
@@ -646,7 +645,6 @@
                     },
                     columns: [
                         { data: 'checkboxes', name: 'checkboxes' },
-                        { data: 'date', name: 'date' },
                         { data: 'item', name: 'item' },
                         { data: 'unit', name: 'unit' },
                         { data: 'brand', name: 'brand' },

@@ -16,10 +16,9 @@ class MovementsFactory extends Factory
      */
     public function definition(): array
     {
-        $quantity = random_int(20, 100);
-        $cost = random_int(1500, 20000);
-        $totalCost = $quantity*$cost;
+        
         return [
+            'user_id'=>2,
             'supplieritem_id'=> random_int(1, 10),
             'dateReleased'=> $this->faker->dateTimeBetween('-5 years', 'now'),
             'date'=> $this->faker->dateTimeBetween('-5 years', 'now'),
@@ -28,9 +27,6 @@ class MovementsFactory extends Factory
             'dateCancelled'=> $this->faker->dateTimeBetween('-5 years', 'now'),
             'type'=> 2,
             'lastAction' => 'JOHN VINCE B. CUY',
-            'quantity' => $quantity,
-            'cost'=> $cost,
-            'totalCost' => $totalCost,
         ];
     }
 }

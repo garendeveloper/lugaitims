@@ -40,7 +40,7 @@
  <style>
    .sb-nav-fixed #layoutSidenav #layoutSidenav_nav .sb-sidenav {
     padding-top: 40px;
-    background-color: #618F99;
+    background-color: white;
     color: white;
   }
   .card-header{

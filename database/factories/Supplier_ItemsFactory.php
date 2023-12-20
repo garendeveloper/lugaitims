@@ -17,12 +17,18 @@ class Supplier_ItemsFactory extends Factory
      */
     public function definition(): array
     {
+        $quantity = random_int(20, 100);
+        $cost = random_int(1500, 20000);
+        $totalCost = $quantity*$cost;
         return [
             'supplier_id' => random_int(1, 5),
             'item_id' => random_int(1, 10),
             'modelnumber'=> strtoupper(Str::random(11)),
             'serialnumber'=> strtoupper(Str::random(11)),
             'stock' => random_int(100, 5000),
+            'quantity' => $quantity,
+            'cost'=> $cost,
+            'totalCost' => $totalCost,
         ];
     }
 }

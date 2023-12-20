@@ -18,7 +18,7 @@
      }
 </style>
 
-<nav class="sb-sidenav accordion sb-sidenav-success" id="sidenavAccordion" style="background-color: #2C4B5F;">
+<nav class="sb-sidenav accordion sb-sidenav-success" id="sidenavAccordion" >
     <div class="sb-sidenav-menu">
         <div class="nav">
         <div class="sb-sidenav-menu-heading">Core</div>
@@ -38,7 +38,7 @@
             Requested Items&nbsp;&nbsp; <span class = 'badge badge-primary' id = "notif" style ="display: none">0</span>
         </a>
         <a class="nav-link" id = "s_mr" href="{{ route('admin.monthlyreport') }}" >
-            <div class="sb-nav-link-icon"><i class="fas fa-file"></i></div>
+            <div class="sb-nav-link-icon">&nbsp;<i class="fas fa-file"></i></div>
             &nbsp;&nbsp;
             Monthly Report
         </a>

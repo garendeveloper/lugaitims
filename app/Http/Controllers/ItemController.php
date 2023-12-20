@@ -38,21 +38,19 @@ class ItemController extends Controller
         return DataTables::of($this->get_allItems())
                 ->addColumn('type', function($row){
                     $html = "";
-                    if($row->type == 1) $html = "<span class = 'badge badge-primary'>REQUESTING</span>";
-                    if($row->type == 3) $html = "<span class = 'badge badge-success'>RELEASED</span>";
-                    if($row->type == 2 || $row->type == 5) $html = "<span class = 'badge badge-success'>PURCHASED</span>";
-                    if($row->type == 4) $html = "<span class = 'badge badge-warning'>WASTED</span>";
+                    if($row->status==0) $html = "<span class = 'badge badge-warning'>WASTED</span>";
+                    if($row->status==1) $html = "<span class = 'badge badge-primary'>ACTIVE</span>";
                     return $html;   
                 })   
                 ->addColumn('checkboxes', function($row){
-                    $html = "<input class = 'checkboxes' style = 'width: 20px; height: 20px;' type = 'checkbox' name = 'itemCheck' id = 'itemCheck' data-supplieritem_id=".$row->supplieritem_id." value = ".$row->movement_id." />";
+                    $html = "<input class = 'checkboxes' style = 'width: 20px; height: 20px;' type = 'checkbox' name = 'itemCheck' id = 'itemCheck' data-supplieritem_id=".$row->supplieritem_id."/>";
                     return $html;
                 })
                 ->addColumn('cost', function($row){
-                    return $html = "&#8369;&nbsp;".number_format((float)$row->cost, 2, '.', '');
+                    return $html = "&#8369;&nbsp;".number_format((float)$row->cost, 2, '.', ',');
                 })
                 ->addColumn('totalCost', function($row){
-                    return $html = "&#8369;&nbsp;".number_format((float)$row->totalCost, 2, '.', '');
+                    return $html = "&#8369;&nbsp;".number_format((float)$row->totalCost, 2, '.', ',');
                 })
                 ->addColumn('actions', function($row){
                     $html = "<td style = 'display: block; margin: auto; text-align:center'>";
@@ -66,12 +64,11 @@ class ItemController extends Controller
     }
     public function get_allItems()
     {
-        $sql = DB::select('SELECT date(movements.created_at) as transactedOn, items.*, itemcategories.*, suppliers.*, supplier_items.*,  movements.*, movements.id as movement_id
-                        FROM items, suppliers, supplier_items, movements, itemcategories
+        $sql = DB::select('SELECT supplier_items.id as supplieritem_id, items.*, itemcategories.*, suppliers.*, supplier_items.*
+                        FROM items, suppliers, supplier_items, itemcategories
                         WHERE itemcategories.id = items.itemcategory_id 
                         AND items.id = supplier_items.item_id
-                        AND suppliers.id = supplier_items.supplier_id
-                        AND supplier_items.id = movements.supplieritem_id');
+                        AND suppliers.id = supplier_items.supplier_id');
         return $sql;
     }
     public function get_allSupplierItems()

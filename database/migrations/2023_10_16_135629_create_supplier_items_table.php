@@ -29,6 +29,11 @@ return new class extends Migration
             $table->text('serialnumber')->nullable();
             $table->integer('no_ofYears')->default(0)->nullable();
             $table->bigInteger('stock')->default(0);
+            $table->integer('quantity');
+            $table->double('cost', 8, 2);//price
+            $table->string('totalCost');
+            $table->string('remarks')->nullable();
+            $table->tinyInteger('status')->default(0);//Determine if available or not.
             $table->timestamps();
         });
     }
