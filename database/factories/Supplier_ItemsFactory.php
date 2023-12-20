@@ -1,0 +1,28 @@
+<?php
+
+namespace Database\Factories;
+
+use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\Factories\Factory;
+
+/**
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Supplier_Items>
+ */
+class Supplier_ItemsFactory extends Factory
+{
+    /**
+     * Define the model's default state.
+     *
+     * @return array<string, mixed>
+     */
+    public function definition(): array
+    {
+        return [
+            'supplier_id' => random_int(1, 5),
+            'item_id' => random_int(1, 10),
+            'modelnumber'=> strtoupper(Str::random(11)),
+            'serialnumber'=> strtoupper(Str::random(11)),
+            'stock' => random_int(100, 5000),
+        ];
+    }
+}
