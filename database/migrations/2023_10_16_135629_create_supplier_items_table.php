@@ -25,6 +25,12 @@ return new class extends Migration
                     ->on('items')
                     ->onUpdate('cascade')
                     ->onDelete('cascade');
+            $table->unsignedBigInteger('category_id');
+            $table->foreign('category_id')
+                    ->references('id')
+                    ->on('itemcategories')
+                    ->onUpdate('cascade')
+                    ->onDelete('cascade');
             $table->text('modelnumber')->nullable();
             $table->text('serialnumber')->nullable();
             $table->integer('no_ofYears')->default(0)->nullable();

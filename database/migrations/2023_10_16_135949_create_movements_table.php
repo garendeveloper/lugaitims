@@ -19,15 +19,17 @@ return new class extends Migration
                     ->on('supplier_items')
                     ->onUpdate('cascade')
                     ->onDelete('cascade');
-            $table->unsignedBigInteger('user_id');//Item Per Supplier
+            $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')
-                    ->references('id')
                     ->on('users')
+                    ->references('id')
                     ->onUpdate('cascade')
                     ->onDelete('cascade');
-            
+            $table->tinyInteger('notification')->default(0);
+            $table->integer('qty')->default(0);
+            $table->tinyInteger('status')->default(0);
+            $table->longText('reasonforCancel')->nullable();
             $table->date('dateReleased')->nullable();
-            $table->date('date')->nullable();
             $table->date('datePurchased')->nullable();
             $table->date('dateWasted')->nullable();
             $table->date('dateCancelled')->nullable();
@@ -37,7 +39,6 @@ return new class extends Migration
             // 4 = Wasted
             $table->tinyInteger('type')->default(1);
             $table->longText('lastAction')->nullable();
-            $table->tinyInteger('status')->default(0);//Determine if available or not.
             $table->timestamps();
         });
     }

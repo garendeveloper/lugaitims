@@ -29,6 +29,14 @@ class SupplierItemsController extends Controller
         $item_ids = $request->items;
         $req_id = $request->req_id;
         $remarks = "Pending";
+        if($request->selected_itemtype === "S1") 
+        {
+            DB::table('supplier_items')->whereIn('id', $item_ids)->update(array('status' => 1));
+        }
+        if($request->selected_itemtype === "S0") 
+        {
+            DB::table('supplier_items')->whereIn('id', $item_ids)->update(array('status' => 0));
+        }
         if($request->selected_itemtype == 2) 
         {
             DB::table('movements')->whereIn('id', $item_ids)->update(array('type' => $request->selected_itemtype, 'datePurchased'=>Carbon::now()));

@@ -64,10 +64,10 @@ class RequestingItemsController extends Controller
     }
     public function resetNotification(Request $request)
     {
-        $result = DB::select('select * from requesting_items where date(created_at) = "'.$request->dateRequest.'" and notification = 1 and user_id = '.$request->user_id.'');
+        $result = DB::select('select * from movements where date(created_at) = "'.$request->dateRequest.'" and notification = 1 and user_id = '.$request->user_id.'');
         foreach($result as $res)
         {
-             $r = DB::table('requesting_items')->where([
+             $r = DB::table('movements')->where([
                     'id'=>$res->id,
                  ])->update(['notification'=>0]);
         }

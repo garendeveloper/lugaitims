@@ -19,7 +19,6 @@ class ItemFactory extends Factory
         $quantity = random_int(100, 500);
         $cost = random_int(100, 1000);
         return [
-            'itemcategory_id' => random_int(1, 3),
             'item' => strtoupper($this->faker->word),
             'unit' => $this->faker->randomElement(['RIM', 'PCS', 'ML', 'L', 'KG', 'PC']),
             'brand' => strtoupper($this->faker->word),

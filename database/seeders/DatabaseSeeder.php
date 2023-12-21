@@ -84,7 +84,5 @@ class DatabaseSeeder extends Seeder
         \App\Models\Supplier::factory(5)->create();
         \App\Models\Item::factory(10)->create();
         \App\Models\Supplier_Items::factory(10)->create();
-        \App\Models\Movements::factory(10)->create();
-        \App\Models\RequestingItems::factory(10)->create();
     }
 }

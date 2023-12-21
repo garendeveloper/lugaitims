@@ -21,6 +21,7 @@ class Supplier_ItemsFactory extends Factory
         $cost = random_int(1500, 20000);
         $totalCost = $quantity*$cost;
         return [
+            'category_id'=> random_int(1,3),
             'supplier_id' => random_int(1, 5),
             'item_id' => random_int(1, 10),
             'modelnumber'=> strtoupper(Str::random(11)),

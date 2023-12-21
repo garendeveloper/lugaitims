@@ -57,9 +57,9 @@
                                                 <th colspan="3" style = "text-align: center">
                                                     <select name="selected_itemtype" id="selected_itemtype" class = "form-control" style = "height: 30px; font-size: 12px">
                                                         <option value="">--Select To Retype Item--</option>
-                                                        <option value="2">PURCHASED</option>
+                                                        <option value="S1">ACTIVATE</option>
                                                         <!-- <option value="3">RELEASED</option> -->
-                                                        <option value="4">WASTED</option>
+                                                        <option value="S0">WASTED</option>
                                                     </select>
                                                 </th>
                                                 <th colspan = "9"></th>
@@ -69,6 +69,7 @@
                                                 <th>Item Name</th>
                                                 <th>Unit</th>
                                                 <th>Brand</th>
+                                                <th>Quantity</th>
                                                 <th>Cost</th>
                                                 <th>Total Cost</th>
                                                 <th>Stock</th>
@@ -103,7 +104,7 @@
 
         <!-- Modal -->
     <div class="modal fade" id="item-modal"   tabindex="-1" role="dialog" aria-labelledby="item-modalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document" >
+        <div class="modal-dialog modal-xl" role="document" >
             <div class="modal-content">
                 <!-- Modal Header -->
                 <div class="modal-header">
@@ -130,14 +131,7 @@
                     <input autocomplete="off" type="hidden" name = "requisitionItem_id" id = "requisitionItem_id" value = "">
                     <div class="modal-body">
                         <div class="row">
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label for="date">Date</label>
-                                    <input autocomplete="off" onkeyup="$(this).removeClass('is-invalid'); $('#date-msg').html('');" type="date" class="form-control" name = "date" id="date" placeholder="Enter your brand">
-                                    <span class = "v-error" style = "color:red;" id = "date-msg"></span>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
+                            <div class="col-md-6">
                                 <div class="form-group s_category">
                                     <label for="itemcategory_id">Category</label>
                                     <select name="itemcategory_id" id="itemcategory_id" class = "form-control" onchange="$(this).removeClass('is-invalid'); $('#itemcategory_id-msg').html('');">
@@ -146,22 +140,13 @@
                                     <span class = "v-error" style = "color:red;" id = "itemcategory_id-msg"></span>
                                 </div>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="item">Supplier</label>
                                     <select name="supplier" id="supplier" class = "form-control" onchange="$(this).removeClass('is-invalid'); $('#supplier-msg').html('');">
                                         <option value="">--Please Select Here--</option>
                                     </select>
                                     <span class = "v-error" style = "color:red;" id = "supplier-msg"></span>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label for="item">Designated Office</label>
-                                    <select class = "form-control" name="requisition" id="requisition" onchange="$(this).removeClass('is-invalid'); $('#requisition-msg').html('');">
-                                        <option value="0" >--Please Select Here--</option>
-                                    </select>
-                                    <span class = "v-error" style = "color:red;" id = "requisition-msg"></span>
                                 </div>
                             </div>
                         </div>
@@ -323,7 +308,7 @@
 
     <!-- Supplier Modal -->
     <div class="modal fade" id="supplier-modal"   tabindex="-1" role="dialog" aria-labelledby="supplier-modalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document" >
+        <div class="modal-dialog modal-xl" role="document" >
             <div class="modal-content">
                 <!-- Modal Header -->
                 <div class="modal-header">
@@ -458,7 +443,7 @@
     
     <!-- Item Details and Transaction Modal -->
      <div class="modal fade" id="itemdetails-modal"   tabindex="-1" role="dialog" aria-labelledby="itemdetails-modalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document" >
+        <div class="modal-dialog modal-xl" role="document" >
             <div class="modal-content">
                 <!-- Modal Header -->
                 <div class="modal-header">
@@ -469,23 +454,27 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <div class="col-md-4">
-                            <div class="table-responsive">
-                                <table id="tbl_itemdetails" class = "table table-bordered table-stripped cell-border" style = "width: 100%">
-                                    <tbody>
-
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
                         <div class="col-md-8">
-                            <div class="table-responsive">
-                                <table id="tbl_supplierdetails" class = "table table-bordered table-stripped cell-border" style = "width: 100%">       
-                                    <tbody>
-                                    </tbody>
-                                </table>
-                            </div>
+                            <table id="tbl_itemdetails" class = "table table-bordered table-stripped " style = "width: 100%">
+                               
+                                <tbody   >
+
+                                </tbody>
+                            </table>
                         </div>
+                        <div class="col-md-4">
+                            <table id = "tbl_image" class = "table table-bordered table-stripped " style = "width: 100%">
+                            <thead>
+                                    <tr>
+                                        <th colspan="2">IMAGE</th>
+                                    </tr>
+                                </thead>
+                                <tbody >
+
+                                </tbody>
+                            </table>
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -606,11 +595,11 @@
                     columnDefs: [
                         {
                             className: "text-center", // Add 'text-center' class to the targeted column
-                            targets: [0, 1, 3, 7, 8, 10] // Replace 'columnIndex' with the index of your targeted column (starting from 0)
+                            targets: [0, 2, 4, 7, 10, 11] // Replace 'columnIndex' with the index of your targeted column (starting from 0)
                         },
                         {
                             className: "text-right", // Add 'text-center' class to the targeted column
-                            targets: [ 5, 6] // Replace 'columnIndex' with the index of your targeted column (starting from 0)
+                            targets: [5, 6] // Replace 'columnIndex' with the index of your targeted column (starting from 0)
                         },
                     ],
                     dom: 'lBfrtip',
@@ -619,21 +608,21 @@
                         {
                             extend: 'copy',
                             exportOptions: {
-                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9] // Set columns 0, 2, and 3 for export
+                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] // Set columns 0, 2, and 3 for export
                             },
                             className: 'btn btn-primary btn-sm',
                         },  
                         {
                             extend: 'excel',
                             exportOptions: {
-                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9] // Set columns 0, 2, and 3 for export
+                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] // Set columns 0, 2, and 3 for export
                             },
                             className: 'btn btn-success btn-sm',
                         },  
                         {
                             extend: 'print',
                             exportOptions: {
-                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9] // Set columns 0, 2, and 3 for export
+                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] // Set columns 0, 2, and 3 for export
                             },
                             className: 'btn btn-secondary btn-sm',
                             orientation: 'portrait',
@@ -648,13 +637,12 @@
                         { data: 'item', name: 'item' },
                         { data: 'unit', name: 'unit' },
                         { data: 'brand', name: 'brand' },
+                        { data: 'quantity', name: 'quantity' },
                         { data: 'cost', name: 'cost' },
                         { data: 'totalCost', name: 'totalCost' },
                         { data: 'stock', name: 'stock' },
                         { data: 'category', name: 'category' },
                         { data: 'name', name: 'name' },
-                        // { data: 'department_name', name: 'department_name' },
-                        // { data: 'fullname', name: 'fullname' },
                         { data: 'type', name: 'type' },
                         { data: 'actions', name: 'actions' },
                     ],
@@ -771,6 +759,7 @@
                                 {
                                     if(response.status) {
                                         AutoReload();
+                                        $("#selected_itemtype").val("");
                                         $("#itemAll").prop('checked', false);
                                         alert(response.message);
                                     }
@@ -879,36 +868,31 @@
             }
             function show_allValue(data)
             {
-                selectElement("itemcategory_id", data['item'][0].itemcategory_id)
-                selectElement("supplier", data['item'][0].supplier_id);
-                selectElement("requisition", data['requestItem'][0].purchaser_id)
+                selectElement("itemcategory_id", data[0].itemcategory_id)
+                selectElement("supplier", data[0].supplier_id);
 
-                $("#supplieritem_id").val(data['item'][0].supplieritem_id);
-                $("#movement_id").val(data['item'][0].movement_id);
-                $("#item_id").val(data['item'][0].item_id); 
-                $("#requisitionItem_id").val(data['requestItem'][0].requestingitem_id); 
+                $("#supplieritem_id").val(data[0].supplieritem_id);
+                $("#item_id").val(data[0].supplieritem_id); 
 
-                if(data['item'][0].image != null)
-                    $("#preview_image").attr('src', '/upload_images/'+data['item'][0].image);
+                if(data[0].image != null)
+                    $("#preview_image").attr('src', '/upload_images/'+data[0].image);
                 else
                     $("#preview_image").attr('src', '/upload_images/item.png');
 
-                $("#item").val(data['item'][0].item);
-                $("#date").val(data['item'][0].date);
-                $("#unit").val(data['item'][0].unit);
-                $("#stock").val(data['item'][0].stock);
-                $("#pstock").val(data['item'][0].stock)
-                $("#quantity").val(data['item'][0].quantity);
-                $("#brand").val(data['item'][0].brand);
-                $("#cost").val(data['item'][0].cost);
-                $("#serialnumber").val(data['item'][0].serialnumber);
-                $("#modelnumber").val(data['item'][0].modelnumber);
-                $("#totalCost").val(data['item'][0].totalCost);
-                $("#remarks").val(data['item'][0].remarks);
-                $("#no_ofYears").val(data['item'][0].no_ofYears);
+                $("#item").val(data[0].item);
+                $("#unit").val(data[0].unit);
+                $("#stock").val(data[0].stock);
+                $("#pstock").val(data[0].stock)
+                $("#quantity").val(data[0].quantity);
+                $("#brand").val(data[0].brand);
+                $("#cost").val(data[0].cost);
+                $("#serialnumber").val(data[0].serialnumber);
+                $("#modelnumber").val(data[0].modelnumber);
+                $("#totalCost").val(data[0].totalCost);
+                $("#remarks").val(data[0].remarks);
+                $("#no_ofYears").val(data[0].no_ofYears);
             }
             $("#table tbody ").on('click', '.edit', function(){
-                show_allDesignatedOffices();
                 show_allItemCategories();
                 show_allSuppliers();
                 show_allUnits();
@@ -938,141 +922,62 @@
                     dataType: 'json',
                     success: function(data)
                     {
-                        $("#itemdetails-modalLabel").text('Item Details and Transaction');  
-                    
-                        $("#item").val(data['item'][0].item);
-                        $("#unit").val(data['item'][0].unit);
-                        $("#stock").val(data['item'][0].stock);
-                        $("#pstock").val(data['item'][0].stock)
-                        $("#quantity").val(data['item'][0].quantity);
-                        $("#brand").val(data['item'][0].brand);
-                        $("#cost").val(data['item'][0].cost);
-                        $("#totalCost").val(data['item'][0].totalCost);
-
-                        var content = "<tbody >";
+                        $("#itemdetails-modalLabel").text('Item Details');  
+                        var content = "";
                         content += "<tr style = 'background-color: #2C4B5F; color: white'>";
                         content += "<td colspan = '2'>Item Details</td>";
                         content += "</tr>";
-                        content += "<tr >";
-                        content += "<td>Date of Transaction</td>";
-                        content += "<td>"+data['item'][0].transactedOn+"</td>";
-                        content += "</tr>";
                         content += "<tr>";
                         content += "<td>Item</td>";
-                        content += "<td>"+data['item'][0].item+"</td>";
+                        content += "<td>"+data[0].item+"</td>";
                         content += "</tr>";
                         content += "<tr>";
                         content += "<td>Unit</td>";
-                        content += "<td>"+data['item'][0].unit+"</td>";
+                        content += "<td>"+data[0].unit+"</td>";
                         content += "</tr>";
                         content += "<tr>";
                         content += "<td>Quantity</td>";
-                        content += "<td>"+data['item'][0].quantity+"</td>";
+                        content += "<td>"+data[0].quantity+"</td>";
                         content += "</tr>";
                         content += "<tr>";
                         content += "<td>Brand</td>";
-                        content += "<td>"+data['item'][0].brand+"</td>";
+                        content += "<td>"+data[0].brand+"</td>";
                         content += "</tr>";
                         content += "<tr>";
                         content += "<td>Cost</td>";
-                        content += "<td>"+data['item'][0].cost+"</td>";
+                        content += "<td>"+data[0].cost+"</td>";
                         content += "</tr>";
                         content += "<tr>";
                         content += "<td>Total Cost</td>";
-                        content += "<td>"+data['item'][0].totalCost+"</td>";
+                        content += "<td>"+data[0].totalCost+"</td>";
                         content += "</tr>";
-                        content += "<tr>";
-                        content += "<td>Date Acquired</td>";
-                        content += "<td>"+data['item'][0].date+"</td>";
-                        content += "</tr>";
-                        content += "<tr>";
                         content += "<tr>";
                         content += "<td>Serial Number</td>";
-                        content += "<td>"+data['item'][0].serialnumber+"</td>";
+                        content += "<td>"+data[0].serialnumber+"</td>";
                         content += "</tr>";
                         content += "<tr>";
                         content += "<td>Model Number</td>";
-                        content += "<td>"+data['item'][0].modelnumber+"</td>";
+                        content += "<td>"+data[0].modelnumber+"</td>";
                         content += "</tr>";
                         content += "<tr>";
-                        content += "<tr>";
                         content += "<td>Years Validity</td>";
-                        content += "<td>"+data['item'][0].no_ofYears+"</td>";
+                        content += "<td>"+data[0].no_ofYears+"</td>";
                         content += "</tr>";
                         content += "<tr>";
                         content += "<td>Years Existence</td>";
-                        content += "<td>"+data['item'][0].age+"</td>";
-                        content += "</tr>";
-                        content += "<tr>";
-                        content += "<td>Date Released</td>";
-                        content += "<td>"+data['item'][0].dateReleased +"</td>";
-                        content += "</tr>";
-                        content += "<tr>";
-                        content += "<td>Date Purchased</td>";
-                        content += "<td>"+data['item'][0].datePurchased +"</td>";
+                        content += "<td>"+data[0].age+"</td>";
                         content += "</tr>";
                         content += "<tr>";
                         content += "<td>Remarks</td>";
-                        content += "<td>"+data['item'][0].remarks+"</td>";
+                        content += "<td>"+data[0].remarks+"</td>";
                         content += "</tr>";
-                        content += "</tbody>";
-
                         $("#tbl_itemdetails tbody").html(content);
 
-                        var content2 = "<tbody >";
-                        content2 += "<tr style = 'background-color: #2C4B5F; color: white'>";
-                        content2 += "<td colspan = '2'>Supplier Details</td>";
-                        content2 += "</tr>";
-                        content2 += "<tr >";
-                        content2 += "<td>Supplier Name</td>";
-                        content2 += "<td>"+data['item'][0].name+"</td>";
-                        content2 += "</tr>";
-                        content2 += "<tr>";
-                        content2 += "<td>Supplier Address</td>";
-                        content2 += "<td>"+data['item'][0].address+"</td>";
-                        content2 += "</tr>";
-                        content2 += "<tr>";
-                        content2 += "<td>Contact Number</td>";
-                        content2 += "<td>"+data['item'][0].supp_contactNo+"</td>";
-                        content2 += "</tr>";
-                        content2 += "<tr>";
-                        content2 += "<td colspan = '2'></td>";
-                        content2 += "</tr>";
-                        content2 += "<tr style = 'background-color: #2C4B5F; color: white'>";
-                        content2 += "<td colspan = '2'>Purchaser Details</td>";
-                        content2 += "</tr>";
-                        content2 += "<tr >";
-                        content2 += "<td>Purchaser Name</td>";
-                        content2 += "<td>"+data['requestItem'][0].fullname+"</td>";
-                        content2 += "</tr>";
-                        content2 += "<tr >";
-                        content2 += "<td>Position</td>";
-                        content2 += "<td>"+data['requestItem'][0].position+"</td>";
-                        content2 += "</tr>";
-                        content2 += "<tr >";
-                        content2 += "<td>Contact Number</td>";
-                        content2 += "<td>"+data['requestItem'][0].contact_number+"</td>";
-                        content2 += "</tr>";
-                        content2 += "<tr >";
-                        content2 += "<td>Department</td>";
-                        content2 += "<td>"+data['requestItem'][0].department_name+"</td>";
-                        content2 += "</tr>";
-                        content2 += "<tr>";
-                        content2 += "<td colspan = '2'></td>";
-                        content2 += "</tr>";
-                        content2 += "<tr style = 'background-color: lightgreen'>";
-                        content2 += "<td>Updated By</td>";
-                        content2 += "<td>"+data['item'][0].lastAction+"</td>";
-                        content2 += "</tr>";
-
-                        content2 += "<tr>";
-                        content2 += "<td colspan = '2'></td>";
-                        content2 += "</tr>";
-              
-                        if(data['item'][0].image != null)
+                        var content2 = "";
+                        if(data[0].image != null)
                         {
                             content2 += "<tr align='center'>";
-                            content2 += "<td colspan = '2'><img src = '/upload_images/"+data['item'][0].image+"' style = 'height: 180px; width: 180px;'></img></td>";
+                            content2 += "<td colspan = '2'><img src = '/upload_images/"+data[0].image+"' style = 'height: 180px; width: 180px;'></img></td>";
                             content2 += "</tr>";
                         }
                         else 
@@ -1080,14 +985,17 @@
                             content2 += "<tr align='center'>";
                             content2 += "<td colspan = '2'><img src = '/upload_images/item.png' style = 'height: 180px; width: 180px;'></img></td>";
                             content2 += "</tr>";
-                          
                         }
-                        content2 += "</tbody>";
-                        $("#tbl_supplierdetails tbody").html(content2);
+                        $("#tbl_image tbody").html(content2);
 
                         $("#itemdetails-modal").modal({
                             backdrop: 'static',
                             keyboard: false,
+                            onOpen: function (dialog) {
+                                dialog.data.show();
+                                dialog.container.show();
+                                dialog.overlay.fadeIn('slow');
+                            }
                         })
                     },
                     error: function(data)

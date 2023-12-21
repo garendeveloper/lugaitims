@@ -42,8 +42,8 @@ class HomeController extends Controller
 
         $years_ofReleasedLabel = [];
         $values_ofReleased = [];
-        $years_r = DB::select('SELECT DISTINCT YEAR(date) as year 
-            FROM movements WHERE type = 2 ORDER BY YEAR(date) asc');
+        $years_r = DB::select('SELECT DISTINCT YEAR(movements.created_at) as year 
+            FROM movements WHERE type = 2 ORDER BY YEAR(movements.created_at) asc');
 
         foreach($years_r as $year)
         {

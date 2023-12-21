@@ -43,7 +43,7 @@ class ItemController extends Controller
                     return $html;   
                 })   
                 ->addColumn('checkboxes', function($row){
-                    $html = "<input class = 'checkboxes' style = 'width: 20px; height: 20px;' type = 'checkbox' name = 'itemCheck' id = 'itemCheck' data-supplieritem_id=".$row->supplieritem_id." value = '".$row->supplieritem_id."' />";
+                    $html = "<input class = 'checkboxes' style = 'width: 20px; height: 20px;' type = 'checkbox' name = 'itemCheck' id = 'itemCheck' data-supplieritem_id=".$row->supplieritem_id."/>";
                     return $html;
                 })
                 ->addColumn('cost', function($row){
@@ -66,7 +66,7 @@ class ItemController extends Controller
     {
         $sql = DB::select('SELECT supplier_items.id as supplieritem_id, items.*, itemcategories.*, suppliers.*, supplier_items.*
                         FROM items, suppliers, supplier_items, itemcategories
-                        WHERE itemcategories.id = supplier_items.category_id 
+                        WHERE itemcategories.id = items.itemcategory_id 
                         AND items.id = supplier_items.item_id
                         AND suppliers.id = supplier_items.supplier_id');
         return $sql;
@@ -75,7 +75,7 @@ class ItemController extends Controller
     {
         $sql = DB::select('SELECT movements.id as movement_id, items.*, itemcategories.*, suppliers.*, supplier_items.*, movements.*
                         FROM items, suppliers, supplier_items, itemcategories, movements
-                        WHERE itemcategories.id = supplier_items.category_id 
+                        WHERE itemcategories.id = items.itemcategory_id 
                         AND items.id = supplier_items.item_id
                         AND suppliers.id = supplier_items.supplier_id
                         AND movements.supplieritem_id = supplier_items.id');
@@ -110,6 +110,7 @@ class ItemController extends Controller
             'brand'=>'required',
             'itemcategory_id'=>'required',
             'supplier'=>'required',
+            'requisition'=>'required',
             'quantity'=>'required',
             'cost'=>'required',
             'stock'=>'required',
@@ -131,82 +132,130 @@ class ItemController extends Controller
             $item = Item::where([
                 'item'=>$request->item,
                 'brand'=>$request->brand,
+                'itemcategory_id'=>$request->itemcategory_id,
             ])->first();
             
             $image_name = "";
             $image = $request->file('image');
-  
             if($image !== null)
             {
+                // $new_name = rand() . '.' . $image->getClientOriginalExtension();
                 $image_name = $image->getClientOriginalName();
                 $image->move(public_path('upload_images'), $image_name);
             }
-            if($request->item_id !== null)
+            if(is_null($item))
+            {
+                $item = Item::create([
+                    'item'=>strtoupper($request->item),
+                    'unit'=>$request->unit,
+                    'brand'=>strtoupper($request->brand),
+                    'itemcategory_id'=>$request->itemcategory_id,
+                    'image'=>$image_name,
+                ]);
+            }
+            else
             {
                 $toUpdate = [];
                 if(is_null($image))
                 {
                     $toUpdate = [
                         'item'=>strtoupper($request->item),
-                        'unit'=>strtoupper($request->unit),
+                        'unit'=>$request->unit,
                         'brand'=>strtoupper($request->brand),
+                        'itemcategory_id'=>$request->itemcategory_id,
                     ];
                 }
                 else
                 {
                     $toUpdate = [
                         'item'=>strtoupper($request->item),
-                        'unit'=>strtoupper($request->unit),
+                        'unit'=>$request->unit,
                         'brand'=>strtoupper($request->brand),
+                        'itemcategory_id'=>$request->itemcategory_id,
                         'image'=>$image_name,
                     ];
                 }
 
                 $u_item = DB::table('items')
-                        ->where('id',$request->item_id)
+                        ->where('id',$item->id)
                         ->update($toUpdate);
+            }
+
+            $supplieritem = SupplierItem::where([
+                'item_id'=>$item->id,
+                'supplier_id'=>$request->supplier,
+            ])->first();
+            if(is_null($supplieritem))
+            {
+                $supplieritem = new SupplierItem;
+                $supplieritem->supplier_id = $request->supplier;
+                $supplieritem->item_id = $item->id;
+                $supplieritem->serialnumber = $request->serialnumber;
+                $supplieritem->modelnumber = $request->modelnumber;
+                $supplieritem->stock = $request->stock;
+                $supplieritem->no_ofYears = $request->no_ofYears;
+                $supplieritem->save();
             }
             else
             {
-                if(is_null($item))
-                {
-                    $item = Item::create([
-                        'item'=>strtoupper($request->item),
-                        'unit'=>strtoupper($request->unit),
-                        'brand'=>strtoupper($request->brand),
-                        'image'=>$image_name,
-                    ]);
-                }
-                else {
-                    $status = false;
-                    $messages = "Item have been already exists!";
-                }
+                $supplieritem = SupplierItem::find($supplieritem->id);
+                $supplieritem->supplier_id = $request->supplier;
+                $supplieritem->item_id = $item->id;
+                $supplieritem->serialnumber = $request->serialnumber;
+                $supplieritem->modelnumber = $request->modelnumber;
+                $supplieritem->stock = $request->stock;
+                $supplieritem->no_ofYears = $request->no_ofYears;
+                $supplieritem->update();
             }
-           
-            $supplieritem = SupplierItem::updateOrCreate(['id'=>$request->supplieritem_id], [
-                'supplier_id' => $request->supplier,
-                'item_id' => $item->id,
-                'serialnumber' => $request->serialnumber,
-                'modelnumber' => $request->modelnumber,
-                'stock' => $request->stock,
-                'no_ofYears' => $request->no_ofYears,
-                'category_id' => $request->itemcategory_id, 
-                'quantity' => $request->quantity, 
-                'cost' => $request->cost,
-                'totalCost' => $request->totalCost, 
-                'remarks' => $request->remarks,
-                'status'=>1,
-            ]);
-            if($status == false) 
+            $movement_id = "";
+            $type = $request->requisition == 1 ? 2 : 2;
+            if($request->item_id !== null)
             {
-                $status = false;
-                $messages = ['item'=>"Item have been already exists!",'brand'=>"Item have been already exists!"];
-            }
-            else 
+                $dataToUpdate = [
+                    'date'=>$request->date,
+                    'supplieritem_id'=>$supplieritem->id,
+                    'lastAction'=>Auth::user()->fullname,
+                    'quantity'=>$request->quantity,
+                    'cost'=>$request->cost,
+                    'totalCost'=>$request->totalCost,
+                    'status'=>1,
+                    'remarks'=>$request->remarks,
+                    'updated_at'=>Carbon::now()->toDateTimeString(),
+                ];
+
+                $m = DB::table('movements')
+                        ->where('id', $request->movement_id)
+                        ->update($dataToUpdate);
+
+                $movement_id = $request->movement_id;
+            } 
+            else
             {
-                $messages = "Item has been successfully saved!";
-                $status = true;
+                $movement_id = DB::table('movements')->insertGetID([
+                    'supplieritem_id'=>$supplieritem->id,
+                    'date'=>$request->date,
+                    'lastAction'=>Auth::user()->fullname,
+                    'quantity'=>$request->quantity,
+                    'cost'=>$request->cost,
+                    'totalCost'=>$request->totalCost,
+                    'status'=>1,
+                    'type'=>$type,
+                    'remarks'=>$request->remarks,
+                    'datePurchased'=>Carbon::now(),
+                    'created_at'=>Carbon::now()->toDateTimeString() ,
+                ]);
             }
+
+            if($request->requisition !== "")
+            {
+                RequestingItems::updateOrCreate(['id'=>$request->requisitionItem_id], [
+                    'user_id'=>$request->requisition,
+                    'movement_id'=>$movement_id,
+                    'qty'=>0,
+                ]); 
+            }
+            $messages = "Item has been successfully saved!";
+            $status = true;
         }
 
         return response()->json([
@@ -235,21 +284,33 @@ class ItemController extends Controller
      */
     public function edit($item_id)
     {
-        $sql = DB::select('SELECT TIMESTAMPDIFF(YEAR, date(supplier_items.created_at), CURDATE())  AS age, suppliers.contact_number as supp_contactNo, suppliers.id as supplier_id, items.*, itemcategories.*, suppliers.*, supplier_items.*, itemcategories.id as itemcategory_id, items.id as item_id, supplier_items.id as supplieritem_id
-                        FROM items, suppliers, supplier_items, itemcategories
-                        WHERE itemcategories.id = supplier_items.category_id 
+        $sql = DB::select('SELECT TIMESTAMPDIFF(YEAR, date(supplier_items.created_at), CURDATE())  AS age, date(movements.created_at) as transactedOn, suppliers.contact_number as supp_contactNo, suppliers.id as supplier_id, items.*, itemcategories.*, suppliers.*, supplier_items.*, movements.*,movements.id as movement_id, itemcategories.id as itemcategory_id, items.id as item_id, supplier_items.id as supplieritem_id
+                        FROM items, suppliers, supplier_items, movements, itemcategories
+                        WHERE itemcategories.id = items.itemcategory_id 
                         AND items.id = supplier_items.item_id
                         AND suppliers.id = supplier_items.supplier_id
+                        AND supplier_items.id = movements.supplieritem_id
                         AND supplier_items.id = '.$item_id.'');
-
-        return response()->json($sql);
+        
+        $requestItem = DB::select('select users.*, users.id as purchaser_id, positions.*, departments.*, requesting_items.*, requesting_items.id as requestingitem_id
+                                from positions, departments, users, requesting_items, movements
+                                where departments.id = users.department_id
+                                and positions.id = users.position_id
+                                and movements.id = requesting_items.movement_id
+                                and users.id = requesting_items.user_id
+                                and movements.id = "'.$sql[0]->movement_id.'"');
+        $data = [
+            'item'=>$sql,
+            'requestItem'=>$requestItem,
+        ];
+        return response()->json($data);
     }   
 
     public function purchaserEdit($item_id)
     {
         $sql = DB::select('SELECT  date(movements.created_at) as transactedOn, suppliers.contact_number as supp_contactNo, suppliers.id as supplier_id, items.*, itemcategories.*, suppliers.*, supplier_items.*, movements.*,movements.id as movement_id, itemcategories.id as itemcategory_id, items.id as item_id, supplier_items.id as supplieritem_id
                         FROM items, suppliers, supplier_items, movements, itemcategories
-                        WHERE itemcategories.id = supplier_items.category_id 
+                        WHERE itemcategories.id = items.itemcategory_id 
                         AND items.id = supplier_items.item_id
                         AND suppliers.id = supplier_items.supplier_id
                         AND supplier_items.id = movements.supplieritem_id
