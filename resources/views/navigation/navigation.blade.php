@@ -26,7 +26,7 @@
 
 </head>
 <body>
-    <nav class="sb-topnav navbar navbar-expand" style="background-color: #2C4B5F;">
+    <nav class="sb-topnav navbar navbar-expand" style="background-color: #005c65;">
     <a class="navbar-brand ps-4" href="#" style="color: white;">
         <img src="{{ asset('admintemplate/assets/img/round.png') }}" alt="Second Logo" style="width: 50px; height: 50px; margin-right: 10px;">
         <img src="{{ asset('admintemplate/assets/img/seal.png') }}" alt="Logo LSHS" style="width: 50px; height: 50px;">

@@ -28,13 +28,11 @@ class HomeController extends Controller
         foreach($years as $year)
         {
             $years_ofPurchasedLabel[] = $year->item." - ".$year->name;
-            $values = DB::select('select count(requesting_items.user_id) as total
-                                from users, movements, supplier_items, items, requesting_items
+            $values = DB::select('select count(movements.user_id) as total
+                                from users, movements, supplier_items, items
                                 where items.id = supplier_items.item_id
                                 and supplier_items.id = movements.supplieritem_id
-                                and movements.id = requesting_items.movement_id
-                                and users.id = requesting_items.user_id
-                                and requesting_items.status = 2
+                                and movements.user_id = users.id
                                 and supplier_items.id = '.$year->id.'');
 
             $values_ofPurchased[] = $values[0]->total;
@@ -43,7 +41,7 @@ class HomeController extends Controller
         $years_ofReleasedLabel = [];
         $values_ofReleased = [];
         $years_r = DB::select('SELECT DISTINCT YEAR(movements.created_at) as year 
-            FROM movements WHERE type = 2 ORDER BY YEAR(movements.created_at) asc');
+            FROM movements WHERE type = 3 ORDER BY YEAR(movements.created_at) asc');
 
         foreach($years_r as $year)
         {
@@ -51,7 +49,7 @@ class HomeController extends Controller
             $values = DB::select('SELECT count(items.id) as total
             FROM items
             INNER JOIN supplier_items on supplier_items.item_id = items.id
-            INNER JOIN movements on movements.supplieritem_id = supplier_items.id and movements.type = 2 and YEAR(date) = "'.$year->year.'"');
+            INNER JOIN movements on movements.supplieritem_id = supplier_items.id and movements.type = 3 and YEAR(movements.created_at) = "'.$year->year.'"');
 
             $values_ofReleased[] = $values[0]->total;
         }

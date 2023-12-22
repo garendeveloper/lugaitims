@@ -343,7 +343,7 @@
                             var reasonforcancel = "-";
                             if(datas[j].type == 1) status = "<span class = 'badge badge-primary'>REQUESTING</span>";
                             if(datas[j].type == 3) status = "<span class = 'badge badge-success'>RELEASED</span>";
-                            if(datas[j].type == 0) reasonforcancel = datas[j].reasonforCancel == null ? "-" : datas[j].reasonforCancel;
+                            if(datas[j].type == 5) reasonforcancel = datas[j].reasonforCancel == null ? "-" : datas[j].reasonforCancel;
                             row += "<td style = 'text-align: center'>"+status+"</td>";
                             row += "<td style = 'text-align: center'>"+reasonforcancel+"</td>";
                             row += "</tr>";

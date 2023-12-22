@@ -44,11 +44,11 @@
     color: white;
   }
   .card-header{
-    background-color: #2C4B5F;
+    background-color: #08a4a7;
     color: white;
   }
   table thead{
-    background-color: #2C4B5F;
+    background-color: #08a4a7;
     color: white;
   }
   .sb-sidenav .sb-sidenav-menu .nav .nav-link {

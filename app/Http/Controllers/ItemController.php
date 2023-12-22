@@ -77,7 +77,8 @@ class ItemController extends Controller
                         FROM items, suppliers, supplier_items, itemcategories
                         WHERE itemcategories.id = supplier_items.category_id 
                         AND items.id = supplier_items.item_id
-                        AND suppliers.id = supplier_items.supplier_id');
+                        AND suppliers.id = supplier_items.supplier_id
+                        AND supplier_items.status = 1');
         return response()->json($sql);
     }
     public function get_allItemOnly()

@@ -60,7 +60,7 @@ class SupplierItemsController extends Controller
         if($request->selected_itemtype == 4) DB::table('movements')->whereIn('id', $item_ids)->update(array('type' => $request->selected_itemtype,  'dateWasted'=>Carbon::now()));
         if($request->selected_itemtype == 5)
         {
-            DB::table('movements')->whereIn('id', $item_ids)->update(array('dateCancelled'=>Carbon::now(), 'reasonforcancel'=>$request->reasonforcancel));
+            DB::table('movements')->whereIn('id', $item_ids)->update(array('type'=>5,'dateCancelled'=>Carbon::now(), 'reasonforcancel'=>strtoupper($request->reasonforcancel)));
             if($request->supplieritem_ids !== null)
             { 
                 for($i = 0; $i<count($request->supplieritem_ids); $i++)
