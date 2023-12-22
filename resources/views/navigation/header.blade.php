@@ -84,7 +84,7 @@
    font-size: 20px;
   }
   .modal-header{
-    background-color: #2c4b5f;
+    background-color: #08a4a7;
     color: white;
   }
   .ui-autocomplete {
