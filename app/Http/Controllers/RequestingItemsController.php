@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Yajra\Datatables\Datatables;
 use DB;
 use Carbon\Carbon;
+use App\Models\Movements;
 class RequestingItemsController extends Controller
 {
     /**
@@ -18,17 +19,15 @@ class RequestingItemsController extends Controller
     }
     public function requesteditems_report($dateRequest, $user_id)
     {
-        $data = DB::select('select distinct requesting_items.status as req_status, items.*, supplier_items.*, suppliers.*, movements.*, users.*, users.id as purchaser_id, positions.*, departments.*, requesting_items.*, requesting_items.id as requestingitem_id
-                                from positions, departments, users, requesting_items, movements, items, supplier_items, suppliers
+        $data = DB::select('select distinct movements.status as req_status, items.*, supplier_items.*, suppliers.*, movements.*, users.*, users.id as purchaser_id, positions.*, departments.*
+                                from positions, departments, users, movements, items, supplier_items, suppliers
                                 where departments.id = users.department_id
                                 and positions.id = users.position_id
-                                and users.id = requesting_items.user_id
                                 and items.id = supplier_items.item_id
                                 and suppliers.id = supplier_items.supplier_id
                                 and supplier_items.id = movements.supplieritem_id
-                                and movements.id = requesting_items.movement_id
-                                and users.id = requesting_items.user_id
-                                and requesting_items.user_id = '.$user_id.' and date(requesting_items.created_at) = "'.$dateRequest.'" and requesting_items.status = 2 order by requesting_items.created_at desc ');
+                                and movements.user_id = users.id
+                                and movements.user_id = '.$user_id.' and date(movements.created_at) = "'.$dateRequest.'" and movements.type = 3 order by movements.created_at desc ');
         return view('reports.requestingitems', compact('data'));
     }
     public function datatable()
@@ -48,7 +47,7 @@ class RequestingItemsController extends Controller
     }
     public function realtime_notification()
     {
-        $notif = RequestingItems::where('notification', 1)->count();
+        $notif = Movements::where('notification', 1)->count();
         $years = DB::select("SELECT TIMESTAMPDIFF(YEAR, date(supplier_items.created_at), CURDATE())  AS age, id, no_ofYears FROM supplier_items");
         foreach($years as $y)
         {
@@ -101,7 +100,7 @@ class RequestingItemsController extends Controller
     }   
     public function get_requestingItemsData()
     {
-        $sql = DB::select('select distinct date(created_at) as dateRequest, user_id from requesting_items');
+        $sql = DB::select('select distinct date(movements.created_at) as dateRequest, user_id from movements');
         return $sql;
     }
     public function get_allUserInfo($user_id)
@@ -118,7 +117,7 @@ class RequestingItemsController extends Controller
         $data = [];
         foreach($this->get_requestingItemsData() as $req)
         {
-            $result = DB::select('select * from requesting_items where date(created_at) = "'.$req->dateRequest.'" and user_id = '.$req->user_id.'');
+            $result = DB::select('select * from movements where date(movements.created_at) = "'.$req->dateRequest.'" and user_id = '.$req->user_id.'');
             $notification = 0;
             foreach($result as $notif)
             {
@@ -137,26 +136,24 @@ class RequestingItemsController extends Controller
     }
     public function get_purchaserRequest(Request $request, $user_id)
     {
-        $data = DB::select('select distinct requesting_items.status as req_status, items.*, supplier_items.*, suppliers.*, movements.*, users.*, users.id as purchaser_id, positions.*, departments.*, requesting_items.*, requesting_items.id as requestingitem_id, requesting_items.created_at as dateTransact
-                                from positions, departments, users, requesting_items, movements, items, supplier_items, suppliers
+        $data = DB::select('select distinct movements.id as movement_id, movements.status as req_status, items.*, supplier_items.*, suppliers.*, movements.*, users.*, users.id as purchaser_id, positions.*, departments.*, movements.created_at as dateTransact
+                                from positions, departments, movements, users, items, supplier_items, suppliers
                                 where departments.id = users.department_id
                                 and positions.id = users.position_id
-                                and users.id = requesting_items.user_id
                                 and items.id = supplier_items.item_id
                                 and suppliers.id = supplier_items.supplier_id
                                 and supplier_items.id = movements.supplieritem_id
-                                and movements.id = requesting_items.movement_id
-                                and users.id = requesting_items.user_id
-                                and requesting_items.user_id = '.$user_id.' and date(requesting_items.created_at) = "'.$request->dateRequest.'" order by requesting_items.created_at desc');
+                                and users.id = movements.user_id
+                                and movements.user_id = '.$user_id.' and date(movements.created_at) = "'.$request->dateRequest.'" order by movements.created_at desc');
         return response()->json($data);
     }
     public function get_current()
     {
-        $data = DB::select('select distinct users.*, users.id as purchaser_id, requesting_items.*,  requesting_items.id as req_id, date(requesting_items.created_at) as date, departments.*
-                            from users, requesting_items, departments
-                            where users.id = requesting_items.user_id
+        $data = DB::select('select distinct users.*, users.id as purchaser_id, movements.id as req_id, date(movements.created_at) as date, departments.*
+                            from users, movements, departments
+                            where users.id = movements.user_id
                             and departments.id = users.department_id
-                            order by requesting_items.created_at asc');
+                            order by movements.created_at asc');
 
         return $data;
     }

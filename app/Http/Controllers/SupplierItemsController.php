@@ -43,8 +43,7 @@ class SupplierItemsController extends Controller
         }
         if($request->selected_itemtype == 3){
          
-            DB::table('movements')->whereIn('id', $item_ids)->update(array('dateReleased'=>Carbon::now()));
-            DB::table('requesting_items')->whereIn('id', $req_id)->update(array('status'=>2));
+            DB::table('movements')->whereIn('id', $item_ids)->update(array('dateReleased'=>Carbon::now(), 'type'=>3));
             if($request->supplieritem_ids !== null)
             { 
                 for($i = 0; $i<count($request->supplieritem_ids); $i++)
@@ -61,8 +60,7 @@ class SupplierItemsController extends Controller
         if($request->selected_itemtype == 4) DB::table('movements')->whereIn('id', $item_ids)->update(array('type' => $request->selected_itemtype,  'dateWasted'=>Carbon::now()));
         if($request->selected_itemtype == 5)
         {
-            DB::table('movements')->whereIn('id', $item_ids)->update(array('dateCancelled'=>Carbon::now()));
-            DB::table('requesting_items')->whereIn('id', $req_id)->update(array('status'=>0, 'reasonforcancel'=>strtoupper($request->reasonforcancel)));
+            DB::table('movements')->whereIn('id', $item_ids)->update(array('dateCancelled'=>Carbon::now(), 'reasonforcancel'=>$request->reasonforcancel));
             if($request->supplieritem_ids !== null)
             { 
                 for($i = 0; $i<count($request->supplieritem_ids); $i++)

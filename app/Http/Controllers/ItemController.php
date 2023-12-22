@@ -73,12 +73,11 @@ class ItemController extends Controller
     }
     public function get_allSupplierItems()
     {
-        $sql = DB::select('SELECT movements.id as movement_id, items.*, itemcategories.*, suppliers.*, supplier_items.*, movements.*
-                        FROM items, suppliers, supplier_items, itemcategories, movements
+        $sql = DB::select('SELECT supplier_items.id as supplieritem_id, items.*, itemcategories.*, suppliers.*, supplier_items.*
+                        FROM items, suppliers, supplier_items, itemcategories
                         WHERE itemcategories.id = supplier_items.category_id 
                         AND items.id = supplier_items.item_id
-                        AND suppliers.id = supplier_items.supplier_id
-                        AND movements.supplieritem_id = supplier_items.id');
+                        AND suppliers.id = supplier_items.supplier_id');
         return response()->json($sql);
     }
     public function get_allItemOnly()
@@ -120,7 +119,6 @@ class ItemController extends Controller
             'no_ofYears'=>'nullable|min:1',
             'image' => 'nullable|image|mimes:jpg,png,jpeg,gif,svg|max:2048|unique:items,image',
         ];
-
         $validator = Validator::make($request->all(), $validatedData);
         if($validator->fails())
         {
@@ -135,13 +133,14 @@ class ItemController extends Controller
             
             $image_name = "";
             $image = $request->file('image');
-  
+            $temp = "";
+            $item_id = "";
             if($image !== null)
             {
                 $image_name = $image->getClientOriginalName();
                 $image->move(public_path('upload_images'), $image_name);
             }
-            if($request->item_id !== null)
+            if($request->item_id !== "")
             {
                 $toUpdate = [];
                 if(is_null($image))
@@ -165,19 +164,22 @@ class ItemController extends Controller
                 $u_item = DB::table('items')
                         ->where('id',$request->item_id)
                         ->update($toUpdate);
+                $item_id = $request->item_id;
             }
             else
             {
                 if(is_null($item))
                 {
-                    $item = Item::create([
-                        'item'=>strtoupper($request->item),
-                        'unit'=>strtoupper($request->unit),
-                        'brand'=>strtoupper($request->brand),
-                        'image'=>$image_name,
-                    ]);
+                    $item = new Item;
+                    $item->item = strtoupper($request->item);
+                    $item->unit = strtoupper($request->unit);
+                    $item->brand= strtoupper($request->brand);
+                    $item->image= $image_name;
+                    $item->save();
+                    $item_id = $item->id;
                 }
                 else {
+                    $temp = 1;
                     $status = false;
                     $messages = "Item have been already exists!";
                 }
@@ -185,7 +187,7 @@ class ItemController extends Controller
            
             $supplieritem = SupplierItem::updateOrCreate(['id'=>$request->supplieritem_id], [
                 'supplier_id' => $request->supplier,
-                'item_id' => $item->id,
+                'item_id' => $item_id,
                 'serialnumber' => $request->serialnumber,
                 'modelnumber' => $request->modelnumber,
                 'stock' => $request->stock,
@@ -197,7 +199,7 @@ class ItemController extends Controller
                 'remarks' => $request->remarks,
                 'status'=>1,
             ]);
-            if($status == false) 
+            if($temp == 1) 
             {
                 $status = false;
                 $messages = ['item'=>"Item have been already exists!",'brand'=>"Item have been already exists!"];
@@ -247,24 +249,23 @@ class ItemController extends Controller
 
     public function purchaserEdit($item_id)
     {
-        $sql = DB::select('SELECT  date(movements.created_at) as transactedOn, suppliers.contact_number as supp_contactNo, suppliers.id as supplier_id, items.*, itemcategories.*, suppliers.*, supplier_items.*, movements.*,movements.id as movement_id, itemcategories.id as itemcategory_id, items.id as item_id, supplier_items.id as supplieritem_id
-                        FROM items, suppliers, supplier_items, movements, itemcategories
+        $sql = DB::select('SELECT  date(supplier_items.created_at) as transactedOn, suppliers.contact_number as supp_contactNo, suppliers.id as supplier_id, items.*, itemcategories.*, suppliers.*, supplier_items.*, itemcategories.id as itemcategory_id, items.id as item_id, supplier_items.id as supplieritem_id
+                        FROM items, suppliers, supplier_items, itemcategories
                         WHERE itemcategories.id = supplier_items.category_id 
                         AND items.id = supplier_items.item_id
                         AND suppliers.id = supplier_items.supplier_id
-                        AND supplier_items.id = movements.supplieritem_id
                         AND supplier_items.id = '.$item_id.'');
         
-        $requestItem = DB::select('select users.*, users.id as purchaser_id, positions.*, departments.*, requesting_items.*, requesting_items.id as requestingitem_id
-                                from positions, departments, users, requesting_items, movements
-                                where departments.id = users.department_id
-                                and positions.id = users.position_id
-                                and movements.id = requesting_items.movement_id
-                                and users.id = requesting_items.user_id
-                                and movements.id = "'.$sql[0]->movement_id.'"');
+        // $requestItem = DB::select('select users.*, users.id as purchaser_id, positions.*, departments.*, requesting_items.*, requesting_items.id as requestingitem_id
+        //                         from positions, departments, users, requesting_items, movements
+        //                         where departments.id = users.department_id
+        //                         and positions.id = users.position_id
+        //                         and movements.id = requesting_items.movement_id
+        //                         and users.id = requesting_items.user_id
+        //                         and movements.id = "'.$sql[0]->movement_id.'"');
         $data = [
             'item'=>$sql,
-            'requestItem'=>$requestItem,
+            // 'requestItem'=>$requestItem,
         ];
         return response()->json($data);
     }   
@@ -323,8 +324,9 @@ class ItemController extends Controller
             $supplieritem = SupplierItem::find($selectedItems[$i]['supplieritem_id']);
             $supplieritem->stock = $supplieritem->stock-$selectedItems[$i]['itemQty'];
             $supplieritem->update();
-            RequestingItems::create([
-                'movement_id'=>$selectedItems[$i]['movement_id'],
+            
+            Movements::create([
+                'supplieritem_id'=>$selectedItems[$i]['supplieritem_id'],
                 'user_id'=>Auth::user()->id,
                 'qty'=>$selectedItems[$i]['itemQty'],
                 'notification'=>1,

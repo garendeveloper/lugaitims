@@ -122,6 +122,11 @@
                 $('label').remove();
             }
         })
+        function numberWithCommas(number) {
+            var parts = number.toString().split(".");
+            parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            return parts.join(".");
+        }
         $("#a_print").click(function(e){
             e.preventDefault();
             var week = $("#weeknumber").val();
@@ -188,8 +193,8 @@
                             html += "<td >"+data[i].dateRequest+"</td>";
                             html += "<td align='center'>"+data[i].quantity+"</td>";
                             html += "<td align='center'>"+data[i].unit+"</td>";
-                            html += "<td align='right'>"+data[i].cost+"</td>";
-                            html += "<td align='right'>"+data[i].totalCost+"</td>";
+                            html += "<td align='right'>&#8369;&nbsp;"+numberWithCommas(data[i].cost)+"</td>";
+                            html += "<td align='right'>&#8369;&nbsp;"+numberWithCommas(data[i].totalCost)+"</td>";
                             html += "<td align='center'>N/A</td>";
                             html += "<td align='center'>"+data[i].category+"</td>";
                             html += "<td align='center'>N/A</td>";

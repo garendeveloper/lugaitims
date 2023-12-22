@@ -315,6 +315,7 @@
                 show_allRequestss(dateRequest, user_id);
                 showModal();
             })
+           
             function show_allRequestss(dateRequest, user_id)
             {
                 $.ajax({
@@ -333,16 +334,16 @@
                         while(j < length)
                         {
                             row += "<tr>";
-                            row += "<td style = 'text-align: center'><input data-qty = "+datas[j].qty+" data-type = "+datas[j].type+" data-supplieritem_id= "+datas[j].supplieritem_id+"  class = 'checkboxes' style = 'width: 20px; height: 20px;' type = 'checkbox' value = "+datas[j].movement_id+"  data-req_id = "+datas[j].requestingitem_id+" name = 'itemCheck' id = 'itemCheck' /></td>";
+                            row += "<td style = 'text-align: center'><input data-qty = "+datas[j].qty+" data-type = "+datas[j].type+" data-supplieritem_id= "+datas[j].supplieritem_id+"  class = 'checkboxes' style = 'width: 20px; height: 20px;' type = 'checkbox' value = "+datas[j].movement_id+"  name = 'itemCheck' id = 'itemCheck' /></td>";
                             row += "<td>"+datas[j].dateTransact+"</td>";
                             row += "<td>"+datas[j].item+"</td>";
                             row += "<td style = 'text-align: center'>"+datas[j].qty+"</td>";
                             row += "<td>"+datas[j].brand+"</td>";
                             var status = "<span class = 'badge badge-danger'>CANCELLED</span>";
                             var reasonforcancel = "-";
-                            if(datas[j].req_status == 1) status = "<span class = 'badge badge-primary'>REQUESTING</span>";
-                            if(datas[j].req_status == 2) status = "<span class = 'badge badge-success'>RELEASED</span>";
-                            if(datas[j].req_status == 0) reasonforcancel = datas[j].reasonforCancel == null ? "-" : datas[j].reasonforCancel;
+                            if(datas[j].type == 1) status = "<span class = 'badge badge-primary'>REQUESTING</span>";
+                            if(datas[j].type == 3) status = "<span class = 'badge badge-success'>RELEASED</span>";
+                            if(datas[j].type == 0) reasonforcancel = datas[j].reasonforCancel == null ? "-" : datas[j].reasonforCancel;
                             row += "<td style = 'text-align: center'>"+status+"</td>";
                             row += "<td style = 'text-align: center'>"+reasonforcancel+"</td>";
                             row += "</tr>";

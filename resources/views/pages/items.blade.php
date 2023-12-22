@@ -15,7 +15,7 @@
                                 <div class="row">
                                     <div class="col-sm-2">
                                         <i class="fas fa-table me-1"></i>
-                                        List of Items
+                                        List of Supplier Items
                                     </div>
                                     <div class="col-sm-7 pull-left">
                                         <div >
@@ -872,7 +872,7 @@
                 selectElement("supplier", data[0].supplier_id);
 
                 $("#supplieritem_id").val(data[0].supplieritem_id);
-                $("#item_id").val(data[0].supplieritem_id); 
+                $("#item_id").val(data[0].item_id); 
 
                 if(data[0].image != null)
                     $("#preview_image").attr('src', '/upload_images/'+data[0].image);

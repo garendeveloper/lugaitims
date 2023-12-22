@@ -7,7 +7,7 @@
             })
         </script>
      <script>
-    //   requesting_notification();
+      requesting_notification();
             function requesting_notification()
             {
                 $.ajax({
@@ -33,9 +33,9 @@
                     }
                 })
             }   
-            // setInterval(() => {
-            //     requesting_notification();
-            // }, 1000);
+            setInterval(() => {
+                requesting_notification();
+            }, 1000);
        </script>
     </body>
 </html>

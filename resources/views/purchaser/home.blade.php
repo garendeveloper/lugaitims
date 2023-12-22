@@ -128,7 +128,7 @@
                             row = "";
                             for(var i = 0; i<data.length; i++)
                             {
-                                if(data[i].type == 2)
+                                if(data[i].status == 1)
                                 {
                                     row += "<tr>";
                                     if(data[i].image != null)
@@ -179,7 +179,7 @@
                     dataType: 'json',
                     success: function(data)
                     {     
-                        var row = "<tr class = 'supplier_item' data-id ="+data['item'][0].supplieritem_id+" data-movement_id ="+data['item'][0].movement_id+" >";
+                        var row = "<tr class = 'supplier_item' data-id ="+data['item'][0].supplieritem_id+"  >";
                         if(data['item'][0].image != null)
                              row += "<td align='center' style = 'width: 1px'><img src = '/upload_images/"+data['item'][0].image+"' style = 'width: 100px; height: 100px'/></td>";
                         else

@@ -59,13 +59,12 @@ class PrintController extends Controller
     public function report_data($supplier, $datefrom, $itemtype)
     {
         $sql = DB::select('SELECT suppliers.*, items.*, movements.*, users.*, departments.*
-                        FROM suppliers, items, supplier_items, movements, users, departments, requesting_items
+                        FROM suppliers, items, supplier_items, movements, users, departments
                         WHERE suppliers.id = supplier_items.supplier_id
                         AND items.id = supplier_items.item_id
                         AND supplier_items.id = movements.supplieritem_id
+                        AND movements.user_id = users.id
                         AND departments.id = users.department_id
-                        AND requesting_items.movement_id = movements.id
-                        AND requesting_items.user_id = users.id
                         AND suppliers.id = '.$supplier.' AND DATE(movements.created_at) = "'.$datefrom.'" AND requesting_items.status = '.$itemtype.'');
         return $sql;
     } 
@@ -127,44 +126,41 @@ class PrintController extends Controller
     }
     public function get_monthlyFromDB($month, $year, $category)
     {
-        $sql = DB::select('SELECT distinct date(movements.created_at) as dateRequest, movements.cost, movements.totalCost, movements.remarks, departments.department_name, items.id as item_id, items.itemcategory_id, items.item, items.unit, items.brand, items.image, users.fullname, itemcategories.category,requesting_items.qty as quantity
-                                FROM suppliers, items, itemcategories, supplier_items, movements, users, departments, requesting_items
+        $sql = DB::select('SELECT distinct date(movements.created_at) as dateRequest,movements.*, itemcategories.*, items.*, users.*, departments.*, supplier_items.*, suppliers.*
+                                FROM suppliers, items, itemcategories, supplier_items, movements, users, departments
                                 WHERE suppliers.id = supplier_items.supplier_id
-                                AND itemcategories.id = items.itemcategory_id
+                                AND itemcategories.id = supplier_items.category_id
                                 AND items.id = supplier_items.item_id
                                 AND supplier_items.id = movements.supplieritem_id
                                 AND departments.id = users.department_id
-                                AND movements.id = requesting_items.movement_id
-                                AND users.id = requesting_items.user_id
-                                AND MONTH(movements.created_at) = "'.$month.'" AND YEAR(movements.created_at) =  "'.$year.'" AND itemcategories.id = '.$category.' AND requesting_items.status != 0');
+                                AND movements.user_id = users.id
+                                AND MONTH(movements.created_at) = "'.$month.'" AND YEAR(movements.created_at) =  "'.$year.'" AND itemcategories.id = '.$category.' AND movements.status != 0');
         return $sql;
     }
     public function get_yearlyFromDB($year, $category)
     {
-        $sql = DB::select('SELECT distinct date(movements.created_at) as dateRequest, movements.cost, movements.totalCost, movements.remarks, departments.department_name, items.id as item_id, items.itemcategory_id, items.item, items.unit, items.brand, items.image, users.fullname, itemcategories.category,requesting_items.qty as quantity
-                        FROM suppliers, items, itemcategories, supplier_items, movements, users, departments, requesting_items
+        $sql = DB::select('SELECT distinct date(movements.created_at) as dateRequest, movements.*, itemcategories.*, items.*, users.*, departments.*, supplier_items.*, suppliers.*
+                        FROM suppliers, items, itemcategories, supplier_items, movements, users, departments
                         WHERE suppliers.id = supplier_items.supplier_id
-                        AND itemcategories.id = items.itemcategory_id
+                        AND itemcategories.id = supplier_items.category_id
                         AND items.id = supplier_items.item_id
                         AND supplier_items.id = movements.supplieritem_id
                         AND departments.id = users.department_id
-                        AND movements.id = requesting_items.movement_id
-                        AND users.id = requesting_items.user_id
-                        AND YEAR(movements.created_at) =  "'.$year.'" AND itemcategories.id = '.$category.' AND requesting_items.status != 0');
+                        AND movements.user_id = users.id
+                        AND YEAR(movements.created_at) =  "'.$year.'" AND itemcategories.id = '.$category.' AND movements.status != 0');
         return $sql;
     }
     public function get_quarterlyFromDB($quarter, $year, $category)
     {
-        $sql = DB::select('SELECT distinct date(movements.created_at) as dateRequest, movements.cost, movements.totalCost, movements.remarks, departments.department_name, items.id as item_id, items.itemcategory_id, items.item, items.unit, items.brand, items.image, users.fullname, itemcategories.category, requesting_items.qty as quantity
-                                FROM suppliers, items, itemcategories, supplier_items, movements, users, departments, requesting_items
+        $sql = DB::select('SELECT distinct date(movements.created_at) as dateRequest,movements.*, itemcategories.*, items.*, users.*, departments.*, supplier_items.*, suppliers.*
+                                FROM suppliers, items, itemcategories, supplier_items, movements, users, departments
                                 WHERE suppliers.id = supplier_items.supplier_id
-                                AND itemcategories.id = items.itemcategory_id
+                                AND itemcategories.id = supplier_items.category_id
                                 AND items.id = supplier_items.item_id
                                 AND supplier_items.id = movements.supplieritem_id
+                                AND movements.user_id = users.id
                                 AND departments.id = users.department_id
-                                AND movements.id = requesting_items.movement_id
-                                AND users.id = requesting_items.user_id
-                                AND QUARTER(movements.created_at) = "'.$quarter.'" AND YEAR(movements.created_at) =  "'.$year.'" AND itemcategories.id = '.$category.' AND requesting_items.status != 0');
+                                AND QUARTER(movements.created_at) = "'.$quarter.'" AND YEAR(movements.created_at) =  "'.$year.'" AND itemcategories.id = '.$category.' AND movements.status = 1');
         return $sql;
     }
     public function get_weeklyFromDB($year, $category, $month)
@@ -174,16 +170,15 @@ class PrintController extends Controller
         {
             $week = $month[1]."".$month[2];
         }
-        $sql = DB::select('SELECT distinct date(movements.created_at) as dateRequest, movements.cost, movements.totalCost, movements.remarks, departments.department_name, items.id as item_id, items.itemcategory_id, items.item, items.unit, items.brand, items.image, users.fullname, itemcategories.category, requesting_items.qty as quantity
-                                FROM suppliers, items, itemcategories, supplier_items, movements, users, departments, requesting_items
+        $sql = DB::select('SELECT distinct date(movements.created_at) as dateRequest,movements.*, itemcategories.*, items.*, users.*, departments.*, supplier_items.*, suppliers.*
+                                FROM suppliers, items, itemcategories, supplier_items, movements, users, departments
                                 WHERE suppliers.id = supplier_items.supplier_id
-                                AND itemcategories.id = items.itemcategory_id
+                                AND itemcategories.id = supplier_items.category_id
                                 AND items.id = supplier_items.item_id
                                 AND supplier_items.id = movements.supplieritem_id
                                 AND departments.id = users.department_id
-                                AND movements.id = requesting_items.movement_id
-                                AND users.id = requesting_items.user_id
-                                AND WEEK(movements.created_at) = '.$week.' AND YEAR(movements.created_at) =  '.$year.' AND itemcategories.id = '.$category.' AND requesting_items.status != 0');
+                                AND movements.user_id = users.id
+                                AND WEEK(movements.created_at) = '.$week.' AND YEAR(movements.created_at) =  '.$year.' AND itemcategories.id = '.$category.' AND movements.status != 0');
         return $sql;
     }
     public function monthlyreport_page()
