@@ -41,7 +41,7 @@ class ItemController extends Controller
                     if($row->status==0) $html = "<span class = 'badge badge-warning'>WASTED</span>";
                     if($row->status==1) $html = "<span class = 'badge badge-primary'>ACTIVE</span>";
                     return $html;   
-                })   
+                })      
                 ->addColumn('checkboxes', function($row){
                     $html = "<input class = 'checkboxes' style = 'width: 20px; height: 20px;' type = 'checkbox' name = 'itemCheck' id = 'itemCheck' data-supplieritem_id=".$row->supplieritem_id."/>";
                     return $html;

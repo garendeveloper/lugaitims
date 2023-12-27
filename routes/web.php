@@ -13,6 +13,8 @@ use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\SupplierItemsController;
 use App\Http\Controllers\PrintController;
 use App\Http\Controllers\RequestingItemsController;
+use App\Http\Controllers\RequisitionController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -43,6 +45,8 @@ Route::group(['middleware'=>['prevent-back-history']], function(){
         Route::resource('itemcategories', ItemcategoryController::class);
         Route::resource('suppliers', SupplierController::class);
         Route::resource('requestingitems', RequestingItemsController::class);
+        Route::resource('requisitions', RequisitionController::class);
+        
 
         Route::post('/item/saveItem', [ItemController::class, 'saveItem'])->name('items.saveItem');
         Route::get('/reset/stock', [SupplierItemsController::class, 'resetStock'])->name('supplieritems.resetStock');
@@ -72,6 +76,8 @@ Route::group(['middleware'=>['prevent-back-history']], function(){
         Route::get('/admin/monthly/report/{month}/{year}/{category}', [PrintController::class, 'get_report']);
         Route::get('/admin/monthly/report/print/{month}/{year}/{category}', [PrintController::class, 'get_reportPrint']);
         Route::get('/admin/get/categoriesbyjson', [ItemcategoryController::class, 'get_categoriesByJson'])->name('admin.get_categories');
+    
+        Route::get('/datatables/requesitions', [RequisitionController::class, 'get_datatable'])->name('datatables.requesitions');
     });
 
     Route::group(['middleware'=>['purchaser']], function(){

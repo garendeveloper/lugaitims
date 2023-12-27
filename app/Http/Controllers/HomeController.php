@@ -70,17 +70,17 @@ class HomeController extends Controller
     }
     public function count_noOfDelivered()
     {
-        $sql = RequestingItems::where('status', 2)->count();
+        $sql = Movements::where('type', 3)->count();
         return $sql;
     }
     public function count_noOfRequisition()
     {
-        $sql = RequestingItems::where('status', 1)->count();
+        $sql = Movements::where('type', 1)->count();
         return $sql;
     }
     /**
      * Show the form for creating a new resource.
-     */
+     */ 
     public function create()
     { 
         //

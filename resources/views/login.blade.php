@@ -78,7 +78,7 @@
                             <form method = "post"  action="{{ route('user.login') }}">
                             @csrf
                         <div class="form-group mt-3">
-                            <input type="text" class="form-control" value="{{ old('username') }}" autocomplete="off" name="username"required>
+                            <input type="text" class="form-control" value="{{ old('username') }}" autocomplete="off" name="username"required autofocus>
                             <label class="form-control-placeholder" for="username">Username</label>
                               @error('username')
                                         <span class="badge badge-danger">{{ $message }}</span>
