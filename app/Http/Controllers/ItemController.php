@@ -13,6 +13,7 @@ use DB;
 use Illuminate\Support\Facades\Auth;
 use App\Models\RequestingItems;
 use Carbon\Carbon;
+use Response;
 
 class ItemController extends Controller
 {
@@ -72,6 +73,24 @@ class ItemController extends Controller
         return $sql;
     }
     public function get_allSupplierItems()
+    {
+        $sql = DB::select('SELECT supplier_items.id as supplieritem_id, items.*, itemcategories.*, suppliers.*, supplier_items.*
+                        FROM items, suppliers, supplier_items, itemcategories
+                        WHERE itemcategories.id = supplier_items.category_id 
+                        AND items.id = supplier_items.item_id
+                        AND suppliers.id = supplier_items.supplier_id
+                        AND supplier_items.status = 1');
+        return response()->json($sql);
+    }
+    public function get_allUsersByJson()
+    {
+        $sql = DB::select('select users.*, users.id as user_id, positions.*, departments.*
+                            from positions, departments, users
+                            where departments.id = users.department_id
+                            and positions.id = users.position_id');
+       return Response::json($sql);
+    }
+    public function supplier_allItems()
     {
         $sql = DB::select('SELECT supplier_items.id as supplieritem_id, items.*, itemcategories.*, suppliers.*, supplier_items.*
                         FROM items, suppliers, supplier_items, itemcategories

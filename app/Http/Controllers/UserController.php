@@ -100,6 +100,7 @@ class UserController extends Controller
     {
         return User::all();
     }
+  
     public function get_allUsersData($department_id)
     {
         $sql = DB::select('select users.*, users.id as purchaser_id, positions.*, departments.*

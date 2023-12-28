@@ -73,14 +73,34 @@
                 </ul>
                 
                 <!-- Modal Body - Your Form Goes Here -->
-                <form id = "department-form" method = "post" action="">
+                <form id = "request-form" method = "post" action="">
                     <input autocomplete="off" type="hidden" name = "_token" value = "{{ csrf_token() }}">
-                    <input autocomplete="off" type="hidden" name = "dept_id" id = "dept_id" value = "">
+                    <input autocomplete="off" type="hidden" name = "movement_id" id = "movement_id" value = "">
                     <div class="modal-body">
                         <div class="form-group">
-                            <label for="department">Department</label>
-                            <input autocomplete="off" onkeyup="$(this).removeClass('is-invalid'); $('#department-msg').html('');" type="text" name = "department_name" class="form-control" id="department_name" placeholder="Enter your department">
+                            <label for="department">Supplier Item</label>
+                            <select class = "form-control" name="supplieritem" id="supplieritem">
+                                
+                            </select>
                             <span class = "v-error" style = "color:red;" id = "department-msg"></span>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="qty">Quantity</label>
+                                    <input autocomplete="off" onkeyup="$(this).removeClass('is-invalid'); $('#department-msg').html('');" type="text" name = "qty" class="form-control" id="qty" placeholder="Enter the quantity">
+                                    <span class = "v-error" style = "color:red;" id = "qty-msg"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="requestor">Requestor</label>
+                                    <select class = "form-control" name="requestor" id="requestor">
+                                
+                                </select>
+                                    <span class = "v-error" style = "color:red;" id = "requestor-msg"></span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <!-- Modal Footer with Close Button -->
@@ -100,6 +120,8 @@
                     'X-CSRF-Token':$("input[name=_token").val()
                 }
             })
+            show_allSupplierItems();
+            show_allUsers();
             $("#s_reqs").addClass("active");
             document.title = "LNHS Departments";
             show_datatable();
@@ -117,6 +139,41 @@
                     oSettings.aiDisplay = oSettings.aiDisplayMaster.slice();
                     table.fnDraw();
                 });
+            }
+            function show_allSupplierItems()
+            {
+                $.ajax({
+                    type: 'get',
+                    url: '/datatable/items/get_allItems',
+                    dataType: 'json',
+                    success: function(data)
+                    {
+                        var option = "<option>--Please select an item here--</option>";
+                        for(var i = 0; i<data.length; i++)
+                        {
+                            option += "<option value = "+data[i].supplieritem_id+">"+data[i].item+" - "+data[i].name+"</option>";
+                        }
+                        $("#supplieritem").html(option);
+                    }
+                })
+            }
+            function show_allUsers()
+            {
+                $.ajax({
+                    url: '{{ route("users.get_allUsers") }}',
+                    method: 'get',
+                    dataType: 'json',
+                    success: function(data)
+                    {
+                        console.log(data)
+                        var option = "<option>--Please select a requestor here--</option>";
+                        for(var i = 0; i<data.length; i++)
+                        {
+                            option += "<option value = "+data[i].user_id+">"+data[i].fullname+" - "+data[i].department_name+"</option>";
+                        }
+                        $("#requestor").html(option);
+                    }
+                })
             }
             function AutoReload() 
             {
@@ -177,7 +234,7 @@
 
             $("#open_departmentModal").on('click', function(e){
                 e.preventDefault();
-                $("#req-modalLabel").text('Create New Department')
+                $("#req-modalLabel").text('Create New Request')
                 resetInputFields();
                 showModal();
             })
@@ -211,20 +268,20 @@
             }
             function resetInputFields()
             {
-                $("#department-form")[0].reset();
+                $("#request-form")[0].reset();
                 $("#dept_id").val("");
                 $(".v-error").html("");
                 $("input").removeClass('is-invalid');
                 $("select").removeClass('is-invalid');
             }           
-            $("#department-form").on('submit', function(e){
+            $("#request-form").on('submit', function(e){
                 e.preventDefault();
                 if(confirm("Are you sure you want to add this department?"))
                 {
                     var formData = serializeForm($(this).serializeArray());
                     console.log(formData)
                     $.ajax({
-                        url: '{{ route("departments.store") }}',
+                        url: '{{ route("requisitions.store") }}',
                         type: 'post',
                         data: formData,
                         dataType: 'json',
@@ -240,11 +297,8 @@
                             else
                             {
                                 $.each(resp.messages, function(key,value) {
-                                   if(key == "department_name")
-                                   {
-                                     $("#department_name").addClass('is-invalid');
-                                     $("#department-msg").html(value);
-                                   }
+                                   $("#"+key).addClass('is-invalid');
+                                   $("#"+key+"-msg").html(value);
                                 });
                             }
                         },
@@ -264,18 +318,20 @@
             }
             function show_allValue(data)
             {
-                $("#dept_id").val(data.id);
-                $("#department_name").val(data.department_name);
+                $("#movement_id").val(data[0].id);
+                $("#supplieritem").val(data[0].supplieritem_id);
+                $("#qty").val(data[0].qty);
+                $("#requestor").val(data[0].user_id);
             }
             $("#table tbody ").on('click', '.edit', function(){
-                var department_id = $(this).data('id');
+                var movement_id = $(this).data('id');
                 $.ajax({
                     type: 'get',
-                    url: "/departments/" + department_id + "/edit",
+                    url: "/requisition/" + movement_id + "/edit",
                     dataType: 'json',
                     success: function(data)
                     {
-                        $("#req-modalLabel").text('Edit department');    
+                        $("#req-modalLabel").text('Edit Request');    
                         show_allValue(data);
                         showModal();
                     },
