@@ -150,7 +150,8 @@ class ItemController extends Controller
                 'item'=>$request->item,
                 'brand'=>$request->brand,
             ])->first();
-            
+         
+
             $image_name = "";
             $image = $request->file('image');
             $temp = "";
@@ -160,7 +161,7 @@ class ItemController extends Controller
                 $image_name = $image->getClientOriginalName();
                 $image->move(public_path('upload_images'), $image_name);
             }
-            if($request->item_id !== "")
+            if(!empty($request->item_id))
             {
                 $toUpdate = [];
                 if(is_null($image))
@@ -185,10 +186,11 @@ class ItemController extends Controller
                         ->where('id',$request->item_id)
                         ->update($toUpdate);
                 $item_id = $request->item_id;
+
             }
             else
             {
-                if(is_null($item))
+                if($item === null)
                 {
                     $item = new Item;
                     $item->item = strtoupper($request->item);
@@ -199,12 +201,27 @@ class ItemController extends Controller
                     $item_id = $item->id;
                 }
                 else {
+                    $item_id = $item->id;
                     $temp = 1;
                     $status = false;
-                    $messages = "Item have been already exists!";
+                    $messages = "The item already exists!";
                 }
             }
            
+               
+            $isExists = SupplierItem::where([
+                'item_id'=>$item_id,
+                'category_id'=>$request->itemcategory_id,
+                'supplier_id'=>$request->supplier,
+            ])->exists();
+            
+            if($isExists)
+            {
+                $item_id = $item->id;
+                $temp = 2;
+                $status = false;
+                $messages = "The item already exists!";
+            }
             $supplieritem = SupplierItem::updateOrCreate(['id'=>$request->supplieritem_id], [
                 'supplier_id' => $request->supplier,
                 'item_id' => $item_id,
@@ -222,7 +239,15 @@ class ItemController extends Controller
             if($temp == 1) 
             {
                 $status = false;
-                $messages = ['item'=>"Item have been already exists!",'brand'=>"Item have been already exists!"];
+                $messages = ['item'=>$messages,'brand'=>$messages];
+            }
+            if($temp == 2) 
+            {
+                $status = false;
+                $messages = ['item'=>$messages,
+                            'brand'=>$messages,
+                            'itemcategory_id'=>$messages,
+                            'supplier'=>$messages];
             }
             else 
             {
