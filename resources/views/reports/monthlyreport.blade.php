@@ -125,6 +125,11 @@
                             @endforeach
                         @endif
                     </tbody>
+                    <tfoot>
+                        <tr align="center">
+                            <td colspan = "14">{{ count($data) }} Items in Total</td>
+                        </tr>
+                    </tfoot>
                 </table> <br><br>
                 <div class="row">
                     <div class="col-md-6">

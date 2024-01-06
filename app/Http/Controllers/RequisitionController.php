@@ -6,6 +6,9 @@ use App\Models\Requisition;
 use Illuminate\Http\Request;
 use Yajra\Datatables\Datatables;
 use DB;
+use App\Models\Movements;
+use App\Models\Supplier_Items as SupplierItem;
+use Illuminate\Support\Facades\Validator;
 
 class RequisitionController extends Controller
 {
@@ -21,7 +24,7 @@ class RequisitionController extends Controller
         return Datatables::of($this->get_data())
                         ->addColumn('status', function($row){
                             $html = "<span class = 'badge badge-danger'>CANCELLED</span>";
-                            if($row->type == 1) $html = "<span class = 'badge badge-primary'>REQUESTING</span>";
+                            if($row->type == 6) $html = "<span class = 'badge badge-primary'>REQUESTING</span>";
                             if($row->type == 2) $html = "<span class = 'badge badge-success'>APPROVED</span>";
                             return $html;  
                         })
@@ -56,7 +59,37 @@ class RequisitionController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator  = Validator::make($request->all(), [
+            'supplieritem' => 'required',
+            'qty'=>'required|min:1',
+            'requestor'=>'required',
+        ]);
+        $status=false; $message="";
+        if($validator->fails())
+        {
+            $message = $validator->messages();
+        }
+        else
+        {
+            $supplieritem = SupplierItem::find($request->supplieritem);
+            $supplieritem->stock = $supplieritem->stock-$request->qty;
+            $supplieritem->update();
+            
+            Movements::create([
+                'supplieritem_id'=>$request->supplieritem,
+                'user_id'=>$request->requestor,
+                'qty'=>$request->qty,
+                'notification'=>1,
+                'status'=>1,
+                'type'=>1,
+            ]);
+            $message='Request has been successfully processed!';
+        }
+
+        return response()->json([
+            'status'=>true,
+            'message'=>$message,
+        ]);
     }
 
     /**

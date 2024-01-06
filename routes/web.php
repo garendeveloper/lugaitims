@@ -35,6 +35,7 @@ Route::group(['middleware'=>['prevent-back-history']], function(){
 
     Route::group(['middleware'=>['role']], function () {
         Route::get('/users/get_allUsers', [ItemController::class, 'get_allUsersByJson'])->name('users.get_allUsers');
+        Route::get('/datatable/items/get_allItems', [ItemController::class, 'supplier_allItems']);
         Route::get('/items/units', [ItemController::class, 'get_allUnits'])->name('items.units');
         Route::get('/items/brands', [ItemController::class, 'get_allBrands'])->name('items.brands');
  
@@ -61,9 +62,7 @@ Route::group(['middleware'=>['prevent-back-history']], function(){
         Route::get('/datatables/purchasedItems', [ItemController::class, 'get_allDataInDatatables'])->name('datatables.purchasedItems');
         Route::get('/datatables/departments', [DepartmentController::class, 'get_allDataInDatatables'])->name('datatables.departments');
         Route::get('/datatables/users/{id}', [UserController::class, 'get_allDataInDatatables'])->name('datatables.users');
-        Route::get('/datatable/items/get_allItems', [ItemController::class, 'supplier_allItems']);
-       
-        
+
         Route::get('/print/inspection/report/{id}', [PrintController::class, 'inspectionReport']);
         Route::get('/print/filter/report', [PrintController::class, 'filterReport'])->name('print.filter');
         Route::get('/print/filter/report/page/{array}', [PrintController::class, 'filterPage']);

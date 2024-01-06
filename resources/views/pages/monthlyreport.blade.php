@@ -30,6 +30,7 @@
                                         <select name="month" id="month" class = "form-control">
                                             <option value="">--SELECT HERE --</option>
                                             <option value="N"> -- SELECT FOR YEARLY --</option>
+                                            <option value="WEEKLY">--SELECT WEEKLY--</option>
                                             <option value=""> -- SELECT BY MONTH --</option>
                                             <option value="1">JANUARY</option>
                                             <option value="2">FEBRUARY</option>
@@ -48,7 +49,6 @@
                                             <option value="Q2">2ND</option>
                                             <option value="Q3">THIRD</option>
                                             <option value="Q4">FOURTH</option>
-                                            <option value="weekly">WEEKLY<option>
                                         </select>
                                         <select name="" id=""></select>
                                     </div>
@@ -115,7 +115,7 @@
         $("#tbl_report").hide();
         $("#a_print").hide();
         $('#month').change(function(){
-            if($('#month option:selected').text() == "WEEKLY"){
+            if($('#month option:selected').val() == "WEEKLY"){
                 $('html #month').after("<label>Enter the week<input id = 'weeknumber'></input></label>");
             }
             else{

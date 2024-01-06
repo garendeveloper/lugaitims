@@ -54,18 +54,23 @@ class PrintController extends Controller
     {
         $unserializeArray = unserialize($data);
         $data = $this->report_data($unserializeArray['_supplier'], $unserializeArray['datefrom'], $unserializeArray['itemtype']);
-        return view('pages.requisition', compact('data'));
+        $userinfo = DB::select('select users.*, users.id as purchaser_id, positions.*, departments.*
+                                from positions, departments, users
+                                where departments.id = users.department_id
+                                and positions.id = users.position_id
+                                and users.id = '.$data[0]->user_id.'');
+        return view('pages.requisition', compact('data', 'userinfo'));
     }
     public function report_data($supplier, $datefrom, $itemtype)
     {
-        $sql = DB::select('SELECT suppliers.*, items.*, movements.*, users.*, departments.*
+        $sql = DB::select('SELECT suppliers.*, items.*, movements.*, users.*, departments.*, supplier_items.*
                         FROM suppliers, items, supplier_items, movements, users, departments
                         WHERE suppliers.id = supplier_items.supplier_id
                         AND items.id = supplier_items.item_id
                         AND supplier_items.id = movements.supplieritem_id
                         AND movements.user_id = users.id
                         AND departments.id = users.department_id
-                        AND suppliers.id = '.$supplier.' AND DATE(movements.created_at) = "'.$datefrom.'" AND requesting_items.status = '.$itemtype.'');
+                        AND users.id = '.$supplier.' AND DATE(movements.created_at) = "'.$datefrom.'" AND movements.type = '.$itemtype.'');
         return $sql;
     } 
     public function get_report($month, $year, $category)

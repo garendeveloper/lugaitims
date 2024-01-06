@@ -165,7 +165,6 @@
                     dataType: 'json',
                     success: function(data)
                     {
-                        console.log(data)
                         var option = "<option>--Please select a requestor here--</option>";
                         for(var i = 0; i<data.length; i++)
                         {
@@ -279,7 +278,6 @@
                 if(confirm("Are you sure you want to add this department?"))
                 {
                     var formData = serializeForm($(this).serializeArray());
-                    console.log(formData)
                     $.ajax({
                         url: '{{ route("requisitions.store") }}',
                         type: 'post',
