@@ -472,6 +472,11 @@
                         </div>
 
                     </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <button class = "btn btn-danger btn-block btn-sm"  data-dismiss="modal"><i class = "fas fa-times"></i>&nbsp;Close</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -815,7 +820,7 @@
                 if(confirm("Are you sure you want to add this item?"))
                 {
                     var formData = new FormData(this);
-                    console.log(formData);  
+                    console.log(serializeForm(formData));  
                     $.ajax({
                         url: '{{ route("items.store") }}',
                         type: 'post',
