@@ -68,7 +68,7 @@
                 <div class="col-md-12">
                     <div class="card">
                         <div class="card-header">
-                            <h4>AVAILABLE ITEMS <span class = "badge badge-secondary" id = "no_allitems"></span></h4>
+                            <h4>AVAILABLE ITEMS</h4>
                         </div>
                         <div class="card-body">
                             <div class="input-group col-md-12">
@@ -123,7 +123,6 @@
                     success: function(data)
                     {
                         var row = "";
-                        $("#no_allitems").html(data.length);
                         if(data.length > 0)
                         {
                             row = "";

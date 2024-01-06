@@ -33,11 +33,11 @@
             &nbsp;&nbsp;
             Manage Items
         </a>
-        <a class="nav-link" id = "s_reqs" href="{{ route('requisitions.index') }}" >
+        <!-- <a class="nav-link" id = "s_reqs" href="{{ route('requisitions.index') }}" >
             <div class="sb-nav-link-icon"><i class="fas fa-shopping-cart"></i></div>
             &nbsp;&nbsp;
             Requisition
-        </a>
+        </a> -->
         <a class="nav-link" id = "s_ritems" href="{{ route('requestingitems.index') }}" >
             <div class="sb-nav-link-icon"><i class="fas fa-shopping-cart"></i></div>
             &nbsp;&nbsp;

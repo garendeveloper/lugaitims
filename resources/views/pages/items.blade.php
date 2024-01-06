@@ -25,10 +25,6 @@
                                                 <i class = "fas fa-cart-plus"></i>&nbsp;&nbsp;
                                                 Create New Item
                                             </button>
-                                            <button id = "btn_filterModal" type = "button" class = "btn btn-secondary btn-sm">
-                                                <i class = "fas fa-file"></i>&nbsp;&nbsp;
-                                                Report
-                                            </button>
                                         </div>
                                     </div>
                                     <div class="col-sm-3 pull-right" style = "text-align: right">

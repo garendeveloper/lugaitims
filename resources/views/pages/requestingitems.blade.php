@@ -12,11 +12,21 @@
                         <div class="card ">
                             <div class="card-header">
                                 <div class="row">
-                                    <div class="col-sm-6">
+                                    <div class="col-sm-4">
                                         <i class="fas fa-table me-1"></i>
                                         Daily Listing of Requested Items 
                                     </div>
-                                    <div class="col-sm-6 pull-right" style = "text-align: right">
+                                    <div class="col-sm-4">
+                                        <button id = "open_departmentModal" type = "button" class = "btn btn-secondary btn-sm">
+                                            <i class = "fas fa-plus"></i>
+                                            Create New Requisition of Item
+                                        </button>
+                                        <button id = "btn_filterModal" type = "button" class = "btn btn-secondary btn-sm">
+                                            <i class = "fas fa-file"></i>&nbsp;&nbsp;
+                                            Report
+                                        </button>
+                                    </div>
+                                    <div class="col-sm-4 pull-right" style = "text-align: right">
                                         <div id="export_buttons">
 
                                         </div>
@@ -115,9 +125,116 @@
         </div>
     </div>
 
+      <!-- Modal -->
+      <div class="modal fade" id="req-modal"   tabindex="-1" role="dialog" aria-labelledby="req-modalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document" >
+            <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h5 class="modal-title" id="req-modalLabel">Form Modal</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <ul id = "error-messages" style = "color: red"> 
+
+                </ul>
+                
+                <!-- Modal Body - Your Form Goes Here -->
+                <form id = "request-form" method = "post" action="">
+                    <input autocomplete="off" type="hidden" name = "_token" value = "{{ csrf_token() }}">
+                    <input autocomplete="off" type="hidden" name = "movement_id" id = "movement_id" value = "">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="department">Supplier Item</label>
+                            <select class = "form-control" name="supplieritem" id="supplieritem">
+                                
+                            </select>
+                            <span class = "v-error" style = "color:red;" id = "department-msg"></span>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="qty">Quantity</label>
+                                    <input autocomplete="off" onkeyup="$(this).removeClass('is-invalid'); $('#department-msg').html('');" type="text" name = "qty" class="form-control" id="qty" placeholder="Enter the quantity">
+                                    <span class = "v-error" style = "color:red;" id = "qty-msg"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="requestor">Requestor</label>
+                                    <select class = "form-control" name="requestor" id="requestor">
+                                
+                                </select>
+                                    <span class = "v-error" style = "color:red;" id = "requestor-msg"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Modal Footer with Close Button -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal"><i class = "fas fa-times"></i>&nbsp; Close</button>
+                        <button type="submit" class="btn btn-primary btn-sm"><i class="fas fa-check"></i>&nbsp; Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    
+    <!-- Filter Modal -->
+    <div class="modal fade" id="filter-modal"   tabindex="-1" role="dialog" aria-labelledby="filter-modalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg " role="document" >
+            <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h5 class="modal-title" id="filter-modalLabel">Form Modal</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="" id = "filter-form">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="datefrom">Item Type</label>
+                                    <select name="itemtype" id="itemtype" style = "text-transform: uppercase" class = "form-control" onchange="$(this).removeClass('is-invalid'); $('#itemtype-msg').html('');">
+                                        <option value="">--Select Item Type Here--</option>
+                                        <option value="1">Requisition</option>
+                                        <option value="3">Released</option>
+                                        <option value="5">Cancelled</option>
+                                    </select>
+                                    <span class = "v-error" style = "color:red;" id = "itemtype-msg"></span>
+                                </div> 
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="datefrom">Requestor</label>
+                                    <select name="_supplier" id="_supplier" class = "form-control" onchange="$(this).removeClass('is-invalid'); $('#_supplier-msg').html('');">
+                                       
+                                    </select>
+                                    <span class = "v-error" style = "color:red;" id = "_supplier-msg"></span>
+                                </div> 
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="datefrom">Date</label>
+                                    <input autocomplete="off" oninput="$(this).removeClass('is-invalid'); $('#datefrom-msg').html('');" type="date" maxlength = "10"  name = "datefrom" id="datefrom"  class="form-control">
+                                    <span class = "v-error" style = "color:red;" id = "datefrom-msg"></span>
+                                </div> 
+                            </div>
+                            <div class="col-md-12">
+                                <button class = "btn btn-secondary btn-block btn-sm" type = "submit"><i class = "fas fa-print"></i>&nbsp;Print Report</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
     @include('navigation/footer')
     <script>
-    
         function reset_notif(dateRequest, user_id)
         {
             $.ajax({
@@ -142,6 +259,39 @@
                 }
             })
         }
+         //Filter Module
+         $("#btn_filterModal").click(function(e){
+            $("#filter-modal").find('.modal-title').text('Filter Report');
+            $("#filter-modal").modal({
+                backdrop: 'static',
+                keyboard: false,
+            });
+        })
+        function show_allSuppliers()
+        {
+            $.ajax({
+                type: 'get',
+                url: "{{ route('suppliers.allSuppliers') }}",
+                dataType: 'json',
+                success: function(data)
+                {
+                    var option = "<optgroup>";
+                    option += "<option value = ''>--Please Select Here --</option>";
+                    for(var i = 0; i<data.length; i++)
+                    {
+                        option += "<option value = "+data[i].id+">"+data[i].name+"</option>";
+                    }
+                    option += "</optgroup>";
+                    $("#supplier").html(option);
+                    $("#_supplier").html(option);
+                },
+                error: function(data)
+                {
+                    alert("Server Error.");
+                }
+            })
+        }
+       
     </script>
     <script  type="text/javascript">
         $(document).ready(function(){
@@ -150,6 +300,142 @@
                     'X-CSRF-Token':$("input[name=_token").val()
                 }
             })
+            show_allSupplierItems();
+            show_allUsers();
+            $("#filter-form").submit(function(e){
+                e.preventDefault();
+                
+                var data = $(this).serializeArray();
+                $.ajax({
+                    type: 'get',
+                    url: '{{ route("print.filter") }}',
+                    data: serializeForm(data),
+                    dataType: 'json',
+                    success: function(response)
+                    {
+                        if(response.status == 1)
+                        {
+                            window.open(response.url, "_blank");
+                        }
+                        else if(response.status == 2) alert(response.messages);
+                        else
+                        {
+                            $.each(response.messages, function(key, value){
+                                $("#"+key).addClass('is-invalid');
+                                $("#"+key+"-msg").html(value);
+                            })
+                        }
+                    },
+                    error: function(resp)
+                    {
+                        alert("Server Error.");
+                    }
+                })
+            })
+            function show_allSupplierItems()
+            {
+                $.ajax({
+                    type: 'get',
+                    url: '/datatable/items/get_allItems',
+                    dataType: 'json',
+                    success: function(data)
+                    {
+                        var option = "<option>--Please select an item here--</option>";
+                        for(var i = 0; i<data.length; i++)
+                        {
+                            option += "<option value = "+data[i].supplieritem_id+">"+data[i].item+" - "+data[i].name+"</option>";
+                        }
+                        $("#supplieritem").html(option);
+                    }
+                })
+            }
+            function show_allUsers()
+            {
+                $.ajax({
+                    url: '{{ route("users.get_allUsers") }}',
+                    method: 'get',
+                    dataType: 'json',
+                    success: function(data)
+                    {
+                        var option = "<option>--Please select a requestor here--</option>";
+                        for(var i = 0; i<data.length; i++)
+                        {
+                            option += "<option value = "+data[i].user_id+">"+data[i].fullname+" - "+data[i].department_name+"</option>";
+                        }
+                        $("#requestor").html(option);
+                        $("#_supplier").html(option);
+                    }
+                })
+            }
+            
+            $("#open_departmentModal").on('click', function(e){
+                e.preventDefault();
+                $("#req-modalLabel").text('Create New Request')
+                resetInputFields1();
+                showModal1();
+            })
+            $("#search").on("keyup", function() {
+                var value = $(this).val().toLowerCase();
+                $("#table tbody tr").filter(function() {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+            function resetInputFields1()
+            {
+                $("#request-form")[0].reset();
+                $("#dept_id").val("");
+                $(".v-error").html("");
+                $("input").removeClass('is-invalid');
+                $("select").removeClass('is-invalid');
+            }           
+            $("#request-form").on('submit', function(e){
+                e.preventDefault();
+                if(confirm("Are you sure you want to add this department?"))
+                {
+                    var formData = serializeForm($(this).serializeArray());
+                    $.ajax({
+                        url: '{{ route("requisitions.store") }}',
+                        type: 'post',
+                        data: formData,
+                        dataType: 'json',
+                        success: function(resp)
+                        {
+                            if(resp.status)
+                            {
+                                AutoReload();
+                                resetInputFields1();
+                                $("#req-modal").modal('hide');
+                                alert(resp.messages);
+                            }
+                            else
+                            {
+                                $.each(resp.messages, function(key,value) {
+                                   $("#"+key).addClass('is-invalid');
+                                   $("#"+key+"-msg").html(value);
+                                });
+                            }
+                        },
+                        error: function(message)
+                        {
+                            alert("Server Error");
+                        }
+                    })
+                }
+            })
+            function showModal1()
+            {
+                $("#req-modal").modal({
+                    backdrop: 'static',
+                    keyboard: false,
+                })
+            }
+            function show_allValue1(data)
+            {
+                $("#movement_id").val(data[0].id);
+                $("#supplieritem").val(data[0].supplieritem_id);
+                $("#qty").val(data[0].qty);
+                $("#requestor").val(data[0].user_id);
+            }
             $("#itemAll").click(function(e){
                 var table = $(e.target).closest("table");
                 $("td input:checkbox", table).prop('checked', this.checked)

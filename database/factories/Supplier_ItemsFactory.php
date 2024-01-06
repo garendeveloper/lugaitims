@@ -30,6 +30,7 @@ class Supplier_ItemsFactory extends Factory
             'quantity' => $quantity,
             'cost'=> $cost,
             'totalCost' => $totalCost,
+            'status'=>1,
         ];
     }
 }

@@ -356,7 +356,7 @@ class ItemController extends Controller
 
         return response()->json([
             'status'=>true,
-            'message'=>'You items has been successfully pr ocessed!'
+            'message'=>'Your items has been successfully processed!'
         ]);
     }
 }
