@@ -23,6 +23,7 @@
 
  @include('scripts/clock')
  <!-- <script src="{{ asset('admintemplate/js/jquery-ajax.min.js') }}"></script> -->
+  <!-- <script src="{{ asset('jquery.slim.min.js') }}"></script>  -->
  <script src="{{ asset('admintemplate/js/jquery.datatables.min.js') }}" crossorigin="anonymous"></script>
  <link href="{{ asset('admintemplate/css/datatables.min.css')}}" rel="stylesheet" />
  <script src="{{ asset('admintemplate/js/datatables-buttons.min.js') }}" crossorigin="anonymous"></script>
