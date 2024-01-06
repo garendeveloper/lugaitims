@@ -2,6 +2,8 @@
 <html>
 <head>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+ 
+
     <style>
 
 
@@ -70,8 +72,23 @@
                 margin-top: 10px;
                 height: 1500px; /* Used in this example to enable scrolling */
             }
+            .wrapper {
+                display: flex;
+                justify-content: space-around;
+            }
+
+            .box {
+                flex: 0 0 40%;
+                text-align: center;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+             border: 1px dashed red;
+            }
+
+            button { margin-top: auto; }
     </style>
-    <div class="topnav">
+    <div class="topnav" id="navbar_top">
         <a id = "home" href="{{ route('purchaser.home') }}">Home</a>
         <a href="#" id="btn_myRequestItems">Transactions</a>
         <a href="#" id="btn_myCart">My Requested Items <span class = "badge badge-primary" id = "req_notif" style = "font-size: 10px"></span></a>
@@ -129,6 +146,7 @@
                 <div class="modal-body">
                     <div class="card">
                         <div class="card-body">
+
                             <table  id = "tbl_purchases" class = "table-bordered table-hovered">
                                 <thead>
                                     <tr>

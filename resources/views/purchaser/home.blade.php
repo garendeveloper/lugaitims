@@ -79,6 +79,10 @@
                                 </button>
                                 </span>
                             </div> 
+                            <div class="wrapper">
+                            
+                            </div>
+
                             <div class="table-responsive">
                                 <table class = "table-stripped" id = "tbl_items">
                                     <thead>
@@ -98,6 +102,18 @@
         </main>
     </body>
     <script type = "text/javascript">
+        document.addEventListener("DOMContentLoaded", function(){
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 50) {
+                    document.getElementById('navbar_top').classList.add('fixed-top');
+                    navbar_height = document.querySelector('.navbar').offsetHeight;
+                    document.body.style.paddingTop = navbar_height + 'px';
+                } else {
+                    document.getElementById('navbar_top').classList.remove('fixed-top');
+                    document.body.style.paddingTop = '0';
+                } 
+            });
+        }); 
          $(document).ready(function(e){
             show_allItems();
             var req_notif = 0;
@@ -123,7 +139,6 @@
                     success: function(data)
                     {
                         var row = "";
-                        $("#no_allitems").html(data.length);
                         if(data.length > 0)
                         {
                             row = "";
