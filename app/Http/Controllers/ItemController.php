@@ -208,20 +208,23 @@ class ItemController extends Controller
                 }
             }
            
-               
-            $isExists = SupplierItem::where([
-                'item_id'=>$item_id,
-                'category_id'=>$request->itemcategory_id,
-                'supplier_id'=>$request->supplier,
-            ])->exists();
-            
-            if($isExists)
+            if(is_null($request->item_id))
             {
-                $item_id = $item->id;
-                $temp = 2;
-                $status = false;
-                $messages = "The item already exists!";
+                $isExists = SupplierItem::where([
+                    'item_id'=>$item_id,
+                    'category_id'=>$request->itemcategory_id,
+                    'supplier_id'=>$request->supplier,
+                ])->exists();
+                
+                if($isExists)
+                {
+                    $item_id = $item->id;
+                    $temp = 2;
+                    $status = false;
+                    $messages = "The item already exists!";
+                }
             }
+           
             $supplieritem = SupplierItem::updateOrCreate(['id'=>$request->supplieritem_id], [
                 'supplier_id' => $request->supplier,
                 'item_id' => $item_id,
