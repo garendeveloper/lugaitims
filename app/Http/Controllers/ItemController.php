@@ -29,8 +29,8 @@ class ItemController extends Controller
        return Datatables::of($this->get_requestedItems())
                 ->addColumn('status', function($row) {
                     $html = "<span class = 'badge badge-danger'>CANCELLED</span>";
-                    if($row->req_status == 1) $html = "<span class = 'badge badge-primary'>REQUESTING</span>";
-                    if($row->req_status == 2) $html = "<span class = 'badge badge-success'>APPROVED</span>";
+                    if($row->type == 1) $html = "<span class = 'badge badge-primary'>REQUESTING</span>";
+                    if($row->type == 3) $html = "<span class = 'badge badge-success'>APPROVED</span>";
                     return $html;  
                 })->rawColumns(['status'])->make(true);
     }
@@ -319,16 +319,14 @@ class ItemController extends Controller
     {
         $user_id = Auth::user()->id;
 
-        $requestItem = DB::select('select requesting_items.status as req_status, items.*, supplier_items.*, suppliers.*, movements.*, users.*, users.id as purchaser_id, positions.*, departments.*, requesting_items.*, requesting_items.id as requestingitem_id, requesting_items.created_at as dateTransact
-                                from positions, departments, users, requesting_items, movements, items, supplier_items, suppliers
+        $requestItem = DB::select('select items.*, supplier_items.*, suppliers.*, movements.*, users.*, users.id as purchaser_id, positions.*, departments.*, movements.created_at as dateTransact
+                                from positions, departments, users, movements, items, supplier_items, suppliers
                                 where departments.id = users.department_id
                                 and positions.id = users.position_id
-                                and users.id = requesting_items.user_id
                                 and items.id = supplier_items.item_id
                                 and suppliers.id = supplier_items.supplier_id
                                 and supplier_items.id = movements.supplieritem_id
-                                and movements.id = requesting_items.movement_id
-                                and users.id = requesting_items.user_id
+                                and users.id = movements.user_id
                                 and users.id = '.$user_id.'');
 
         return $requestItem;

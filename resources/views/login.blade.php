@@ -50,8 +50,69 @@
     visibility: visible;
     transform: scaleX(1);
   }
+  
+  .ftco-section {
+    padding: 1rem 0;
+}
 </style>
+<style>
+        .topnav {
+            overflow: hidden;
+            background-color: #333;
+        }
+        .topnav a {
+            float: left;
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+            font-size: 17px;
+        }
+        .topnav a:hover {
+            background-color: #ddd;
+            color: black;
+        }
+        .topnav a.active {
+            background-color: #2C4B5F;
+            color: white;
+        }
+        .topnav-right {
+            float: center;
+            text-align:center;
+            color: white;
+            font-family: "algerian";
+            height: 70px;
+        }
+        .topnav-right .logout:hover{
+            background-color: darkred;
+            color: white;
+        }
+        main{
+            padding: 16px;
+            margin-top: 10px;
+            height: 1500px; 
+        }
+        .wrapper {
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .box {
+            flex: 0 0 40%;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+          border: 1px dashed red;
+        }
+
+    </style>
     <body>
+    <div class="topnav" id="navbar_top">
+        <div class="topnav-right">
+           <H5 style = "color: white; font-size: 40px; font-family: Tahoma">WELCOME TO LUGAIT SENIOR HIGH ITEM MONITORING SYSTEM</H5>
+        </div>
+    </div>
     <section class="ftco-section">
         <div class="container">
             <div class="row justify-content-center">

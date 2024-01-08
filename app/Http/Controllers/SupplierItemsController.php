@@ -44,18 +44,18 @@ class SupplierItemsController extends Controller
         if($request->selected_itemtype == 3){
          
             DB::table('movements')->whereIn('id', $item_ids)->update(array('dateReleased'=>Carbon::now(), 'type'=>3));
-            if($request->supplieritem_ids !== null)
-            { 
-                for($i = 0; $i<count($request->supplieritem_ids); $i++)
-                {
-                    if($request->types[$i] != $request->selected_itemtype)
-                    {
-                        $supplier_item = Supplier_Items::find($request->supplieritem_ids[$i]);
-                        $supplier_item->stock = $supplier_item->stock-$request->qty[$i];
-                        $supplier_item->update();
-                    }
-                }
-            }
+            // if($request->supplieritem_ids !== null)
+            // { 
+            //     for($i = 0; $i<count($request->supplieritem_ids); $i++)
+            //     {
+            //         if($request->types[$i] != $request->selected_itemtype)
+            //         {
+            //             $supplier_item = Supplier_Items::find($request->supplieritem_ids[$i]);
+            //             $supplier_item->stock = $supplier_item->stock-$request->qty[$i];
+            //             $supplier_item->update();
+            //         }
+            //     }
+            // }
         }
         if($request->selected_itemtype == 4) DB::table('movements')->whereIn('id', $item_ids)->update(array('type' => $request->selected_itemtype,  'dateWasted'=>Carbon::now()));
         if($request->selected_itemtype == 5)
