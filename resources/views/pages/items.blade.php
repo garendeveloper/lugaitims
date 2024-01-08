@@ -1,5 +1,19 @@
 
 @include('navigation/header')
+<style>
+     @media print {
+        body {
+            visibility: hidden;
+        }
+        .no-print{
+            visibility: hidden;
+        }
+        #printarea {
+            visibility: visible;
+        }
+        @page {size: portrait}
+    }
+</style>
     <body class="sb-nav-fixed">
        @include('navigation/navigation')
         <div id="layoutSidenav">
@@ -448,7 +462,7 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body" id = "printarea">
                     <div class="row">
                         <div class="col-md-8">
                             <table id="tbl_itemdetails" class = "table table-bordered table-stripped " style = "width: 100%">
@@ -472,8 +486,9 @@
                         </div>
 
                     </div>
-                    <div class="row">
+                    <div class="row no-print">
                         <div class="col-md-12">
+                            <button class = "btn btn-primary btn-block btn-sm" id  = "btn-print"><i class = "fas fa-print"></i>&nbsp;Print</button>
                             <button class = "btn btn-danger btn-block btn-sm"  data-dismiss="modal"><i class = "fas fa-times"></i>&nbsp;Close</button>
                         </div>
                     </div>
@@ -485,6 +500,9 @@
     @include('navigation/footer')
     <script>
         $(document).ready(function() {
+            $("#btn-print").click(function(){
+                window.print();
+            })
             $(function(){
                 var dtToday = new Date();
 
@@ -925,7 +943,7 @@
                     {
                         $("#itemdetails-modalLabel").text('Item Details');  
                         var content = "";
-                        content += "<tr style = 'background-color: #2C4B5F; color: white'>";
+                        content += "<tr style = 'background-color: #08a4a7; color: white'>";
                         content += "<td colspan = '2'>Item Details</td>";
                         content += "</tr>";
                         content += "<tr>";
@@ -987,6 +1005,26 @@
                             content2 += "<td colspan = '2'><img src = '/upload_images/item.png' style = 'height: 180px; width: 180px;'></img></td>";
                             content2 += "</tr>";
                         }
+
+                        content2 += "<tr align='center' style = 'background-color: #08a4a7; color: white'>";
+                        content2 += "<td colspan = '2'><i class = 'fas fa-info'></i>&nbsp; SUPPLIER AND CATEGORY </td>";
+                        content2 += "</tr>";
+                        content2 += "<tr>";
+                        content2 += "<td>Supplier</td>";
+                        content2 += "<td>"+data[0].name+"</td>";
+                        content2 += "</tr>";
+                        content2 += "<tr>";
+                        content2 += "<td>Address</td>";
+                        content2 += "<td>"+data[0].address+"</td>";
+                        content2 += "</tr>";
+                        content2 += "<tr>";
+                        content2 += "<tr>";
+                        content2 += "<td>Contact Number</td>";
+                        content2 += "<td>"+data[0].contact_number+"</td>";
+                        content2 += "</tr>";
+                        content2 += "<td>Category</td>";
+                        content2 += "<td>"+data[0].category+"</td>";
+                        content2 += "</tr>";
                         $("#tbl_image tbody").html(content2);
 
                         $("#itemdetails-modal").modal({

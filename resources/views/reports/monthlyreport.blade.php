@@ -131,6 +131,7 @@
                         </tr>
                     </tfoot>
                 </table> <br><br>
+                @if(count($data) > 0)
                 <div class="row">
                     <div class="col-md-6">
                        Prepared By: <br><br>
@@ -143,6 +144,7 @@
                         School-In-Charge <br>
                     </div>
                 </div><br>
+                @endif
             </div>
         </div>
 </body>

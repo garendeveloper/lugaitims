@@ -48,7 +48,7 @@
                                         <div class="small text-white"><h4>{{ $data['no_ofDelivered'] }}</h4></div>
                                     </div>
                                     <div class="card-footer d-flex align-items-center justify-content-between">
-                                        <a class="small text-white stretched-link" href="#">
+                                        <a class="small text-white stretched-link" href="{{ route('requestingitems.index') }}">
                                             <img src="{{ asset('admintemplate/assets/img/delivered.png') }}" alt="" style = "width: 250px; height: 250px">
                                         </a>
                                         <div class="small text-white"><i class="fas fa-angle-right"></i></div>
@@ -83,8 +83,10 @@
                             <div class="col-xl-12">
                                 <div class="card mb-4">
                                     <div class="card-header bg-success" style = "color: black">
-                                        <i class="fas fa-chart-bar me-1"></i>
-                                        Bar Chart of Yearly Released Items
+                                        <div class = 'col-md-6'>
+                                            <i class="fas fa-chart-bar me-1"></i>
+                                            Bar Chart Per Quarter of a Year
+                                        </div>
                                     </div>
                                     <div class="card-body"><canvas id="chart_releasedItems" width="100%" height="40"></canvas></div>
                                 </div>
@@ -92,18 +94,7 @@
                         </div>
                     </div>
                 </main>
-                <footer class="py-4 bg-dark mt-auto" style="">
-                    <div class="container-fluid px-4">
-                        <div class="d-flex align-items-center justify-content-between small">
-                            <div class="text-muted">Copyright &copy; IMS-LUGAIT {{ date('Y') }}</div>
-                            <div>
-                                <a href="#">Privacy Policy</a>
-                                &middot;
-                                <a href="#">Terms &amp; Conditions</a>
-                            </div>
-                        </div>
-                    </div>
-                </footer>
+               
             </div>
         </div>
     @include('navigation/footer')
@@ -205,88 +196,88 @@
     </script>
     <script>
     $(document).ready(function(){
-        'use strict'
-        var ticksStyle = {
-            fontColor: '#495057',
-            fontStyle: 'bold',
-        }
-        function argMax(array) {
-            return array.map((x, i) => [x, i]).reduce((r, a) => (a[0] > r[0] ? a : r))[1];
-        }
-      
-        var mode = 'index'
-        var intersect = true
-        var years_ofdeads = {{Js::From($years_ofReleasedLabel)}};
-        var deaths_values = {{Js::From($values_ofReleased)}};
-        var salesChart = $('#chart_releasedItems')
-        var color = deaths_values.map(x => '#007bff');
-        color[argMax(deaths_values)] = 'red';
-        // eslint-disable-next-line no-unused-vars
-        var salesChart = new Chart(salesChart, {
-        type: 'bar',
-        data: {
-            labels: years_ofdeads,
-            datasets: [
-            {
-                backgroundColor: color,
-                borderColor: '#007bff',
-                data: deaths_values,
-            },
-            ]
-        },
-        options: {
-            maintainAspectRatio: true,
-            tooltips: {
-                mode: mode,
-            intersect: intersect
-            },
-            hover: {
-                mode: mode,
-                intersect: intersect
-            },
-            legend: {
-                display: false
-            },
-            scales: {
-            yAxes: [{
-                display: true,
-                gridLines: {
-                display: true,
-                // lineWidth: '4px',
-                // color: 'rgba(0, 0, 0, .2)',
-                zeroLineColor: 'transparent'
-                },
-                scaleLabel: {
-                    display: true,
-                    labelString: 'No. Of Items'
-                },
-                ticks: $.extend({
-                beginAtZero: true,
-
-                // Include a dollar sign in the ticks
-                callback: function (value) {
-                    if (value >= 1000) {
-                        value /= 1000
-                        value += ''
-                    }
-
-                    return value
-                }
-                }, ticksStyle)
-            }],
-            xAxes: [{
-                display: true,
-                gridLines: {
-                display: false
-                },
-                scaleLabel: {
-                    display: true,
-                    labelString: 'Year'
-                },
-                ticks: ticksStyle
-            }]
+            'use strict'
+            var ticksStyle = {
+                fontColor: '#495057',
+                fontStyle: 'bold',
             }
-        }
-        })
+            function argMax(array) {
+                return array.map((x, i) => [x, i]).reduce((r, a) => (a[0] > r[0] ? a : r))[1];
+            }
+        
+            var mode = 'index'
+            var intersect = true
+            var years_ofdeads = {{Js::From($years_ofReleasedLabel)}};
+            var deaths_values = {{Js::From($values_ofReleased)}};
+            var salesChart = $('#chart_releasedItems')
+            var color = deaths_values.map(x => '#007bff');
+            color[argMax(deaths_values)] = 'red';
+            // eslint-disable-next-line no-unused-vars
+            var salesChart = new Chart(salesChart, {
+            type: 'bar',
+            data: {
+                labels: years_ofdeads,
+                datasets: [
+                {
+                    backgroundColor: color,
+                    borderColor: '#007bff',
+                    data: deaths_values,
+                },
+                ]
+            },
+            options: {
+                maintainAspectRatio: true,
+                tooltips: {
+                    mode: mode,
+                intersect: intersect
+                },
+                hover: {
+                    mode: mode,
+                    intersect: intersect
+                },
+                legend: {
+                    display: false
+                },
+                scales: {
+                yAxes: [{
+                    display: true,
+                    gridLines: {
+                    display: true,
+                    // lineWidth: '4px',
+                    // color: 'rgba(0, 0, 0, .2)',
+                    zeroLineColor: 'transparent'
+                    },
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'No. Of Items'
+                    },
+                    ticks: $.extend({
+                    beginAtZero: true,
+
+                    // Include a dollar sign in the ticks
+                    callback: function (value) {
+                        if (value >= 1000) {
+                            value /= 1000
+                            value += ''
+                        }
+
+                        return value
+                    }
+                    }, ticksStyle)
+                }],
+                xAxes: [{
+                    display: true,
+                    gridLines: {
+                    display: false
+                    },
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Year'
+                    },
+                    ticks: ticksStyle
+                }]
+                }
+            }
+            })
     })
     </script>

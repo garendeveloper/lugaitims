@@ -40,16 +40,18 @@ class HomeController extends Controller
 
         $years_ofReleasedLabel = [];
         $values_ofReleased = [];
-        $years_r = DB::select('SELECT DISTINCT YEAR(movements.created_at) as year 
-            FROM movements WHERE type = 3 ORDER BY YEAR(movements.created_at) asc');
+        $years_r = DB::select('SELECT DISTINCT YEAR(movements.created_at) as years , QUARTER(movements.created_at) as quarters
+            FROM movements WHERE type = 3 ORDER BY QUARTER(movements.created_at) asc');
 
         foreach($years_r as $year)
         {
-            $years_ofReleasedLabel[] = $year->year;
-            $values = DB::select('SELECT count(items.id) as total
+            $amount_total = DB::select('select sum(totalCost) as accumulated from supplier_items where YEAR(supplier_items.created_at) = "'.$year->years.'"');
+            $total = " P ".number_format((float)$amount_total[0]->accumulated, 2, '.', ',');
+            $years_ofReleasedLabel[] = $year->years." - Q".$year->quarters." : ".$total;
+            $values = DB::select('SELECT count(supplier_items.id) as total
             FROM items
             INNER JOIN supplier_items on supplier_items.item_id = items.id
-            INNER JOIN movements on movements.supplieritem_id = supplier_items.id and movements.type = 3 and YEAR(movements.created_at) = "'.$year->year.'"');
+            INNER JOIN movements on movements.supplieritem_id = supplier_items.id and movements.type = 3 and QUARTER(movements.created_at) = "'.$year->quarters.'" ');
 
             $values_ofReleased[] = $values[0]->total;
         }

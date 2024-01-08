@@ -152,6 +152,7 @@
                                     <tr>
                                         <th>IMAGE</th>
                                         <th>ITEM</th>
+                                        <th>STOCK</th>
                                         <th>QTY</th>
                                         <th>Action</th>
                                     </tr>
