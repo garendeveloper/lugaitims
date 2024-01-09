@@ -39,6 +39,7 @@ return new class extends Migration
             $table->double('cost', 8, 2);//price
             $table->string('totalCost');
             $table->string('remarks')->nullable();
+            $table->date('date')->nullable();
             $table->tinyInteger('status')->default(0);//Determine if available or not.
             $table->timestamps();
         });

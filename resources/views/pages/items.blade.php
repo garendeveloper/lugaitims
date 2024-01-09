@@ -141,7 +141,14 @@
                     <input autocomplete="off" type="hidden" name = "requisitionItem_id" id = "requisitionItem_id" value = "">
                     <div class="modal-body">
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="item">Date</label>
+                                    <input  autocomplete="off" onkeyup="$(this).removeClass('is-invalid'); $('#date-msg').html('');" type="date" name = "date" class="form-control disableFuturedate" id="date" placeholder="Enter your date">
+                                    <span class = "v-error" style = "color:red;" id = "date-msg"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
                                 <div class="form-group s_category">
                                     <label for="itemcategory_id">Category</label>
                                     <select name="itemcategory_id" id="itemcategory_id" class = "form-control" onchange="$(this).removeClass('is-invalid'); $('#itemcategory_id-msg').html('');">
@@ -150,7 +157,7 @@
                                     <span class = "v-error" style = "color:red;" id = "itemcategory_id-msg"></span>
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="item">Supplier</label>
                                     <select name="supplier" id="supplier" class = "form-control" onchange="$(this).removeClass('is-invalid'); $('#supplier-msg').html('');">
@@ -498,6 +505,24 @@
     </div>
 
     @include('navigation/footer')
+    <script>
+        $(document).ready(function () {
+            var currentDate = new Date();
+            $('.disableFuturedate').datepicker({
+            format: 'dd/mm/yyyy',
+            autoclose:true,
+            endDate: "currentDate",
+            maxDate: currentDate
+            }).on('changeDate', function (ev) {
+                $(this).datepicker('hide');
+            });
+            $('.disableFuturedate').keyup(function () {
+                if (this.value.match(/[^0-9]/g)) {
+                    this.value = this.value.replace(/[^0-9^-]/g, '');
+                }
+            });
+        });
+    </script>
     <script>
         $(document).ready(function() {
             $("#btn-print").click(function(){
@@ -899,6 +924,7 @@
                     $("#preview_image").attr('src', '/upload_images/item.png');
 
                 $("#item").val(data[0].item);
+                $("#date").val(data[0].date);
                 $("#unit").val(data[0].unit);
                 $("#stock").val(data[0].stock);
                 $("#pstock").val(data[0].stock)
@@ -945,6 +971,10 @@
                         var content = "";
                         content += "<tr style = 'background-color: #08a4a7; color: white'>";
                         content += "<td colspan = '2'>Item Details</td>";
+                        content += "</tr>";
+                        content += "<tr>";
+                        content += "<td>Date</td>";
+                        content += "<td>"+data[0].date+"</td>";
                         content += "</tr>";
                         content += "<tr>";
                         content += "<td>Item</td>";
