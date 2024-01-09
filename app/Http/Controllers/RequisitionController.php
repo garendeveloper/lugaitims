@@ -88,7 +88,7 @@ class RequisitionController extends Controller
 
         return response()->json([
             'status'=>true,
-            'message'=>$message,
+            'messages'=>$message,
         ]);
     }
 
