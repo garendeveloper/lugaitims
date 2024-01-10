@@ -45,7 +45,7 @@ class HomeController extends Controller
 
         foreach($years_r as $year)
         {
-            $amount_total = DB::select('select sum(totalCost) as accumulated from supplier_items, movements where supplier_items.id = movements.supplieritem_id and YEAR(movements.created_at) = "'.$year->years.'" and movements.type = 3');
+            $amount_total = DB::select('select sum(supplier_items.totalCost) as accumulated from supplier_items, movements where supplier_items.id = movements.supplieritem_id and YEAR(movements.created_at) = "'.$year->years.'" and movements.type = 3');
             $total = " P ".number_format((float)$amount_total[0]->accumulated, 2, '.', ',');
             $years_ofReleasedLabel[] = $year->years." - Q".$year->quarters." : ".$total;
             $values = DB::select('SELECT count(supplier_items.id) as total
@@ -67,7 +67,7 @@ class HomeController extends Controller
 
     public function count_noOfPurchased()
     {
-        $sql = Movements::where('type', 2)->count();
+        $sql = Supplier_Items::where('status', 1)->count();
         return $sql;
     }
     public function count_noOfDelivered()

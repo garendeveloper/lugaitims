@@ -30,7 +30,7 @@
                             <div class="col-xl-3 col-md-6">
                                 <div class="card bg-success text-white mb-4">
                                     <div class="card-body d-flex align-items-center justify-content-between">
-                                        <h4>Purchased</h4>
+                                        <h4>Active Items</h4>
                                         <div class="small text-white"><h4>{{ $data['no_ofPurchased'] }}</h4></div>
                                     </div>
                                     <div class="card-footer d-flex align-items-center justify-content-between">
@@ -58,7 +58,7 @@
                             <div class="col-xl-3 col-md-6">
                                 <div class="card bg-danger text-white mb-4">
                                     <div class="card-body d-flex align-items-center justify-content-between">
-                                        <h4>Requisition</h4>
+                                        <h4>Requesting</h4>
                                         <div class="small text-white"><h4>{{ $data['no_ofRequisition'] }}</h4></div>
                                     </div>
                                     <div class="card-footer d-flex align-items-center justify-content-between">
