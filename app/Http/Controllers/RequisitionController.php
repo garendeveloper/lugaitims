@@ -72,18 +72,22 @@ class RequisitionController extends Controller
         else
         {
             $supplieritem = SupplierItem::find($request->supplieritem);
-            $supplieritem->stock = $supplieritem->stock-$request->qty;
-            $supplieritem->update();
-            
-            Movements::create([
-                'supplieritem_id'=>$request->supplieritem,
-                'user_id'=>$request->requestor,
-                'qty'=>$request->qty,
-                'notification'=>1,
-                'status'=>1,
-                'type'=>1,
-            ]);
-            $message='Request has been successfully processed!';
+            $message = "Sorry! Cannot process your request due to out of stock!";
+            if($supplieritem->stock > 0)
+            {
+                $supplieritem->stock = $supplieritem->stock-$request->qty;
+                $supplieritem->update();
+                
+                Movements::create([
+                    'supplieritem_id'=>$request->supplieritem,
+                    'user_id'=>$request->requestor,
+                    'qty'=>$request->qty,
+                    'notification'=>1,
+                    'status'=>1,
+                    'type'=>1,
+                ]);
+                $message='Request has been successfully processed!';
+            }
         }
 
         return response()->json([

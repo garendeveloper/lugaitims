@@ -514,7 +514,7 @@
         $(document).ready(function() {
             $("#btn-print").click(function(){
                 var id = $("#__supplieritem_id").val();
-                window.location.href = "/print/item/profile/"+id;
+                window.open('print/item/profile/'+id, "_blank");
             })
             $("#table, #export_buttons, .dt-buttons, .buttons-print").click(function(){
                 $("#table").show();
