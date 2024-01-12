@@ -50,6 +50,17 @@ class PrintController extends Controller
             'url'=>$url,
         ]);
     }
+    public function itemprofile($supplieritem_id)
+    {
+        $sql = DB::select('SELECT TIMESTAMPDIFF(YEAR,supplier_items.date, CURDATE())  AS age, suppliers.contact_number as supp_contactNo, suppliers.id as supplier_id, items.*, itemcategories.*, suppliers.*, supplier_items.*, itemcategories.id as itemcategory_id, items.id as item_id, supplier_items.id as supplieritem_id
+        FROM items, suppliers, supplier_items, itemcategories
+        WHERE itemcategories.id = supplier_items.category_id 
+        AND items.id = supplier_items.item_id
+        AND suppliers.id = supplier_items.supplier_id
+        AND supplier_items.id = '.$supplieritem_id.'');
+
+        return view('reports.itemprofile', compact('sql'));
+    }
     public function filterPage(Request $request, $data)
     {
         $unserializeArray = unserialize($data);
@@ -139,7 +150,7 @@ class PrintController extends Controller
                                 AND supplier_items.id = movements.supplieritem_id
                                 AND departments.id = users.department_id
                                 AND movements.user_id = users.id
-                                AND MONTH(movements.created_at) = "'.$month.'" AND YEAR(movements.created_at) =  "'.$year.'" AND itemcategories.id = '.$category.' AND movements.status != 0');
+                                AND MONTH(movements.created_at) = "'.$month.'" AND YEAR(movements.created_at) =  "'.$year.'" AND itemcategories.id = '.$category.' AND supplier_items.status != 0');
         return $sql;
     }
     public function get_yearlyFromDB($year, $category)
@@ -152,7 +163,7 @@ class PrintController extends Controller
                         AND supplier_items.id = movements.supplieritem_id
                         AND departments.id = users.department_id
                         AND movements.user_id = users.id
-                        AND YEAR(movements.created_at) =  "'.$year.'" AND itemcategories.id = '.$category.' AND movements.status != 0');
+                        AND YEAR(movements.created_at) =  "'.$year.'" AND itemcategories.id = '.$category.' AND supplier_items.status != 0');
         return $sql;
     }
     public function get_quarterlyFromDB($quarter, $year, $category)
@@ -165,7 +176,7 @@ class PrintController extends Controller
                                 AND supplier_items.id = movements.supplieritem_id
                                 AND movements.user_id = users.id
                                 AND departments.id = users.department_id
-                                AND QUARTER(movements.created_at) = "'.$quarter.'" AND YEAR(movements.created_at) =  "'.$year.'" AND itemcategories.id = '.$category.' AND movements.status = 1');
+                                AND QUARTER(movements.created_at) = "'.$quarter.'" AND YEAR(movements.created_at) =  "'.$year.'" AND itemcategories.id = '.$category.' AND supplier_items.status = 1');
         return $sql;
     }
     public function get_weeklyFromDB($year, $category, $month)
@@ -183,7 +194,7 @@ class PrintController extends Controller
                                 AND supplier_items.id = movements.supplieritem_id
                                 AND departments.id = users.department_id
                                 AND movements.user_id = users.id
-                                AND WEEK(movements.created_at) = '.$week.' AND YEAR(movements.created_at) =  '.$year.' AND itemcategories.id = '.$category.' AND movements.status != 0');
+                                AND WEEK(movements.created_at) = '.$week.' AND YEAR(movements.created_at) =  '.$year.' AND itemcategories.id = '.$category.' AND supplier_items.status != 0');
         return $sql;
     }
     public function monthlyreport_page()

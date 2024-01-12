@@ -1,19 +1,5 @@
 
 @include('navigation/header')
-<style>
-     @media print {
-        body {
-            visibility: hidden;
-        }
-        .no-print{
-            visibility: hidden;
-        }
-        #printarea {
-            visibility: visible;
-        }
-        @page {size: portrait}
-    }
-</style>
     <body class="sb-nav-fixed">
        @include('navigation/navigation')
         <div id="layoutSidenav">
@@ -471,6 +457,7 @@
                 </div>
                 <div class="modal-body" id = "printarea">
                     <div class="row">
+                        <input type="hidden" id = "__supplieritem_id">
                         <div class="col-md-8">
                             <table id="tbl_itemdetails" class = "table table-bordered table-stripped " style = "width: 100%">
                                
@@ -526,7 +513,12 @@
     <script>
         $(document).ready(function() {
             $("#btn-print").click(function(){
-                window.print();
+                var id = $("#__supplieritem_id").val();
+                window.location.href = "/print/item/profile/"+id;
+            })
+            $("#table, #export_buttons, .dt-buttons, .buttons-print").click(function(){
+                $("#table").show();
+                $("body").show();
             })
             $(function(){
                 var dtToday = new Date();
@@ -671,6 +663,16 @@
                             className: 'btn btn-secondary btn-sm',
                             orientation: 'portrait',
                             pageSize: 'LEGAL',
+                            footer: 'true',
+                            title: 'LNHS LIST OF ALL ITEMS',
+                            customize: function (win) {
+                                $(win.document.body)
+                                    .css('font-size', '8pt');
+                        
+                                $(win.document.body).find('table')
+                                    .addClass('compact')
+                                    .css('font-size', 'inherit');
+                            }
                         },
                     ],
                     initComplete: function () {
@@ -690,7 +692,6 @@
                         { data: 'type', name: 'type' },
                         { data: 'actions', name: 'actions' },
                     ],
-                   
                 });
             }
 
@@ -961,6 +962,7 @@
             })
             $("#table tbody ").on('click', '.view', function(){
                 var item_id = $(this).data('id');
+                $("#__supplieritem_id").val(item_id);
                 $.ajax({
                     type: 'get',
                     url: "/items/" + item_id + "/edit",

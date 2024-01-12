@@ -38,7 +38,8 @@ Route::group(['middleware'=>['prevent-back-history']], function(){
         Route::get('/datatable/items/get_allItems', [ItemController::class, 'supplier_allItems']);
         Route::get('/items/units', [ItemController::class, 'get_allUnits'])->name('items.units');
         Route::get('/items/brands', [ItemController::class, 'get_allBrands'])->name('items.brands');
- 
+        Route::get('/print/item/profile/{id}', [PrintController::class, 'itemprofile']);
+
         Route::get('/home', [HomeController::class, 'index'])->name('admin.home');
         Route::resource('items', ItemController::class);
         Route::resource('purchasedItems', PurchasedItemsController::class);
