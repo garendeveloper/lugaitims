@@ -93,6 +93,8 @@
                                         <tbody>
                                         </tbody>
                                         <tfoot >
+                                            <tr id = "total_res">
+                                           </tr>
                                            <tr>
                                                 <td colspan = "14"> 
                                                 <a id = "a_print" href="" class = "btn btn-primary btn-block"><i class="fas fa-print"></i> Print</a>
@@ -183,6 +185,8 @@
                 dataType: 'json',
                 success: function(data){
                     var html = "";
+                    var unitvalue = 0;
+                    var totalCost = 0;
                     if(data.length>0)
                     {
                         for(var i=0; i<data.length; i++)
@@ -191,10 +195,10 @@
                             html += "<td align='center'>N/A</td>";
                             html += "<td>"+data[i].item+"</td>";
                             html += "<td >"+data[i].dateRequest+"</td>";
-                            html += "<td align='center'>"+data[i].quantity+"</td>";
+                            html += "<td align='center'>"+data[i].qty+"</td>";
                             html += "<td align='center'>"+data[i].unit+"</td>";
                             html += "<td align='right'>&#8369;&nbsp;"+numberWithCommas(data[i].cost)+"</td>";
-                            html += "<td align='right'>&#8369;&nbsp;"+numberWithCommas(data[i].totalCost)+"</td>";
+                            html += "<td align='right'>&#8369;&nbsp;"+numberWithCommas(data[i].cost*data[i].qty)+"</td>";
                             html += "<td align='center'>N/A</td>";
                             html += "<td align='center'>"+data[i].category+"</td>";
                             html += "<td align='center'>N/A</td>";
@@ -203,6 +207,8 @@
                             html += "<td align='center'>N/A</td>";
                             html += "<td align='center'>"+data[i].remarks+"</td>";
                             html += "</tr>";
+                            unitvalue += data[i].cost;
+                            totalCost += data[i].cost*data[i].qty;
                         }
                     }
                     else
@@ -210,7 +216,10 @@
                         $("#a_print").hide();
                         html += "<tr><td colspan = '14'>Sorry no transaction on this date.</td></tr>";
                     }
-                        
+                    var tfoot = "<td colspan = '5'>TOTAL </td>";
+                        tfoot += "<td align='right'>&#8369;&nbsp;"+numberWithCommas(unitvalue)+"</td>";
+                        tfoot += "<td align='right' >&#8369;&nbsp;"+numberWithCommas(totalCost)+"</td>";
+                    $("#total_res").append(tfoot);
                     $("#tbl_report tbody").html(html);
                 }
             })

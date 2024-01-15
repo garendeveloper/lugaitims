@@ -24,7 +24,8 @@ class HomeController extends Controller
 
         $years_ofPurchasedLabel = [];
         $values_ofPurchased = [];
-        $years = DB::select('select supplier_items.id, items.item, suppliers.name from items, supplier_items, suppliers where items.id = supplier_items.item_id and suppliers.id = supplier_items.supplier_id order by suppliers.id asc');
+        $years = DB::select('select supplier_items.id, items.item, suppliers.name from items, supplier_items, suppliers where items.id = supplier_items.item_id and suppliers.id = supplier_items.supplier_id');
+        $max = 0;
         foreach($years as $year)
         {
             $years_ofPurchasedLabel[] = $year->item." - ".$year->name;
@@ -33,7 +34,7 @@ class HomeController extends Controller
                                 where items.id = supplier_items.item_id
                                 and supplier_items.id = movements.supplieritem_id
                                 and movements.user_id = users.id
-                                and supplier_items.id = '.$year->id.'');
+                                and supplier_items.id = '.$year->id.' order by total desc');
 
             $values_ofPurchased[] = $values[0]->total;
         }
@@ -45,7 +46,7 @@ class HomeController extends Controller
 
         foreach($years_r as $year)
         {
-            $amount_total = DB::select('select (supplier_items.cost*movements.qty) as accumulated from supplier_items, movements where supplier_items.id = movements.supplieritem_id and QUARTER(movements.created_at) = "'.$year->quarters.'" and movements.type = 3');
+            $amount_total = DB::select('select SUM(supplier_items.cost*movements.qty) as accumulated from supplier_items, movements where supplier_items.id = movements.supplieritem_id and QUARTER(movements.created_at) = "'.$year->quarters.'" and YEAR(movements.created_at) = "'.$year->years.'" and movements.type = 3');
             $acc = $amount_total[0]->accumulated;
             if($acc === null)
             {
@@ -56,7 +57,7 @@ class HomeController extends Controller
             $values = DB::select('SELECT count(supplier_items.id) as total
             FROM items
             INNER JOIN supplier_items on supplier_items.item_id = items.id
-            INNER JOIN movements on movements.supplieritem_id = supplier_items.id and movements.type = 3 and QUARTER(movements.created_at) = "'.$year->quarters.'" ');
+            INNER JOIN movements on movements.supplieritem_id = supplier_items.id and movements.type = 3 and QUARTER(movements.created_at) = "'.$year->quarters.'" and YEAR(movements.created_at) = "'.$year->years.'" ');
 
             $values_ofReleased[] = $values[0]->total;
         }

@@ -109,10 +109,10 @@
                                     <td style = " text-align: center">N/A</td>
                                     <td>{{$d->item}}</td>
                                     <td>{{$d->dateRequest}}</td>
-                                    <td style = " text-align: center">{{$d->quantity}}</td>
+                                    <td style = " text-align: center">{{$d->qty}}</td>
                                     <td style = " text-align: center">{{$d->unit}}</td>
                                     <td style = " text-align: right">&#8369;&nbsp;{{number_format((float)$d->cost, 2, '.', ',')}}</td>
-                                    <td style = " text-align: right">&#8369;&nbsp;{{number_format((float)$d->totalCost, 2, '.', ',')}}</td>
+                                    <td style = " text-align: right">&#8369;&nbsp;{{number_format((float)$d->cost*$d->qty, 2, '.', ',')}}</td>
                                     <td style = " text-align: center">N/A</td>
                                     <td style = " text-align: center">{{$d->category}}</td>
                                     <td style = " text-align: center">N/A</td>

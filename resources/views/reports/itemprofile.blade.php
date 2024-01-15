@@ -87,7 +87,7 @@
                             @endif
                             @if($sql[0]->image != "")
                             <?php $value = $sql[0]->image;?>
-                            <img src = "/upload_images/"'.$value.'"" style = 'height: 180px; width: 180px;'></img>
+                            <img src = "/upload_images/{{ $value }}" style = 'height: 180px; width: 180px;'></img>
                             @endif
                         </th>
                     </tr>
