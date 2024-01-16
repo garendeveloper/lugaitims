@@ -118,18 +118,37 @@
         var years_ofdeads = {{Js::From($years_ofPurchasedLabel)}};
         var deaths_values = {{Js::From($values_ofPurchased)}};
         var salesChart = $('#chart_purchasedItems')
-        // eslint-disable-next-line no-unused-vars
-        var color = deaths_values.map(x => '#007bff');
-        color[argMax(deaths_values)] = 'red';
+
+        const arrayOfObj = years_ofdeads.map(function(d, i) {
+            return {
+                label: d,
+                data: deaths_values[i] || 0
+            };
+        });
+
+        const sortedArrayOfObj = arrayOfObj.sort(function(a, b) {
+            return b.data - a.data;
+        });
+
+        let newArrayLabel = [];
+        let newArrayData = [];
+        sortedArrayOfObj.forEach(function(d){
+            newArrayLabel.push(d.label);
+            newArrayData.push(d.data);
+        });
+
+        var color = newArrayData.map(x => '#007bff');
+        color[argMax(newArrayData)] = 'red';
+
         var salesChart = new Chart(salesChart, {
         type: 'horizontalBar',
         data: {
-            labels: years_ofdeads,
+            labels: newArrayLabel,
             datasets: [
             {
                 backgroundColor: color,
                 borderColor: '#007bff',
-                data: deaths_values,
+                data: newArrayData,
             },
             ]
         },
@@ -204,7 +223,7 @@
             function argMax(array) {
                 return array.map((x, i) => [x, i]).reduce((r, a) => (a[0] > r[0] ? a : r))[1];
             }
-        
+            
             var mode = 'index'
             var intersect = true
             var years_ofdeads = {{Js::From($years_ofReleasedLabel)}};
