@@ -630,12 +630,12 @@
                     ajax: '{!! route("datatables.items") !!}',
                     columnDefs: [
                         {
-                            className: "text-center", // Add 'text-center' class to the targeted column
-                            targets: [0, 2, 4, 7, 10, 11] // Replace 'columnIndex' with the index of your targeted column (starting from 0)
+                            className: "text-center", 
+                            targets: [0, 2, 4, 7, 10, 11] 
                         },
                         {
-                            className: "text-right", // Add 'text-center' class to the targeted column
-                            targets: [5, 6] // Replace 'columnIndex' with the index of your targeted column (starting from 0)
+                            className: "text-right", 
+                            targets: [5, 6] 
                         },
                     ],
                     dom: 'lBfrtip',
@@ -722,7 +722,7 @@
                     if(!isNaN(quantity) && quantity > 0)
                     {
                         var totalCost = quantity*$("#cost").val();
-                        var totalStock = ((stock + quantity));
+                        var totalStock = ((pstock + quantity)*1);
                         $("#totalCost").val(totalCost);
                         $("#stock").val(totalStock);
                     }
