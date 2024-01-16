@@ -152,7 +152,7 @@ class PrintController extends Controller
                                 AND departments.id = users.department_id
                                 AND movements.user_id = users.id
                                 AND movements.type != 5
-                                AND MONTH(movements.created_at) = "'.$month.'" AND YEAR(movements.created_at) =  "'.$year.'" AND itemcategories.id = '.$category.' AND supplier_items.status != 0');
+                                AND MONTH(movements.created_at) = "'.$month.'" AND YEAR(movements.created_at) =  "'.$year.'" AND itemcategories.id = '.$category.' AND supplier_items.status != 1');
         return $sql;
     }
     public function get_yearlyFromDB($year, $category)
@@ -166,7 +166,7 @@ class PrintController extends Controller
                         AND departments.id = users.department_id
                         AND movements.user_id = users.id
                         AND movements.type != 5
-                        AND YEAR(movements.created_at) =  "'.$year.'" AND itemcategories.id = '.$category.' AND supplier_items.status != 0');
+                        AND YEAR(movements.created_at) =  "'.$year.'" AND itemcategories.id = '.$category.' AND supplier_items.status != 1');
         return $sql;
     }
     public function get_quarterlyFromDB($quarter, $year, $category)
@@ -199,7 +199,7 @@ class PrintController extends Controller
                                 AND departments.id = users.department_id
                                 AND movements.user_id = users.id
                                 AND movements.type != 5
-                                AND WEEK(movements.created_at) = '.$week.' AND YEAR(movements.created_at) =  '.$year.' AND itemcategories.id = '.$category.' AND supplier_items.status != 0');
+                                AND WEEK(movements.created_at) = '.$week.' AND YEAR(movements.created_at) =  '.$year.' AND itemcategories.id = '.$category.' AND supplier_items.status != 1');
         return $sql;
     }
     public function monthlyreport_page()

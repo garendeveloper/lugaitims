@@ -58,7 +58,7 @@ class HomeController extends Controller
             FROM items
             INNER JOIN supplier_items on supplier_items.item_id = items.id
             INNER JOIN movements on movements.supplieritem_id = supplier_items.id and movements.type = 3 and QUARTER(movements.created_at) = "'.$year->quarters.'" and YEAR(movements.created_at) = "'.$year->years.'" ');
-
+            
             $values_ofReleased[] = $values[0]->total;
         }
 
