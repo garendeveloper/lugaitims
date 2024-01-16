@@ -98,6 +98,7 @@
                         </tr>
                     </tfoot>
                 </table><br>
+                @if(count($data) > 0)
                 <div class="row">
                     <div class="col-sm-6" style = "width: 50%">
                         Received By: <br><br>
@@ -110,6 +111,7 @@
                         School-In-Charge <br>
                     </div>
                 </div><br>
+                @endif
             </div>
         </div>
 </body>

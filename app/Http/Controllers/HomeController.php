@@ -42,7 +42,7 @@ class HomeController extends Controller
         $years_ofReleasedLabel = [];
         $values_ofReleased = [];
         $years_r = DB::select('SELECT DISTINCT YEAR(movements.created_at) as years , QUARTER(movements.created_at) as quarters
-            FROM movements WHERE type = 3 ORDER BY QUARTER(movements.created_at) asc');
+            FROM movements WHERE type = 3 ORDER BY YEAR(movements.created_at) asc');
 
         foreach($years_r as $year)
         {
@@ -61,7 +61,7 @@ class HomeController extends Controller
 
             $values_ofReleased[] = $values[0]->total;
         }
-    
+
         return view('pages.home', compact('data', 'years_ofPurchasedLabel', 'values_ofPurchased', 'years_ofReleasedLabel', 'values_ofReleased'));       
     }
     public function get_allYears()

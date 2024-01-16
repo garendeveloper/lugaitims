@@ -219,7 +219,7 @@
                     var tfoot = "<td colspan = '5'>TOTAL </td>";
                         tfoot += "<td align='right'>&#8369;&nbsp;"+numberWithCommas(unitvalue)+"</td>";
                         tfoot += "<td align='right' >&#8369;&nbsp;"+numberWithCommas(totalCost)+"</td>";
-                    $("#total_res").append(tfoot);
+                    $("#total_res").html(tfoot);
                     $("#tbl_report tbody").html(html);
                 }
             })

@@ -81,6 +81,7 @@ class PrintController extends Controller
                         AND supplier_items.id = movements.supplieritem_id
                         AND movements.user_id = users.id
                         AND departments.id = users.department_id
+                        AND movements.type != 5
                         AND users.id = '.$supplier.' AND DATE(movements.created_at) = "'.$datefrom.'" AND movements.type = '.$itemtype.'');
         return $sql;
     } 
