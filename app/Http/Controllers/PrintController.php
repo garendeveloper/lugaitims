@@ -152,7 +152,7 @@ class PrintController extends Controller
                                 AND departments.id = users.department_id
                                 AND movements.user_id = users.id
                                 AND movements.type != 5
-                                AND MONTH(movements.created_at) = "'.$month.'" AND YEAR(movements.created_at) =  "'.$year.'" AND itemcategories.id = '.$category.' AND supplier_items.status != 1');
+                                AND MONTH(movements.created_at) = "'.$month.'" AND YEAR(movements.created_at) =  "'.$year.'" AND itemcategories.id = '.$category.' AND supplier_items.status != 0');
         return $sql;
     }
     public function get_yearlyFromDB($year, $category)
@@ -166,7 +166,7 @@ class PrintController extends Controller
                         AND departments.id = users.department_id
                         AND movements.user_id = users.id
                         AND movements.type != 5
-                        AND YEAR(movements.created_at) =  "'.$year.'" AND itemcategories.id = '.$category.' AND supplier_items.status != 1');
+                        AND YEAR(movements.created_at) =  "'.$year.'" AND itemcategories.id = '.$category.' AND supplier_items.status != 0');
         return $sql;
     }
     public function get_quarterlyFromDB($quarter, $year, $category)
@@ -180,7 +180,7 @@ class PrintController extends Controller
                                 AND movements.user_id = users.id
                                 AND departments.id = users.department_id
                                 AND movements.type != 5
-                                AND QUARTER(movements.created_at) = "'.$quarter.'" AND YEAR(movements.created_at) =  "'.$year.'" AND itemcategories.id = '.$category.' AND supplier_items.status = 1');
+                                AND QUARTER(movements.created_at) = "'.$quarter.'" AND YEAR(movements.created_at) =  "'.$year.'" AND itemcategories.id = '.$category.' AND supplier_items.status = 0');
         return $sql;
     }
     public function get_weeklyFromDB($year, $category, $month)
@@ -199,7 +199,7 @@ class PrintController extends Controller
                                 AND departments.id = users.department_id
                                 AND movements.user_id = users.id
                                 AND movements.type != 5
-                                AND WEEK(movements.created_at) = '.$week.' AND YEAR(movements.created_at) =  '.$year.' AND itemcategories.id = '.$category.' AND supplier_items.status != 1');
+                                AND WEEK(movements.created_at) = '.$week.' AND YEAR(movements.created_at) =  '.$year.' AND itemcategories.id = '.$category.' AND supplier_items.status != 0');
         return $sql;
     }
     public function monthlyreport_page()
