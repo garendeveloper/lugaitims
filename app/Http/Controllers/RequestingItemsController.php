@@ -48,14 +48,16 @@ class RequestingItemsController extends Controller
     public function realtime_notification()
     {
         $notif = Movements::where('notification', 1)->count();
-        $years = DB::select("SELECT TIMESTAMPDIFF(YEAR, date(supplier_items.created_at), CURDATE())  AS age, id, no_ofYears FROM supplier_items");
+        $years = DB::select("SELECT TIMESTAMPDIFF(YEAR, supplier_items.date, CURDATE())  AS age, id, no_ofYears FROM supplier_items");
         foreach($years as $y)
         {
             if($y->age > 0)
             {
                 if($y->age >= $y->no_ofYears)
                 { 
-                    DB::table('movements')->where('supplieritem_id', $y->id)->update(array('type'=>4, 'dateWasted'=>Carbon::now()));
+                    DB::table('supplier_items')->where('id', $y->id)->update(array('status'=>0));
+                    $exists = Movements::where('supplieritem_id')->exists();
+                    DB::table('movements')->where('supplieritem_id', $y->id)->update(array('dateWasted'=>Carbon::now()));
                 }
             }
         }
@@ -100,7 +102,7 @@ class RequestingItemsController extends Controller
     }   
     public function get_requestingItemsData()
     {
-        $sql = DB::select('select distinct date(movements.created_at) as dateRequest, user_id from movements');
+        $sql = DB::select('select distinct date(movements.created_at) as dateRequest, user_id from movements order by date(movements.created_at) desc');
         return $sql;
     }
     public function get_allUserInfo($user_id)

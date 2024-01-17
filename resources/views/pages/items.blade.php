@@ -49,6 +49,7 @@
                                                 </th>
                                                 <th colspan = "2" style = "text-align: center">
                                                     <button type = "button" class = "btn btn-flat btn-primary btn-sm" id = "btn_reStock"><i class = "fas  fa-redo fa-xs"></i>&nbsp;Reset Stock </button>
+                                                    <button type = "button" class = "btn btn-flat btn-secondary btn-sm" id = "btn_reload"><i class = "fas  fa-refresh"></i>&nbsp;Reload Table </button>
                                                 </th>
                                                 <th colspan="3" style = "text-align: center">
                                                     <select name="selected_itemtype" id="selected_itemtype" class = "form-control" style = "height: 30px; font-size: 12px">
@@ -62,6 +63,7 @@
                                             </tr>
                                             <tr>
                                                 <th>Select</th>
+                                                <th>Date</th>
                                                 <th>Item Name</th>
                                                 <th>Unit</th>
                                                 <th>Brand</th>
@@ -608,6 +610,9 @@
                     table.fnDraw();
                 });
             }
+            $("#btn_reload").click(function(){
+                AutoReload();
+            })
             function AutoReload() 
             {
                 RefreshTable('#table', '{!! route("datatables.items") !!}');
@@ -631,34 +636,35 @@
                     columnDefs: [
                         {
                             className: "text-center", 
-                            targets: [0, 2, 4, 7, 10, 11] 
+                            targets: [0, 1, 3, 5, 8, 11, 12] 
                         },
                         {
                             className: "text-right", 
-                            targets: [5, 6] 
+                            targets: [5, 7] 
                         },
                     ],
+                    order: [[1, 'desc']],
                     dom: 'lBfrtip',
                     buttons: [
                         'length',
                         {
                             extend: 'copy',
                             exportOptions: {
-                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] // Set columns 0, 2, and 3 for export
+                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11] // Set columns 0, 2, and 3 for export
                             },
                             className: 'btn btn-primary btn-sm',
                         },  
                         {
                             extend: 'excel',
                             exportOptions: {
-                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] // Set columns 0, 2, and 3 for export
+                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11] // Set columns 0, 2, and 3 for export
                             },
                             className: 'btn btn-success btn-sm',
                         },  
                         {
                             extend: 'print',
                             exportOptions: {
-                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] // Set columns 0, 2, and 3 for export
+                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11] // Set columns 0, 2, and 3 for export
                             },
                             className: 'btn btn-secondary btn-sm',
                             orientation: 'portrait',
@@ -680,6 +686,7 @@
                     },
                     columns: [
                         { data: 'checkboxes', name: 'checkboxes' },
+                        { data: 'date', name: 'date' },
                         { data: 'item', name: 'item' },
                         { data: 'unit', name: 'unit' },
                         { data: 'brand', name: 'brand' },
@@ -939,8 +946,6 @@
                 $("#no_ofYears").val(data[0].no_ofYears);
             }
             $("#table tbody ").on('click', '.edit', function(){
-                show_allItemCategories();
-                show_allSuppliers();
                 show_allUnits();
                 show_allItems();
                 var item_id = $(this).data('id');
@@ -1176,6 +1181,7 @@
                         option += "</optgroup>";
                         $("#supplier").html(option);
                         $("#_supplier").html(option);
+                        
                     },
                     error: function(data)
                     {
