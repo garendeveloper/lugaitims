@@ -7,7 +7,7 @@
  <meta name="description" content="" />
  <meta name="author" content="" />
  <meta name="csrf-token" content="{{ csrf_token() }}">
- <link rel="icon" type="image/png" href="admintemplate/assets/img/round.png">
+ <link rel="icon" type="image/png" href="{{ asset('admintemplate/assets/img/round.png') }}">
  <title>IMS</title>
  <link rel="stylesheet" href="{{ asset('bootstrap.min.css') }}"  rel="stylesheet" >
  <link href="{{ asset('admintemplate/css/styles.css')}}" rel="stylesheet" />

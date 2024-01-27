@@ -551,7 +551,7 @@
                         className: "text-center", // Add 'text-center' class to the targeted column
                         targets: [0, 3] // Replace 'columnIndex' with the index of your targeted column (starting from 0)
                     }],
-                    order: [[0, 'asc']],
+                    order: [[0, 'desc']],
                     dom: 'lBfrtip',
                     buttons: [
                         'length',

@@ -160,6 +160,7 @@
                                                     "<li>Item: "+data[i].item+"</li>"+
                                                     "<li>Brand: "+data[i].brand+"</li>"+
                                                     "<li>Stock: "+data[i].stock+"</li>"+
+                                                    "<li>Unit: "+data[i].unit+"</li>"+
                                                 "<div></td>";
                                     if(data[i].stock > 0)   
                                     {
@@ -201,7 +202,7 @@
                         else
                             row += "<td align='center' style = 'width: 1px'><img src = '{{ asset('upload_images/item.png') }}' style = 'width: 100px; height: 100px'/></td>";
 
-                        row += "<td>"+data['item'][0].item+"</td>";
+                        row += "<td>"+data['item'][0].item+" | "+data['item'][0].brand+" | "+data['item'][0].unit+"</td>";
                         row += "<td style = 'text-align:center' class = 'fit'>"+data['item'][0].stock+"</td>";
                         row += "<td class = 'fit'><input class = 'form-control' type = 'number' min='0' name = 'itemQty' data-stock="+data['item'][0].stock+" id = 'itemQty' max="+data['item'][0].stock+"  min = '00' required></input></td>";
                         row += "<td class ='fit' align='center'><button class = 'btn btn-danger btn-sm' data-id = "+item_id+" id = 'btn_removeTo'><i class = 'fas fa-times'></i></button></td>";

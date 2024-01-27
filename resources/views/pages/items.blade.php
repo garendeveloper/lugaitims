@@ -1,19 +1,5 @@
 
 @include('navigation/header')
-<style>
-     @media print {
-        body {
-            visibility: hidden;
-        }
-        .no-print{
-            visibility: hidden;
-        }
-        #printarea {
-            visibility: visible;
-        }
-        @page {size: portrait}
-    }
-</style>
     <body class="sb-nav-fixed">
        @include('navigation/navigation')
         <div id="layoutSidenav">
@@ -63,7 +49,8 @@
                                                 </th>
                                                 <th colspan = "2" style = "text-align: center">
                                                     <button type = "button" class = "btn btn-flat btn-primary btn-sm" id = "btn_reStock"><i class = "fas  fa-redo fa-xs"></i>&nbsp;Reset Stock </button>
-                                                  
+
+                                                    <button type = "button" class = "btn btn-flat btn-secondary btn-sm" id = "btn_reload"><i class = "fas  fa-refresh"></i>&nbsp;Reload Table </button>
                                                 </th>
                                                 <th colspan="3" style = "text-align: center">
                                                     <select name="selected_itemtype" id="selected_itemtype" class = "form-control" style = "height: 30px; font-size: 12px">
@@ -77,6 +64,7 @@
                                             </tr>
                                             <tr>
                                                 <th>Select</th>
+                                                <th>Date</th>
                                                 <th>Item Name</th>
                                                 <th>Unit</th>
                                                 <th>Brand</th>
@@ -142,7 +130,14 @@
                     <input autocomplete="off" type="hidden" name = "requisitionItem_id" id = "requisitionItem_id" value = "">
                     <div class="modal-body">
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="item">Date</label>
+                                    <input  autocomplete="off" onkeyup="$(this).removeClass('is-invalid'); $('#date-msg').html('');" type="date" name = "date" class="form-control disableFuturedate" id="date" placeholder="Enter your date">
+                                    <span class = "v-error" style = "color:red;" id = "date-msg"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
                                 <div class="form-group s_category">
                                     <label for="itemcategory_id">Category</label>
                                     <select name="itemcategory_id" id="itemcategory_id" class = "form-control" onchange="$(this).removeClass('is-invalid'); $('#itemcategory_id-msg').html('');">
@@ -151,7 +146,7 @@
                                     <span class = "v-error" style = "color:red;" id = "itemcategory_id-msg"></span>
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="item">Supplier</label>
                                     <select name="supplier" id="supplier" class = "form-control" onchange="$(this).removeClass('is-invalid'); $('#supplier-msg').html('');">
@@ -465,6 +460,7 @@
                 </div>
                 <div class="modal-body" id = "printarea">
                     <div class="row">
+                        <input type="hidden" id = "__supplieritem_id">
                         <div class="col-md-8">
                             <table id="tbl_itemdetails" class = "table table-bordered table-stripped " style = "width: 100%">
                                
@@ -500,9 +496,32 @@
 
     @include('navigation/footer')
     <script>
+        $(document).ready(function () {
+            var currentDate = new Date();
+            $('.disableFuturedate').datepicker({
+            format: 'dd/mm/yyyy',
+            autoclose:true,
+            endDate: "currentDate",
+            maxDate: currentDate
+            }).on('changeDate', function (ev) {
+                $(this).datepicker('hide');
+            });
+            $('.disableFuturedate').keyup(function () {
+                if (this.value.match(/[^0-9]/g)) {
+                    this.value = this.value.replace(/[^0-9^-]/g, '');
+                }
+            });
+        });
+    </script>
+    <script>
         $(document).ready(function() {
             $("#btn-print").click(function(){
-                window.print();
+                var id = $("#__supplieritem_id").val();
+                window.open('print/item/profile/'+id, "_blank");
+            })
+            $("#table, #export_buttons, .dt-buttons, .buttons-print").click(function(){
+                $("#table").show();
+                $("body").show();
             })
             $(function(){
                 var dtToday = new Date();
@@ -592,6 +611,9 @@
                     table.fnDraw();
                 });
             }
+            $("#btn_reload").click(function(){
+                AutoReload();
+            })
             function AutoReload() 
             {
                 RefreshTable('#table', '{!! route("datatables.items") !!}');
@@ -614,39 +636,50 @@
                     ajax: '{!! route("datatables.items") !!}',
                     columnDefs: [
                         {
-                            className: "text-center", // Add 'text-center' class to the targeted column
-                            targets: [0, 2, 4, 7, 10, 11] // Replace 'columnIndex' with the index of your targeted column (starting from 0)
+                            className: "text-center", 
+                            targets: [0, 1, 3, 5, 8, 11, 12] 
                         },
                         {
-                            className: "text-right", // Add 'text-center' class to the targeted column
-                            targets: [5, 6] // Replace 'columnIndex' with the index of your targeted column (starting from 0)
+                            className: "text-right", 
+                            targets: [5, 7] 
                         },
                     ],
+                    order: [[1, 'desc']],
                     dom: 'lBfrtip',
                     buttons: [
                         'length',
                         {
                             extend: 'copy',
                             exportOptions: {
-                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] // Set columns 0, 2, and 3 for export
+                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11] // Set columns 0, 2, and 3 for export
                             },
                             className: 'btn btn-primary btn-sm',
                         },  
                         {
                             extend: 'excel',
                             exportOptions: {
-                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] // Set columns 0, 2, and 3 for export
+                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11] // Set columns 0, 2, and 3 for export
                             },
                             className: 'btn btn-success btn-sm',
                         },  
                         {
                             extend: 'print',
                             exportOptions: {
-                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] // Set columns 0, 2, and 3 for export
+                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11] // Set columns 0, 2, and 3 for export
                             },
                             className: 'btn btn-secondary btn-sm',
                             orientation: 'portrait',
                             pageSize: 'LEGAL',
+                            footer: 'true',
+                            title: 'LNHS LIST OF ALL ITEMS',
+                            customize: function (win) {
+                                $(win.document.body)
+                                    .css('font-size', '8pt');
+                        
+                                $(win.document.body).find('table')
+                                    .addClass('compact')
+                                    .css('font-size', 'inherit');
+                            }
                         },
                     ],
                     initComplete: function () {
@@ -654,6 +687,7 @@
                     },
                     columns: [
                         { data: 'checkboxes', name: 'checkboxes' },
+                        { data: 'date', name: 'date' },
                         { data: 'item', name: 'item' },
                         { data: 'unit', name: 'unit' },
                         { data: 'brand', name: 'brand' },
@@ -666,7 +700,6 @@
                         { data: 'type', name: 'type' },
                         { data: 'actions', name: 'actions' },
                     ],
-                   
                 });
             }
 
@@ -697,7 +730,7 @@
                     if(!isNaN(quantity) && quantity > 0)
                     {
                         var totalCost = quantity*$("#cost").val();
-                        var totalStock = ((stock + quantity));
+                        var totalStock = ((pstock + quantity)*1);
                         $("#totalCost").val(totalCost);
                         $("#stock").val(totalStock);
                     }
@@ -900,6 +933,7 @@
                     $("#preview_image").attr('src', '/upload_images/item.png');
 
                 $("#item").val(data[0].item);
+                $("#date").val(data[0].date);
                 $("#unit").val(data[0].unit);
                 $("#stock").val(data[0].stock);
                 $("#pstock").val(data[0].stock)
@@ -913,8 +947,6 @@
                 $("#no_ofYears").val(data[0].no_ofYears);
             }
             $("#table tbody ").on('click', '.edit', function(){
-                show_allItemCategories();
-                show_allSuppliers();
                 show_allUnits();
                 show_allItems();
                 var item_id = $(this).data('id');
@@ -936,6 +968,7 @@
             })
             $("#table tbody ").on('click', '.view', function(){
                 var item_id = $(this).data('id');
+                $("#__supplieritem_id").val(item_id);
                 $.ajax({
                     type: 'get',
                     url: "/items/" + item_id + "/edit",
@@ -946,6 +979,10 @@
                         var content = "";
                         content += "<tr style = 'background-color: #08a4a7; color: white'>";
                         content += "<td colspan = '2'>Item Details</td>";
+                        content += "</tr>";
+                        content += "<tr>";
+                        content += "<td>Date</td>";
+                        content += "<td>"+data[0].date+"</td>";
                         content += "</tr>";
                         content += "<tr>";
                         content += "<td>Item</td>";
@@ -1145,6 +1182,7 @@
                         option += "</optgroup>";
                         $("#supplier").html(option);
                         $("#_supplier").html(option);
+                        
                     },
                     error: function(data)
                     {

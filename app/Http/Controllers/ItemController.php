@@ -77,7 +77,8 @@ class ItemController extends Controller
                         FROM items, suppliers, supplier_items, itemcategories
                         WHERE itemcategories.id = supplier_items.category_id 
                         AND items.id = supplier_items.item_id
-                        AND suppliers.id = supplier_items.supplier_id');
+                        AND suppliers.id = supplier_items.supplier_id
+                        ORDER BY supplier_items.date desc');
         return $sql;
     }
     public function get_allSupplierItems()
@@ -133,6 +134,7 @@ class ItemController extends Controller
         $messages; $status="";
         $validatedData = [
             'item'=>'required',
+            'date'=>'required',
             'unit'=>'required',
             'brand'=>'required',
             'itemcategory_id'=>'required',
@@ -236,6 +238,7 @@ class ItemController extends Controller
             $supplieritem = SupplierItem::updateOrCreate(['id'=>$request->supplieritem_id], [
                 'supplier_id' => $request->supplier,
                 'item_id' => $item_id,
+                'date'=>$request->date,
                 'serialnumber' => $request->serialnumber,
                 'modelnumber' => $request->modelnumber,
                 'stock' => $request->stock,
@@ -293,7 +296,7 @@ class ItemController extends Controller
      */
     public function edit($item_id)
     {
-        $sql = DB::select('SELECT TIMESTAMPDIFF(YEAR, date(supplier_items.created_at), CURDATE())  AS age, suppliers.contact_number as supp_contactNo, suppliers.id as supplier_id, items.*, itemcategories.*, suppliers.*, supplier_items.*, itemcategories.id as itemcategory_id, items.id as item_id, supplier_items.id as supplieritem_id
+        $sql = DB::select('SELECT TIMESTAMPDIFF(YEAR,supplier_items.date, CURDATE())  AS age, suppliers.contact_number as supp_contactNo, suppliers.id as supplier_id, items.*, itemcategories.*, suppliers.*, supplier_items.*, itemcategories.id as itemcategory_id, items.id as item_id, supplier_items.id as supplieritem_id
                         FROM items, suppliers, supplier_items, itemcategories
                         WHERE itemcategories.id = supplier_items.category_id 
                         AND items.id = supplier_items.item_id
