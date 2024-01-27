@@ -16,10 +16,20 @@
                     dataType: 'json',
                     success:function(data)
                     {
-                        if(data > 0)
+                        if(data.lowstock > 0)
+                        {
+                            $("#lowstock").show();
+                            $("#lowstock").text("LS"+data.lowstock)
+                        }
+                        else
+                        {
+                            $("#lowstock").hide();
+                            $("#lowstock").html("");
+                        }
+                        if(data.notif > 0)
                         {
                             $("#notif").show();
-                            $("#notif").text(data);
+                            $("#notif").text(data.notif);
                         }
                         else
                         {
