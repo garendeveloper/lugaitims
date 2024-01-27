@@ -53,6 +53,14 @@ class ItemController extends Controller
                 ->addColumn('totalCost', function($row){
                     return $html = "&#8369;&nbsp;".number_format((float)$row->totalCost, 2, '.', ',');
                 })
+                ->addColumn('stock', function($row){
+                    if($row->stock <= 5 && $row->stock >= 1)
+                        return $html = "<span class = 'badge badge-warning'>".$row->stock."</span>";
+                    if($row->stock == 0)
+                        return $html = "<span class = 'badge badge-danger'>".$row->stock."</span>";
+                    else
+                        return $html = "<span class = 'badge badge-primary'>".$row->stock."</span>";
+                })
                 ->addColumn('actions', function($row){
                     $html = "<td style = 'display: block; margin: auto; text-align:center'>";
                     $html = '<button type = "button" data-id = '.$row->supplieritem_id.' class = "btn  btn-flat btn-outline btn-primary btn-sm edit"><i class = "fas fa-xs fa-edit"></i>&nbsp;</button>&nbsp;';
@@ -60,7 +68,7 @@ class ItemController extends Controller
                     $html .= "</td>";
                     return $html;
                 }) 
-                ->rawColumns(['type','checkboxes','actions', 'cost', 'totalCost'])
+                ->rawColumns(['type','checkboxes','actions', 'cost', 'totalCost', 'stock'])
                 ->make(true);
     }
     public function get_allItems()

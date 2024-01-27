@@ -63,6 +63,7 @@
                                                 </th>
                                                 <th colspan = "2" style = "text-align: center">
                                                     <button type = "button" class = "btn btn-flat btn-primary btn-sm" id = "btn_reStock"><i class = "fas  fa-redo fa-xs"></i>&nbsp;Reset Stock </button>
+                                                  
                                                 </th>
                                                 <th colspan="3" style = "text-align: center">
                                                     <select name="selected_itemtype" id="selected_itemtype" class = "form-control" style = "height: 30px; font-size: 12px">
