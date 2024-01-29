@@ -48,7 +48,7 @@ class RequestingItemsController extends Controller
     public function realtime_notification()
     {
         $notif = Movements::where('notification', 1)->count();
-        $lowstock = DB::select("SELECT count(*) as lowstocks from supplier_items where stock <=5");
+        $lowstock = DB::select("SELECT supplier_items.id as lowstocks, items.*, supplier_items.* from supplier_items, items where items.id = supplier_items.item_id and supplier_items.stock <=5");
         $years = DB::select("SELECT TIMESTAMPDIFF(YEAR, supplier_items.date, CURDATE())  AS age, id, no_ofYears FROM supplier_items");
         foreach($years as $y)
         {
@@ -62,7 +62,7 @@ class RequestingItemsController extends Controller
                 }
             }
         }
-        $data = ['notif'=>$notif, 'lowstock'=>$lowstock[0]->lowstocks];
+        $data = ['notif'=>$notif, 'lowstock'=>count($lowstock), 'lowstocks'=>$lowstock];
         return response()->json($data);
     }
     public function resetNotification(Request $request)
