@@ -31,7 +31,7 @@
         <a class="nav-link" id = "s_items" href="{{ route('items.index') }}" >
             <div class="sb-nav-link-icon"><i class="fas fa-shopping-cart"></i></div>
             &nbsp;&nbsp;
-            Manage Items&nbsp;&nbsp; <span class = 'badge badge-warning' id = "lowstock" style ="display: none">0</span>
+            Manage Items&nbsp;&nbsp; 
         </a>
         <!-- <a class="nav-link" id = "s_reqs" href="{{ route('requisitions.index') }}" >
             <div class="sb-nav-link-icon"><i class="fas fa-shopping-cart"></i></div>
