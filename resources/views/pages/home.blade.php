@@ -8,7 +8,7 @@
             <div id="layoutSidenav_content">
                 <main>
                     <div class="container-fluid px-4">
-                        <h1 class="mt-4">Dashboard</h1>
+                        <h1 class="mt-4"></h1>
                         <!-- <ol class="breadcrumb mb-4">
                             <li class="breadcrumb-item active">Dashboard</li>
                         </ol> -->
@@ -73,19 +73,19 @@
                         <div class="row">
                             <div class="col-xl-12">
                                 <div class="card mb-4">
-                                    <div class="card-header bg-warning" style = "color: black">
+                                    <div class="card-header" style = "color: white">
                                         <i class="fas fa-chart-area me-1"></i>
-                                        Bar Chart of Item Released Per Requesting Office
+                                        Bar Chart of Most Popular Item Released Per Requestor
                                     </div>
                                     <div class="card-body"><canvas id="chart_purchasedItems" width="100%" height="40"></canvas></div>
                                 </div>
                             </div>
                             <div class="col-xl-12">
                                 <div class="card mb-4">
-                                    <div class="card-header bg-success" style = "color: black">
+                                    <div class="card-header" style = "color: white">
                                         <div class = 'col-md-6'>
                                             <i class="fas fa-chart-bar me-1"></i>
-                                            Bar Chart Per Quarter of a Year
+                                            Bar Chart of Total Accumulated Amount of Released Item Per Quarter of the Year
                                         </div>
                                     </div>
                                     <div class="card-body"><canvas id="chart_releasedItems" width="100%" height="40"></canvas></div>
@@ -137,7 +137,7 @@
             newArrayData.push(d.data);
         });
 
-        var color = newArrayData.map(x => '#007bff');
+        var color = newArrayData.map(x => '#2C4B5F');
         color[argMax(newArrayData)] = 'red';
 
         var salesChart = new Chart(salesChart, {
@@ -147,7 +147,7 @@
             datasets: [
             {
                 backgroundColor: color,
-                borderColor: '#007bff',
+                borderColor: '#2C4B5F',
                 data: newArrayData,
             },
             ]
@@ -229,7 +229,7 @@
             var years_ofdeads = {{Js::From($years_ofReleasedLabel)}};
             var deaths_values = {{Js::From($values_ofReleased)}};
             var salesChart = $('#chart_releasedItems')
-            var color = deaths_values.map(x => '#007bff');
+            var color = deaths_values.map(x => '#2C4B5F');
             color[argMax(deaths_values)] = 'red';
             // eslint-disable-next-line no-unused-vars
             var salesChart = new Chart(salesChart, {
@@ -239,7 +239,7 @@
                 datasets: [
                 {
                     backgroundColor: color,
-                    borderColor: '#007bff',
+                    borderColor: '#2C4B5F',
                     data: deaths_values,
                 },
                 ]

@@ -236,7 +236,7 @@
                 }
             })
             $("#s_pitems").addClass("active");
-            document.title = "LNHS ITEMS";
+            document.title = "LSHS ITEMS";
             show_datatable();
             function RefreshTable(tableId, urlData) {
                 $.getJSON(urlData, null, function(json) {

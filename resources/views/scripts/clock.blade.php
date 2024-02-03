@@ -31,7 +31,7 @@
           const second = seconds < 10 ? "0" + seconds : seconds;
 
           // Combine day of the month, month, day of the week, time, and AM/PM designation
-          const digitalTime = month + ' ' + dayOfMonth + ' - ' + dayOfWeek + ' ' + hour + ":" + minute + ":" + second + ' ' + ampm;
+          const digitalTime = dayOfWeek + ' ' + hour + ":" + minute + ":" + second + ' ' + ampm;
 
           // Print the digital time to the DOM
           document.getElementById("time").innerHTML = digitalTime;

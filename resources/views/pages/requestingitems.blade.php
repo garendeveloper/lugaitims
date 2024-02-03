@@ -452,7 +452,7 @@
                 window.open("/admin/requesting/report/"+dateRequest+"/"+user_id, "_blank");
             })
             $("#s_ritems").addClass("active");
-            document.title = "LNHS Requested Items";
+            document.title = "LSHS Requested Items";
             show_datatable();
             function RefreshTable(tableId, urlData) {
                 $.getJSON(urlData, null, function(json) {

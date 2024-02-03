@@ -48,7 +48,14 @@ class ItemcategoryController extends Controller
     {
         //
     }
-
+    public function countItems()
+    {
+        $sql = DB::select("SELECT COUNT(supplier_items.id) AS totalItems, category
+                            FROM itemcategories, supplier_items
+                            WHERE itemcategories.id = supplier_items.category_id
+                            GROUP BY itemcategories.category");
+        return response()->json($sql);
+    }
     /**
      * Store a newly created resource in storage.
      */

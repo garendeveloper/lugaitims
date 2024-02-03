@@ -34,6 +34,7 @@ Route::group(['middleware'=>['prevent-back-history']], function(){
     
 
     Route::group(['middleware'=>['role']], function () {
+        Route::get('/item/categories/list', [ItemcategoryController::class, 'countItems'])->name('categorylist');
         Route::get('/users/get_allUsers', [ItemController::class, 'get_allUsersByJson'])->name('users.get_allUsers');
         Route::get('/datatable/items/get_allItems', [ItemController::class, 'supplier_allItems']);
         Route::get('/items/units', [ItemController::class, 'get_allUnits'])->name('items.units');
@@ -50,7 +51,8 @@ Route::group(['middleware'=>['prevent-back-history']], function(){
         Route::resource('requestingitems', RequestingItemsController::class);
         Route::resource('requisitions', RequisitionController::class);
         
-      
+        
+
         Route::post('/item/saveItem', [ItemController::class, 'saveItem'])->name('items.saveItem');
         Route::get('/reset/stock', [SupplierItemsController::class, 'resetStock'])->name('supplieritems.resetStock');
         Route::get('/retype/item', [SupplierItemsController::class, 'reTypeItem'])->name('supplieritems.reTypeItem');
@@ -79,7 +81,7 @@ Route::group(['middleware'=>['prevent-back-history']], function(){
         Route::get('/admin/monthly/report/{month}/{year}/{category}', [PrintController::class, 'get_report']);
         Route::get('/admin/monthly/report/print/{month}/{year}/{category}', [PrintController::class, 'get_reportPrint']);
         Route::get('/admin/get/categoriesbyjson', [ItemcategoryController::class, 'get_categoriesByJson'])->name('admin.get_categories');
-        
+       
         Route::get('/datatables/requesitions', [RequisitionController::class, 'get_datatable'])->name('datatables.requesitions');
     });
 

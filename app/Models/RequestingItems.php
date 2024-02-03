@@ -12,4 +12,5 @@ class RequestingItems extends Model
     protected $fillable = [
         'id', 'movement_id', 'user_id', 'qty', 'notification', 'status', 'reasonforcancel'
     ];
+
 }
