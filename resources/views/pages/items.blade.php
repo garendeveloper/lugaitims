@@ -641,7 +641,7 @@
                         },
                         {
                             className: "text-right", 
-                            targets: [5, 7] 
+                            targets: [6, 7] 
                         },
                     ],
                     order: [[1, 'desc']],
@@ -651,21 +651,21 @@
                         {
                             extend: 'copy',
                             exportOptions: {
-                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11] // Set columns 0, 2, and 3 for export
+                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11] 
                             },
                             className: 'btn btn-primary btn-sm',
                         },  
                         {
                             extend: 'excel',
                             exportOptions: {
-                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11] // Set columns 0, 2, and 3 for export
+                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11] 
                             },
                             className: 'btn btn-success btn-sm',
                         },  
                         {
                             extend: 'print',
                             exportOptions: {
-                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11] // Set columns 0, 2, and 3 for export
+                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11] 
                             },
                             className: 'btn btn-secondary btn-sm',
                             orientation: 'portrait',
@@ -1285,7 +1285,7 @@
                         {
                             extend: 'copy',
                             exportOptions: {
-                                columns: [0] // Set columns 0, 2, and 3 for export
+                                columns: [0] 
                             }, 
                             title: 'LNHS ITEM CATEGORIES',
                             className: 'btn btn-primary btn-sm',
@@ -1293,7 +1293,7 @@
                         {
                             extend: 'print',
                             exportOptions: {
-                                columns: [0] // Set columns 0, 2, and 3 for export
+                                columns: [0] 
                             },
                             title: 'LNHS ITEM CATEGORIES',
                             className: 'btn btn-secondary btn-sm',
@@ -1304,7 +1304,7 @@
                             extend: 'excel',
                             title: 'LNHS ITEM CATEGORIES',
                             exportOptions: {
-                                columns: [0] // Set columns 0, 2, and 3 for export
+                                columns: [0] 
                             },
                             className: 'btn btn-success btn-sm',
                         },  
@@ -1454,7 +1454,7 @@
                         {
                             extend: 'copy',
                             exportOptions: {
-                                columns: [0, 1, 2] // Set columns 0, 2, and 3 for export
+                                columns: [0, 1, 2] 
                             }, 
                             title: 'LNHS SUPPLIERS',
                             className: 'btn btn-primary btn-sm',
@@ -1462,7 +1462,7 @@
                         {
                             extend: 'print',
                             exportOptions: {
-                                columns: [0, 1, 2] // Set columns 0, 2, and 3 for export
+                                columns: [0, 1, 2] 
                             },
                             title: 'LNHS SUPPLIERS',
                             className: 'btn btn-secondary btn-sm',
@@ -1473,7 +1473,7 @@
                             extend: 'excel',
                             title: 'LNHS SUPPLIERS',
                             exportOptions: {
-                                columns: [0, 1, 2] // Set columns 0, 2, and 3 for export
+                                columns: [0, 1, 2] 
                             },
                             className: 'btn btn-success btn-sm',
                         },  

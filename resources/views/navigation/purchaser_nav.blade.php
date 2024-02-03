@@ -5,40 +5,17 @@
  
 
     <style>
-
-
-    /* Adjusted styles for positioning and padding of the digital clock */
-    .digital-clock {
-        font-family: 'Digital', sans-serif;
-        font-weight: bold;
-        font-size: 36px;
-        color: white;
-        margin-right: 20px; /* Added margin to move the clock to the left */
-        padding: 10px; /* Added padding for spacing */
-    }
+        .digital-clock {
+            font-family: 'Digital', sans-serif;
+            font-weight: bold;
+            font-size: 36px;
+            color: white;
+            margin-right: 20px; 
+            padding: 10px; 
+        }
     </style>
 </head>
 <body>
-    <!-- <nav class="sb-topnav navbar navbar-expand" style="background-color: #2C4B5F;">
-       
-        <a class="navbar-brand ps-3" href="#" style="color: white; font-family: 'Digital', sans-serif; font-weight: bold; letter-spacing: 2px;">LSHS-IMS</a>
-        <button class="btn btn-sm btn-danger order-2 order-lg-0 me-4 me-lg-0" id="logout" >
-            <i class="fas fa-sign-out-alt" style="color: white;"></i> Logout
-        </button>
-        &nbsp;
-        <button class="btn btn-sm btn-secondary order-2 order-lg-0 me-4 me-lg-0" id="btn_myRequestItems" >
-            <i class="fas fa-exchange-alt" style="color: white;"></i> My Transactions
-        </button>
-        <a class="btn btn-sm btn-secondary order-2 order-lg-0 me-4 me-lg-0" href = "{{ route('users.userprofile') }}" >
-            <i class="fas fa-user" style="color: white;"></i> My Profile
-        </a>
-        <a class="btn btn-sm btn-secondary order-2 order-lg-0 me-4 me-lg-0" href = "{{ route('purchaser.home') }}" >
-            <i class="fas fa-user" style="color: white;"></i> Home
-        </a>
-        <div class="digital-clock ml-auto">
-        <div id="time" style="text-align: right;"></div>
-        </div>
-    </nav> -->
     <style>
             .topnav {
                 overflow: hidden;
@@ -70,7 +47,7 @@
             main{
                 padding: 16px;
                 margin-top: 10px;
-                height: 1500px; /* Used in this example to enable scrolling */
+                height: 1500px; 
             }
             .wrapper {
                 display: flex;
@@ -83,7 +60,7 @@
                 display: flex;
                 flex-direction: column;
                 align-items: center;
-             border: 1px dashed red;
+                border: 1px dashed red;
             }
 
             button { margin-top: auto; }
@@ -183,6 +160,7 @@
                     searching: true,
                     responsive: true,
                     ajax: '{!! route("purchaser.get_myRequestedItems") !!}',
+                    order: [[0, 'desc']],
                     columnDefs:[{
                         className: 'text-center',
                         targets: [0, 2, 3, 4],

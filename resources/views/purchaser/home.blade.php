@@ -256,6 +256,8 @@
                                     show_allItems();
                                     $("#tbl_purchases tbody tr").remove();
                                     $(".btn-submit").hide();
+                                    selecteditems = [];
+                                    req_notif = 0;
                                 }
                                 else
                                 {
