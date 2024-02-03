@@ -62,7 +62,7 @@ class ItemController extends Controller
                     if($row->stock == 0)
                         return $html = "<span class = 'badge badge-danger'>".$row->stock."</span>";
                     else
-                        return $html = "<span class = 'badge badge-primary'>".$row->stock."</span>";
+                        return $html = $row->stock;
                 })
                 ->addColumn('actions', function($row){
                     $html = "<td style = 'display: block; margin: auto; text-align:center'>";
