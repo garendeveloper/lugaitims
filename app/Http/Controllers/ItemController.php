@@ -43,6 +43,9 @@ class ItemController extends Controller
                     if($row->status==1) $html = "<span class = 'badge badge-primary'>ACTIVE</span>";
                     return $html;   
                 })   
+                ->addColumn('date', function($row){
+                    return date('m-d-Y', strtotime($row->date));
+                })  
                 ->addColumn('checkboxes', function($row){
                     $html = "<input class = 'checkboxes' style = 'width: 20px; height: 20px;' type = 'checkbox' name = 'itemCheck' id = 'itemCheck' data-supplieritem_id=".$row->supplieritem_id." value = '".$row->supplieritem_id."' />";
                     return $html;
@@ -68,7 +71,7 @@ class ItemController extends Controller
                     $html .= "</td>";
                     return $html;
                 }) 
-                ->rawColumns(['type','checkboxes','actions', 'cost', 'totalCost', 'stock'])
+                ->rawColumns(['type', 'date', 'checkboxes','actions', 'cost', 'totalCost', 'stock'])
                 ->make(true);
     }
     public function get_allItems()

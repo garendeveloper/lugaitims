@@ -8,6 +8,7 @@
             <div id="layoutSidenav_content">
                 <main>
                     <div class="container-fluid px-6">
+                        <h1></h1>
                         <div class="card ">
                             <div class="card-header">
                                 <div class="row">
@@ -195,7 +196,7 @@
                 }
             })
             $("#s_departments").addClass("active");
-            document.title = "LNHS Departments";
+            document.title = "LSHS Departments";
             show_datatable();
             function RefreshTable(tableId, urlData) {
                 $.getJSON(urlData, null, function(json) {

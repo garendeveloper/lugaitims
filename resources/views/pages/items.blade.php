@@ -20,7 +20,7 @@
                                     <div class="col-sm-7 pull-left">
                                         <div >
                                             <button class = "btn btn-sm btn-warning" id = "btn_manageSupplier"><i class = "fas fa-users"></i>&nbsp;&nbsp;Manage Suppliers</button>
-                                            <button class = "btn btn-sm btn-secondary" id = "btn_manageCategory"><i class = "fas fa-list-alt"></i>&nbsp;&nbsp;Manage Categories</button>
+                                            <button class = "btn btn-sm btn-success" id = "btn_manageCategory"><i class = "fas fa-list-alt"></i>&nbsp;&nbsp;Manage Categories</button>
                                             <button id = "open_itemModal" type = "button" class = "btn btn-primary btn-sm">
                                                 <i class = "fas fa-cart-plus"></i>&nbsp;&nbsp;
                                                 Create New Item
@@ -40,16 +40,19 @@
                                         word-break: break-word; word-break: break-all; white-space: normal;
                                     }
                                 </style>
+                               
+                               <div class="row" id = "categorylist">
+
+                                </div>
                                 <div class="table-responsive">
                                     <table id="table" class = "table table-bordered table-stripped cell-border" style = "width: 100%">
                                         <thead >
-                                            <tr class = "bg-success">
+                                            <tr class = "background-color: #44c7c;">
                                                 <th style = "text-align:center;">
                                                     <input style = "width: 20px; height: 20px;" type="checkbox" id = "itemAll"/> 
                                                 </th>
                                                 <th colspan = "2" style = "text-align: center">
                                                     <button type = "button" class = "btn btn-flat btn-primary btn-sm" id = "btn_reStock"><i class = "fas  fa-redo fa-xs"></i>&nbsp;Reset Stock </button>
-
                                                     <button type = "button" class = "btn btn-flat btn-secondary btn-sm" id = "btn_reload"><i class = "fas  fa-refresh"></i>&nbsp;Reload Table </button>
                                                 </th>
                                                 <th colspan="3" style = "text-align: center">
@@ -59,7 +62,7 @@
                                                         <!-- <option value="3">RELEASED</option> -->
                                                         <option value="S0">WASTED</option>
                                                     </select>
-                                                </th>
+                                                </th> 
                                                 <th colspan = "9"></th>
                                             </tr>
                                             <tr>
@@ -86,18 +89,6 @@
                         </div>
                     </div>
                 </main>
-                <!-- <footer class="py-4 bg-secondary mt-auto" >
-                    <div class="container-fluid px-4">
-                        <div class="d-flex align-items-center justify-content-between small">
-                            <div class="text-muted">Copyright &copy; Your Website 2023</div>
-                            <div>
-                                <a href="#">Privacy Policy</a>
-                                &middot;
-                                <a href="#">Terms &amp; Conditions</a>
-                            </div>
-                        </div>
-                    </div>
-                </footer> -->
             </div>
         </div>
 
@@ -588,7 +579,7 @@
                 }
             })
             $("#s_items").addClass("active");
-            document.title = "LNHS ITEMS";
+            document.title = "LSHS ITEMS";
             show_datatable();
             show_allUnits();
             show_allBrands();
@@ -625,6 +616,31 @@
                 var ctx = canvas.getContext("2d");
                 ctx.drawImage(img, 0, 0);
                 return canvas.toDataURL("image/png");
+            }
+            show_allCategoryList();
+            function show_allCategoryList()
+            {
+                $.ajax({
+                    type:'get',
+                    url: '{{ route("categorylist") }}',
+                    dataType: 'json',
+                    success: function(data)
+                    {
+                        var row = '';
+                        for(var i = 0; i<data.length; i++)
+                        {
+                            row += '<div class="col-lg-3 col-md-3">';
+                            row += '<div class="card bg-primary text-white mb-4">';
+                            row += '<div class="card-body d-flex align-items-center justify-content-between">';
+                            row += '<h5>'+data[i].category+'</h5>';
+                            row += '<div class="small text-white"><h5>'+data[i].totalItems+'</h5></div>';
+                            row += '</div>';
+                            row += '</div>';
+                            row += '</div>';      
+                        }    
+                        $("#categorylist").html(row);
+                    }
+                })
             }
             function show_datatable()
             {
@@ -671,7 +687,7 @@
                             orientation: 'portrait',
                             pageSize: 'LEGAL',
                             footer: 'true',
-                            title: 'LNHS LIST OF ALL ITEMS',
+                            title: 'LSHS LIST OF ALL ITEMS',
                             customize: function (win) {
                                 $(win.document.body)
                                     .css('font-size', '8pt');
@@ -1287,7 +1303,7 @@
                             exportOptions: {
                                 columns: [0] 
                             }, 
-                            title: 'LNHS ITEM CATEGORIES',
+                            title: 'LSHS ITEM CATEGORIES',
                             className: 'btn btn-primary btn-sm',
                         },  
                         {
@@ -1295,14 +1311,14 @@
                             exportOptions: {
                                 columns: [0] 
                             },
-                            title: 'LNHS ITEM CATEGORIES',
+                            title: 'LSHS ITEM CATEGORIES',
                             className: 'btn btn-secondary btn-sm',
                             orientation: 'portrait',
                             pageSize: 'LEGAL',
                         },  
                         {
                             extend: 'excel',
-                            title: 'LNHS ITEM CATEGORIES',
+                            title: 'LSHS ITEM CATEGORIES',
                             exportOptions: {
                                 columns: [0] 
                             },
@@ -1332,6 +1348,7 @@
                             {
                                 AutoReloadCategory();
                                 reset_categoryForm();
+                                show_allCategoryList();
                                 alert(resp.messages);
                             }
                             else
@@ -1456,7 +1473,7 @@
                             exportOptions: {
                                 columns: [0, 1, 2] 
                             }, 
-                            title: 'LNHS SUPPLIERS',
+                            title: 'LSHS SUPPLIERS',
                             className: 'btn btn-primary btn-sm',
                         },  
                         {
@@ -1464,14 +1481,14 @@
                             exportOptions: {
                                 columns: [0, 1, 2] 
                             },
-                            title: 'LNHS SUPPLIERS',
+                            title: 'LSHS SUPPLIERS',
                             className: 'btn btn-secondary btn-sm',
                             orientation: 'portrait',
                             pageSize: 'LEGAL',
                         },  
                         {
                             extend: 'excel',
-                            title: 'LNHS SUPPLIERS',
+                            title: 'LSHS SUPPLIERS',
                             exportOptions: {
                                 columns: [0, 1, 2] 
                             },

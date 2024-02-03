@@ -19,7 +19,7 @@
      
 </style>
 
-<nav class="sb-sidenav accordion sb-sidenav-success" id="sidenavAccordion" style = "background-color: #08a4a7" >
+<nav class="sb-sidenav accordion sb-sidenav-success" id="sidenavAccordion" style = "background-color: #83b2b7" >
     <div class="sb-sidenav-menu">
         <div class="nav">
         <div class="sb-sidenav-menu-heading">Core</div>

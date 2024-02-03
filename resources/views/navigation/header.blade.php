@@ -45,11 +45,11 @@
     color: white;
   }
   .card-header{
-    background-color: #08a4a7;
+    background-color: #2C4B5F;
     color: white;
   }
   table thead{
-    background-color: #08a4a7;
+    background-color: #2C4B5F;
     color: white;
   }
   .sb-sidenav .sb-sidenav-menu .nav .nav-link {
@@ -85,7 +85,7 @@
    font-size: 20px;
   }
   .modal-header{
-    background-color: #08a4a7;
+    background-color: #2C4B5F;
     color: white;
   }
   .ui-autocomplete {
