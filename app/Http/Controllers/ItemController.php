@@ -126,9 +126,6 @@ class ItemController extends Controller
     {
         return response()->json($request->all());
     }
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         $messages; $status="";
@@ -315,13 +312,6 @@ class ItemController extends Controller
                         AND suppliers.id = supplier_items.supplier_id
                         AND supplier_items.id = '.$item_id.'');
         
-        // $requestItem = DB::select('select users.*, users.id as purchaser_id, positions.*, departments.*, requesting_items.*, requesting_items.id as requestingitem_id
-        //                         from positions, departments, users, requesting_items, movements
-        //                         where departments.id = users.department_id
-        //                         and positions.id = users.position_id
-        //                         and movements.id = requesting_items.movement_id
-        //                         and users.id = requesting_items.user_id
-        //                         and movements.id = "'.$sql[0]->movement_id.'"');
         $data = [
             'item'=>$sql,
             // 'requestItem'=>$requestItem,
