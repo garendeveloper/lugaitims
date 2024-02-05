@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\supplier_items;
 use Illuminate\Http\Request;
 use DB;
+use App\Models\Movements;
 use Carbon\Carbon;
 class SupplierItemsController extends Controller
 {
@@ -60,7 +61,16 @@ class SupplierItemsController extends Controller
         if($request->selected_itemtype == 4) DB::table('movements')->whereIn('id', $item_ids)->update(array('type' => $request->selected_itemtype,  'dateWasted'=>Carbon::now()));
         if($request->selected_itemtype == 5)
         {
-            DB::table('movements')->whereIn('id', $item_ids)->update(array('type'=>5,'dateCancelled'=>Carbon::now(), 'reasonforcancel'=>strtoupper($request->reasonforcancel)));
+            // DB::table('movements')->whereIn('id', $item_ids)->update(array('type'=>5, 'totalReleased'=>0, 'dateCancelled'=>Carbon::now(), 'reasonforcancel'=>strtoupper($request->reasonforcancel)));
+            for($i = 0; $i<count($item_ids); $i++)
+            {
+                $movement = Movements::find($item_ids[$i]);
+                $movement->type = 5; 
+                $movement->totalReleased = 0;
+                $movement->reasonforcancel = strtoupper($request->reasonforcancel);
+                $movement->dateCancelled = Carbon::now();
+                $movement->update();
+            }
             if($request->supplieritem_ids !== null)
             { 
                 for($i = 0; $i<count($request->supplieritem_ids); $i++)

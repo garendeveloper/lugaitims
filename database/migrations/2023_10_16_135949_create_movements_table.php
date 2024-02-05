@@ -25,6 +25,7 @@ return new class extends Migration
                     ->references('id')
                     ->onUpdate('cascade')
                     ->onDelete('cascade');
+            $table->integer('totalReleased')->default(0);
             $table->tinyInteger('notification')->default(0);
             $table->integer('qty')->default(0);
             $table->tinyInteger('status')->default(0);

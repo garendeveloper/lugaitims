@@ -34,6 +34,7 @@ Route::group(['middleware'=>['prevent-back-history']], function(){
     
 
     Route::group(['middleware'=>['role']], function () {
+        Route::get('/admin/request/savePartial', [RequestingItemsController::class, 'savePartial']);
         Route::get('/item/categories/list', [ItemcategoryController::class, 'countItems'])->name('categorylist');
         Route::get('/users/get_allUsers', [ItemController::class, 'get_allUsersByJson'])->name('users.get_allUsers');
         Route::get('/datatable/items/get_allItems', [ItemController::class, 'supplier_allItems']);

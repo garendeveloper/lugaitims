@@ -10,7 +10,7 @@ class movements extends Model
     use HasFactory;
 
     protected $fillable=[
-        'id','supplieritem_id','user_id','lastAction',
+        'id','supplieritem_id','user_id','lastAction', 'totalReleased',
         'status','type', 'dateReleased','datePurchased','dateWasted','dateCancelled','qty', 'notification', 'status', 'reasonforcancel',
     ];
 }
