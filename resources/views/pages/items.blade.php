@@ -630,7 +630,7 @@
                         for(var i = 0; i<data.length; i++)
                         {
                             row += '<div class="col-lg-3 col-md-3">';
-                            row += '<div class="card bg-primary text-white mb-4">';
+                            row += '<div class="card bg-secondary text-white mb-4">';
                             row += '<div class="card-body d-flex align-items-center justify-content-between">';
                             row += '<h5>'+data[i].category+'</h5>';
                             row += '<div class="small text-white"><h5>'+data[i].totalItems+'</h5></div>';
@@ -703,7 +703,7 @@
                     },
                     columns: [
                         { data: 'checkboxes', name: 'checkboxes' },
-                        { data: 'date', name: 'date' },
+                        { data: 'dateT', name: 'dateT' },
                         { data: 'item', name: 'item' },
                         { data: 'unit', name: 'unit' },
                         { data: 'brand', name: 'brand' },

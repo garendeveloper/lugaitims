@@ -30,7 +30,8 @@ class ItemController extends Controller
                 ->addColumn('status', function($row) {
                     $html = "<span class = 'badge badge-danger'>CANCELLED</span>";
                     if($row->type == 1) $html = "<span class = 'badge badge-primary'>REQUESTING</span>";
-                    if($row->type == 3) $html = "<span class = 'badge badge-success'>APPROVED</span>";
+                    if($row->type == 3) $html = "<span class = 'badge badge-success'>FULLY RELEASED</span>";
+                    if($row->type == 7) $html = "<span class = 'badge badge-warning'>PARTIALLY RELEASED</span>";
                     return $html;  
                 })->rawColumns(['status'])->make(true);
     }
@@ -43,9 +44,6 @@ class ItemController extends Controller
                     if($row->status==1) $html = "<span class = 'badge badge-primary'>ACTIVE</span>";
                     return $html;   
                 })   
-                ->addColumn('date', function($row){
-                    return date('m-d-Y', strtotime($row->date));
-                })  
                 ->addColumn('checkboxes', function($row){
                     $html = "<input class = 'checkboxes' style = 'width: 20px; height: 20px;' type = 'checkbox' name = 'itemCheck' id = 'itemCheck' data-supplieritem_id=".$row->supplieritem_id." value = '".$row->supplieritem_id."' />";
                     return $html;
@@ -71,22 +69,22 @@ class ItemController extends Controller
                     $html .= "</td>";
                     return $html;
                 }) 
-                ->rawColumns(['type', 'date', 'checkboxes','actions', 'cost', 'totalCost', 'stock'])
+                ->rawColumns(['type', 'checkboxes','actions', 'cost', 'totalCost', 'stock'])
                 ->make(true);
     }
     public function get_allItems()
     {
-        $sql = DB::select('SELECT supplier_items.id as supplieritem_id, items.*, itemcategories.*, suppliers.*, supplier_items.*
+        $sql = DB::select('SELECT date_format(supplier_items.date, "%m-%d-%Y")  as dateT, supplier_items.id as supplieritem_id, items.*, itemcategories.*, suppliers.*, supplier_items.*
                         FROM items, suppliers, supplier_items, itemcategories
                         WHERE itemcategories.id = supplier_items.category_id 
                         AND items.id = supplier_items.item_id
                         AND suppliers.id = supplier_items.supplier_id
-                        ORDER BY supplier_items.date desc');
+                        ORDER BY date_format(supplier_items.date, "%m-%d-%Y") desc');
         return $sql;
     }
     public function get_allSupplierItems()
     {
-        $sql = DB::select('SELECT supplier_items.id as supplieritem_id, items.*, itemcategories.*, suppliers.*, supplier_items.*
+        $sql = DB::select('SELECT date_format(supplier_items.date, "%m-%d-%Y")  as date, supplier_items.id as supplieritem_id, items.*, itemcategories.*, suppliers.*, supplier_items.*
                         FROM items, suppliers, supplier_items, itemcategories
                         WHERE itemcategories.id = supplier_items.category_id 
                         AND items.id = supplier_items.item_id
@@ -117,9 +115,6 @@ class ItemController extends Controller
         $data = Item::select('item')->distinct()->get();
         return response()->json($data);
     }
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         //
@@ -296,7 +291,7 @@ class ItemController extends Controller
      */
     public function edit($item_id)
     {
-        $sql = DB::select('SELECT TIMESTAMPDIFF(YEAR,supplier_items.date, CURDATE())  AS age, suppliers.contact_number as supp_contactNo, suppliers.id as supplier_id, items.*, itemcategories.*, suppliers.*, supplier_items.*, itemcategories.id as itemcategory_id, items.id as item_id, supplier_items.id as supplieritem_id
+        $sql = DB::select('SELECT TIMESTAMPDIFF(YEAR,supplier_items.date, CURDATE())  AS age, suppliers.contact_number as supp_contactNo, suppliers.id as supplier_id, items.*, itemcategories.*, suppliers.*, supplier_items.*, itemcategories.id as itemcategory_id, items.id as item_id, supplier_items.id as supplieritem_id, date_format(supplier_items.date, "%m-%d-%Y")  as date
                         FROM items, suppliers, supplier_items, itemcategories
                         WHERE itemcategories.id = supplier_items.category_id 
                         AND items.id = supplier_items.item_id
@@ -308,7 +303,7 @@ class ItemController extends Controller
 
     public function purchaserEdit($item_id)
     {
-        $sql = DB::select('SELECT  date(supplier_items.created_at) as transactedOn, suppliers.contact_number as supp_contactNo, suppliers.id as supplier_id, items.*, itemcategories.*, suppliers.*, supplier_items.*, itemcategories.id as itemcategory_id, items.id as item_id, supplier_items.id as supplieritem_id
+        $sql = DB::select('SELECT date_format(supplier_items.created_at, "%m-%d-%Y")  as transactedOn, suppliers.contact_number as supp_contactNo, suppliers.id as supplier_id, items.*, itemcategories.*, suppliers.*, supplier_items.*, itemcategories.id as itemcategory_id, items.id as item_id, supplier_items.id as supplieritem_id
                         FROM items, suppliers, supplier_items, itemcategories
                         WHERE itemcategories.id = supplier_items.category_id 
                         AND items.id = supplier_items.item_id
@@ -326,7 +321,7 @@ class ItemController extends Controller
     {
         $user_id = Auth::user()->id;
 
-        $requestItem = DB::select('select items.*, supplier_items.*, suppliers.*, movements.*, users.*, users.id as purchaser_id, positions.*, departments.*, movements.created_at as dateTransact
+        $requestItem = DB::select('select items.*, supplier_items.*, suppliers.*, movements.*, users.*, users.id as purchaser_id, positions.*, departments.*, date_format(movements.created_at, "%m-%d-%Y")  as dateTransact
                                 from positions, departments, users, movements, items, supplier_items, suppliers
                                 where departments.id = users.department_id
                                 and positions.id = users.position_id

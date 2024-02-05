@@ -83,7 +83,7 @@
                             <?php $count=1;?>
                             @foreach($data as $d)
                                 <tr>
-                                    <td style = "width: 20px; text-align: center">{{$d->qty}}</td>
+                                    <td style = "width: 20px; text-align: center">{{$d->totalReleased}}</td>
                                     <td style = "text-align: center">{{$d->unit}}</td>
                                     <td class = "w-50">{{$d->item}}</td>
                                     <td style = "text-align: center">N/A</td>

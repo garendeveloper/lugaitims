@@ -91,11 +91,12 @@
                                         <th>
                                             <select name="selected_itemtype" id="selected_itemtype" class = "form-control" style = "height: 40px; ">
                                                 <option value="">--TRANSACTION--</option>
-                                                <option value="3">RELEASED</option>
+                                                <option value="7">RELEASED</option>
+                                                <!-- <option value="3">FULLY RELEASED</option> -->
                                                 <option value="5">CANCEL</option>
                                             </select>
                                         </th>
-                                        <th colspan = "5">
+                                        <th colspan = "6">
                                             <input type="text" class = "form-control" placeholder = "SEARCH ITEM HERE" id = "search">
                                         </th>
                                     </tr>
@@ -105,6 +106,7 @@
                                         <th>ITEM</th>
                                         <th>QUANTITY</th>
                                         <th>BRAND</th>
+                                        <th>NO. ITEMS RELEASED</th>
                                         <th>STATUS</th>
                                         <th>REASON OF CANCEL</th>
                                     </tr>
@@ -115,6 +117,7 @@
                     </div>
                     <!-- Modal Footer with Close Button -->
                     <div class="modal-footer">
+                    <button type="button" class="btn btn-success btn-sm btn-block btn-submitPartial" style = "display:none"><i class = "fas fa-save"></i>&nbsp; Submit</button> 
                         <a class = "btn btn-primary btn-block btn-sm" id = "btn_releaseReport" ><i class = "fas fa-print"></i>&nbsp; Release Ticket</a>
                         <!-- <button type="button" class="btn btn-success btn-sm btn-block btn-approved" data-dismiss="modal"><i class = "fas fa-cart"></i>&nbsp; Delivered</button>
                         <button type="button" class="btn btn-danger btn-sm btn-block btn-cancel" data-dismiss="modal"><i class = "fas fa-times"></i>&nbsp; Cancel</button> -->
@@ -461,15 +464,60 @@
 
                     table.fnClearTable(this);
 
-                    for (var i = 0; i < json.aaData.length; i++) {
-                        table.oApi._fnAddData(oSettings, json.aaData[i]);
+                    for (var i = 0; i < json.data.length; i++) {
+                        table.oApi._fnAddData(oSettings, json.data[i]);
                     }
 
                     oSettings.aiDisplay = oSettings.aiDisplayMaster.slice();
                     table.fnDraw();
                 });
             }
+            var releasedItems = [];
+            $(".btn-submitPartial").click(function(){
+                $("input:checkbox[name=itemCheck]:checked").each(function() {
+                    var data = {};
+                    var totalReleased = $(this).closest('tr').find('input[name="totalReleased"]').val();
+                    
+                    if(totalReleased !== "")
+                    {
+                        data.totalReleased = totalReleased;
+                        data.qty = $(this).closest('tr').find('input[name="totalReleased"]').data('qty');
+                        data.type = $(this).closest('tr').find('input[name="totalReleased"]').data('type');
+                        data.supplieritem_id = $(this).closest('tr').find('input[name="totalReleased"]').data('supplieritem_id');
+                        data.movement_id = $(this).closest('tr').find('input[name="totalReleased"]').data('movement_id');
+                        releasedItems.push(data);
+                    }
+                    else return $(this).closest('tr').find('.totalReleased').addClass('is-invalid');
+                })
+                if(releasedItems.length > 0 )
+                {
+                    $.ajax({
+                        type: 'get',
+                        url: '/admin/request/savePartial',
+                        data: {releasedItems: releasedItems},
+                        dataType: 'json',
+                        success: function(response)
+                        {
+                            var userid = $("#_userid").val();
+                            var dateRequest = $("#_date").val();
+                            if(response.status){
+                                show_allRequestss(dateRequest, userid);
+                                $("#itemAll").prop('checked', false);
+                                $("#selected_itemtype").val("");
+                                alert(response.message);
+                                releasedItems = [];
+                                $(".btn-submitPartial").hide();
+                            }
+                            else
+                            {
+                                alert(response.message);
+                            }
+                        }
+                    })
+                }
+            })
             $("#selected_itemtype").on('change', function(e){
+                
                 var array = [];
                 var supplieritem_ids = [];
                 var qty = [];
@@ -486,48 +534,78 @@
                 {
                     if($(this).val() !== "")
                     {
-                        if(confirm("Do you wish to retype the selected items?"))
+                        if($(this).val() === "7")
                         {
-                            var reasonforcancel = "";
-                            if($(this).val() === "5")
-                            {
-                                do{
-                                    reasonforcancel = prompt("Enter a reason:");
-                                }
-                                while(reasonforcancel == null || reasonforcancel == "" );
-                            } 
-                            $.ajax({
-                                type: 'get',
-                                url: '{{ route("supplieritems.reTypeItem") }}',
-                                data: {
-                                    items: array, 
-                                    selected_itemtype: $(this).val(), 
-                                    supplieritem_ids: supplieritem_ids, 
-                                    qty: qty, 
-                                    types: types,
-                                    req_id: req_id,
-                                    reasonforcancel: reasonforcancel,
-                                },
-                                dataType: 'json',
-                                success: function(response)
-                                {
-                                    var userid = $("#_userid").val();
-                                    var dateRequest = $("#_date").val();
-                                    if(response.status) {
-                                        $("#itemAll").prop('checked', false);
-                                        $("#selected_itemtype").val("");
-                                        alert(response.message);
-                                        show_allRequestss(dateRequest, userid);
-                                    }
-                                },
-                                error: function(res)
-                                {
-                                    alert("Something went wrong in updating of records.");
-                                }
+                            $("input:checkbox[name=itemCheck]:checked").each(function() { 
+                                $(this).closest('tr').find('input[name="totalReleased"]').attr('disabled', false);
+                                $(".btn-submitPartial").show();
+                            }); 
+                            $("input:checkbox[name=itemCheck]:not(:checked)").each(function(){
+                                $(this).closest('tr').find('input[name="totalReleased"]').attr('disabled', true);
+                                $(this).attr('disabled', true);
                             })
                         }
+                        else
+                        {
+                            $("input:checkbox[name=itemCheck]:checked").each(function() { 
+                                $(this).closest('tr').find('input[name="totalReleased"]').val();
+                                $(".btn-submitPartial").hide();
+                            }); 
+                            if(confirm("Do you wish to retype the selected items?"))
+                            {
+                                var reasonforcancel = "";
+                                if($(this).val() === "5")
+                                {
+                                    do{
+                                        reasonforcancel = prompt("Enter a reason:");
+                                    }
+                                    while(reasonforcancel == null || reasonforcancel == "" );
+                                } 
+                                $.ajax({
+                                    type: 'get',
+                                    url: '{{ route("supplieritems.reTypeItem") }}',
+                                    data: {
+                                        items: array, 
+                                        selected_itemtype: $(this).val(), 
+                                        supplieritem_ids: supplieritem_ids, 
+                                        qty: qty, 
+                                        types: types,
+                                        req_id: req_id,
+                                        reasonforcancel: reasonforcancel,
+                                    },
+                                    dataType: 'json',
+                                    success: function(response)
+                                    {
+                                        var userid = $("#_userid").val();
+                                        var dateRequest = $("#_date").val();
+                                        if(response.status) {
+                                            $("#itemAll").prop('checked', false);
+                                            $("#selected_itemtype").val("");
+                                            alert(response.message);
+                                            show_allRequestss(dateRequest, userid);
+                                        }
+                                    },
+                                    error: function(res)
+                                    {
+                                        alert("Something went wrong in updating of records.");
+                                    }
+                                })
+                            }
+                        }
                     }
-                    else alert("Please select a type!");
+                    else 
+                    {
+                        alert("Please select a type!");
+                        $('input[name="totalReleased"]').attr('disabled', true);
+                        $("input:checkbox[name=itemCheck]:not(:checked)").each(function(){
+                            $(this).attr('disabled', false);
+                        })
+                        $("input:checkbox[name=itemCheck]:checked").each(function() { 
+                            $(this).closest('tr').find('input[name="totalReleased"]').val();
+                            $(".btn-submitPartial").hide();
+                            $(this).prop('checked', false);
+                        }); 
+                    }
                 }
                 else
                 {
@@ -548,8 +626,8 @@
                     responsive: true,
                     ajax: '{!! route("datatables.requestingitems") !!}',
                     columnDefs: [{
-                        className: "text-center", // Add 'text-center' class to the targeted column
-                        targets: [0, 3] // Replace 'columnIndex' with the index of your targeted column (starting from 0)
+                        className: "text-center", 
+                        targets: [0, 3] 
                     }],
                     order: [[0, 'desc']],
                     dom: 'lBfrtip',
@@ -558,7 +636,7 @@
                         {
                             extend: 'copy',
                             exportOptions: {
-                                columns: [0, 1, 2] // Set columns 0, 2, and 3 for export
+                                columns: [0, 1, 2] 
                             },
                             className: 'btn btn-primary btn-sm',
                         },  
@@ -566,7 +644,7 @@
                             title: 'Requested Items',
                             extend: 'print',
                             exportOptions: {
-                                columns: [0, 1, 2] // Set columns 0, 2, and 3 for export
+                                columns: [0, 1, 2]
                             },
                             className: 'btn btn-secondary btn-sm',
                             orientation: 'portrait',
@@ -575,7 +653,7 @@
                         {
                             extend: 'excel',
                             exportOptions: {
-                                columns: [0, 1, 2] // Set columns 0, 2, and 3 for export
+                                columns: [0, 1, 2] 
                             },
                             className: 'btn btn-success btn-sm',
                         },  
@@ -601,7 +679,28 @@
                 show_allRequestss(dateRequest, user_id);
                 showModal();
             })
-           
+            $("#tblrequest_items_tbody").on('keyup', '#totalReleased', function(e){
+               var qty = $(this).val();
+               var stock = $(this).data('qty');
+               if(stock < qty)
+               {
+                 alert("Total released must not be greater than requested quantity");
+                 $(this).val(0);
+               }
+               if(qty < 0 || qty == "0-" || qty == "0--" || qty == "-")
+               {
+                 alert("Invalid Total Released");
+                 $(this).val(0);
+               }
+            })
+            $("#tblrequest_items_tbody").on('keydown', '#totalReleased', function(e){
+               var qty = $(this).val();
+               if(qty < 0 || qty === "0-" || qty === "0--" || qty === "-" || qty === "--")
+               {
+                 alert("Invalid Total Released");
+                 $(this).val(0);
+               }
+            })
             function show_allRequestss(dateRequest, user_id)
             {
                 $.ajax({
@@ -620,15 +719,20 @@
                         while(j < length)
                         {
                             row += "<tr>";
-                            row += "<td style = 'text-align: center'><input data-qty = "+datas[j].qty+" data-type = "+datas[j].type+" data-supplieritem_id= "+datas[j].supplieritem_id+"  class = 'checkboxes' style = 'width: 20px; height: 20px;' type = 'checkbox' value = "+datas[j].movement_id+"  name = 'itemCheck' id = 'itemCheck' /></td>";
+                            if(datas[j].type == 3)
+                            row += "<td style = 'text-align: center'><input data-qty = "+datas[j].qty+" data-type = "+datas[j].type+" data-supplieritem_id= "+datas[j].supplieritem_id+"  class = 'checkboxes' style = 'width: 20px; height: 20px;' type = 'checkbox' value = "+datas[j].movement_id+"  name = 'itemCheck1' id = 'itemCheck1' checked disabled readonly/></td>";
+                            else 
+                            row += "<td style = 'text-align: center'><input data-qty = "+datas[j].qty+" data-type = "+datas[j].type+" data-supplieritem_id= "+datas[j].supplieritem_id+"  class = 'checkboxes' style = 'width: 20px; height: 20px;' type = 'checkbox' value = "+datas[j].movement_id+"  name = 'itemCheck' id = 'itemCheck'/></td>";
                             row += "<td>"+datas[j].dateTransact+"</td>";
                             row += "<td>"+datas[j].item+"</td>";
                             row += "<td style = 'text-align: center'>"+datas[j].qty+"</td>";
                             row += "<td>"+datas[j].brand+"</td>";
+                            row += "<td class = 'fit'><input class = 'form-control totalReleased' type = 'number' min='0'  name = 'totalReleased' id = 'totalReleased' required  data-qty = "+datas[j].qty+" data-type = "+datas[j].type+" data-supplieritem_id= "+datas[j].supplieritem_id+"  value = "+datas[j].totalReleased+" data-movement_id = "+datas[j].movement_id+" max="+datas[j].qty+" disabled></input></td>";
                             var status = "<span class = 'badge badge-danger'>CANCELLED</span>";
                             var reasonforcancel = "-";
                             if(datas[j].type == 1) status = "<span class = 'badge badge-primary'>REQUESTING</span>";
-                            if(datas[j].type == 3) status = "<span class = 'badge badge-success'>RELEASED</span>";
+                            if(datas[j].type == 3) status = "<span class = 'badge badge-success'>FULLY RELEASED</span>";
+                            if(datas[j].type == 7) status = "<span class = 'badge badge-warning'>PARTIALLY RELEASED</span>";
                             if(datas[j].type == 5) reasonforcancel = datas[j].reasonforCancel == null ? "-" : datas[j].reasonforCancel;
                             row += "<td style = 'text-align: center'>"+status+"</td>";
                             row += "<td style = 'text-align: center'>"+reasonforcancel+"</td>";

@@ -27,7 +27,7 @@ class RequestingItemsController extends Controller
                                 and suppliers.id = supplier_items.supplier_id
                                 and supplier_items.id = movements.supplieritem_id
                                 and movements.user_id = users.id
-                                and movements.user_id = '.$user_id.' and date(movements.created_at) = "'.$dateRequest.'" and movements.type = 3 order by movements.created_at desc ');
+                                and movements.user_id = '.$user_id.' and date_format(movements.created_at, "%m-%d-%Y") = "'.$dateRequest.'" and movements.type = 3 order by movements.created_at desc ');
         return view('reports.requestingitems', compact('data'));
     }
     public function datatable()
@@ -43,10 +43,34 @@ class RequestingItemsController extends Controller
                     return $html;
                 })
                 ->addColumn('dateRequest', function($data){
-                    return date('m-d-Y', strtotime($data['dateRequest']));
+                    // return date('m-d-Y', strtotime($data['dateRequest']));
+                    return $data['dateRequest'];
                 })
                 ->rawColumns(['action', 'status', 'dateRequest'])
                 ->make(true);
+    }
+    public function savePartial(Request $request)
+    {   
+        $releasedItems = $request->releasedItems;
+        for($i = 0; $i<count($releasedItems); $i++)
+        {
+            $movement = Movements::find($releasedItems[$i]['movement_id']);
+            if($releasedItems[$i]['totalReleased'] == $movement->qty) 
+            {
+                $movement->type = 3; //Fully Released
+            }
+            if($releasedItems[$i]['totalReleased'] != $movement->qty) 
+            {
+                $movement->type = 7;//Partially Released
+            }
+            $movement->totalReleased = $releasedItems[$i]['totalReleased'];
+            $movement->dateReleased = Carbon::now();
+            $movement->update();
+        }
+        return response()->json([
+            'status'=>true,
+            'message'=> 'Requested Item/s has been successfully processed!'
+        ]);
     }
     public function realtime_notification()
     {
@@ -70,7 +94,7 @@ class RequestingItemsController extends Controller
     }
     public function resetNotification(Request $request)
     {
-        $result = DB::select('select * from movements where date(created_at) = "'.date('Y-m-d', strtotime($request->dateRequest)).'" and notification = 1 and user_id = '.$request->user_id.'');
+        $result = DB::select('select * from movements where date_format(movements.created_at, "%m-%d-%Y") = "'.$request->dateRequest.'" and notification = 1 and user_id = '.$request->user_id.'');
         foreach($result as $res)
         {
              $r = DB::table('movements')->where([
@@ -96,7 +120,7 @@ class RequestingItemsController extends Controller
     }   
     public function get_requestingItemsData()
     {
-        $sql = DB::select('select distinct date(movements.created_at) as dateRequest, user_id from movements order by date(movements.created_at) desc');
+        $sql = DB::select('select distinct date_format(movements.created_at, "%m-%d-%Y") as dateRequest, user_id from movements order by date_format(movements.created_at, "%m-%d-%Y") desc');
         return $sql;
     }
     public function get_allUserInfo($user_id)
@@ -113,7 +137,7 @@ class RequestingItemsController extends Controller
         $data = [];
         foreach($this->get_requestingItemsData() as $req)
         {
-            $result = DB::select('select * from movements where date(movements.created_at) = "'.$req->dateRequest.'" and user_id = '.$req->user_id.'');
+            $result = DB::select('select * from movements where date_format(movements.created_at, "%m-%d-%Y") = "'.$req->dateRequest.'" and user_id = '.$req->user_id.'');
             $notification = 0;
             foreach($result as $notif)
             {
@@ -132,7 +156,7 @@ class RequestingItemsController extends Controller
     }
     public function get_purchaserRequest(Request $request, $user_id)
     {
-        $data = DB::select('select distinct movements.id as movement_id, movements.status as req_status, items.*, supplier_items.*, suppliers.*, movements.*, users.*, users.id as purchaser_id, positions.*, departments.*, movements.created_at as dateTransact
+        $data = DB::select('select distinct movements.id as movement_id, movements.status as req_status, items.*, supplier_items.*, suppliers.*, movements.*, users.*, users.id as purchaser_id, positions.*, departments.*, date_format(movements.created_at, "%m-%d-%Y %H:%m:%s") as dateTransact
                                 from positions, departments, movements, users, items, supplier_items, suppliers
                                 where departments.id = users.department_id
                                 and positions.id = users.position_id
@@ -140,12 +164,12 @@ class RequestingItemsController extends Controller
                                 and suppliers.id = supplier_items.supplier_id
                                 and supplier_items.id = movements.supplieritem_id
                                 and users.id = movements.user_id
-                                and movements.user_id = '.$user_id.' and date(movements.created_at) = "'.$request->dateRequest.'" order by movements.created_at desc');
+                                and movements.user_id = '.$user_id.' and date_format(movements.created_at, "%m-%d-%Y") = "'.$request->dateRequest.'" order by movements.created_at desc');
         return response()->json($data);
     }
     public function get_current()
     {
-        $data = DB::select('select distinct users.*, users.id as purchaser_id, movements.id as req_id, date(movements.created_at) as date, departments.*
+        $data = DB::select('select distinct users.*, users.id as purchaser_id, movements.id as req_id, date_format(movements.created_at, "%m-%d-%Y") as date, departments.*
                             from users, movements, departments
                             where users.id = movements.user_id
                             and departments.id = users.department_id

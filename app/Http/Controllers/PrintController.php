@@ -52,7 +52,7 @@ class PrintController extends Controller
     }
     public function itemprofile($supplieritem_id)
     {
-        $sql = DB::select('SELECT TIMESTAMPDIFF(YEAR,supplier_items.date, CURDATE())  AS age, suppliers.contact_number as supp_contactNo, suppliers.id as supplier_id, items.*, itemcategories.*, suppliers.*, supplier_items.*, itemcategories.id as itemcategory_id, items.id as item_id, supplier_items.id as supplieritem_id
+        $sql = DB::select('SELECT TIMESTAMPDIFF(YEAR,supplier_items.date, CURDATE())  AS age, suppliers.contact_number as supp_contactNo, suppliers.id as supplier_id, items.*, itemcategories.*, suppliers.*, supplier_items.*, itemcategories.id as itemcategory_id, items.id as item_id, supplier_items.id as supplieritem_id, date_format(supplier_items.date, "%m-%d-%Y")  as date
         FROM items, suppliers, supplier_items, itemcategories
         WHERE itemcategories.id = supplier_items.category_id 
         AND items.id = supplier_items.item_id
@@ -143,7 +143,7 @@ class PrintController extends Controller
     }
     public function get_monthlyFromDB($month, $year, $category)
     {
-        $sql = DB::select('SELECT distinct date(movements.created_at) as dateRequest,movements.*, itemcategories.*, items.*, users.*, departments.*, supplier_items.*, suppliers.*
+        $sql = DB::select('SELECT distinct date_format(movements.created_at, "%m-%d-%Y") as dateRequest, movements.*, itemcategories.*, items.*, users.*, departments.*, supplier_items.*, suppliers.*
                                 FROM suppliers, items, itemcategories, supplier_items, movements, users, departments
                                 WHERE suppliers.id = supplier_items.supplier_id
                                 AND itemcategories.id = supplier_items.category_id
@@ -157,7 +157,7 @@ class PrintController extends Controller
     }
     public function get_yearlyFromDB($year, $category)
     {
-        $sql = DB::select('SELECT distinct date(movements.created_at) as dateRequest, movements.*, itemcategories.*, items.*, users.*, departments.*, supplier_items.*, suppliers.*
+        $sql = DB::select('SELECT distinct date_format(movements.created_at, "%m-%d-%Y") as dateRequest, movements.*, itemcategories.*, items.*, users.*, departments.*, supplier_items.*, suppliers.*
                         FROM suppliers, items, itemcategories, supplier_items, movements, users, departments
                         WHERE suppliers.id = supplier_items.supplier_id
                         AND itemcategories.id = supplier_items.category_id
@@ -171,7 +171,7 @@ class PrintController extends Controller
     }
     public function get_quarterlyFromDB($quarter, $year, $category)
     {
-        $sql = DB::select('SELECT distinct date(movements.created_at) as dateRequest,movements.*, itemcategories.*, items.*, users.*, departments.*, supplier_items.*, suppliers.*
+        $sql = DB::select('SELECT distinct date_format(movements.created_at, "%m-%d-%Y") as dateRequest,movements.*, itemcategories.*, items.*, users.*, departments.*, supplier_items.*, suppliers.*
                                 FROM suppliers, items, itemcategories, supplier_items, movements, users, departments
                                 WHERE suppliers.id = supplier_items.supplier_id
                                 AND itemcategories.id = supplier_items.category_id
@@ -190,7 +190,7 @@ class PrintController extends Controller
         {
             $week = $month[1]."".$month[2];
         }
-        $sql = DB::select('SELECT distinct date(movements.created_at) as dateRequest,movements.*, itemcategories.*, items.*, users.*, departments.*, supplier_items.*, suppliers.*
+        $sql = DB::select('SELECT distinct date_format(movements.created_at, "%m-%d-%Y") as dateRequest,movements.*, itemcategories.*, items.*, users.*, departments.*, supplier_items.*, suppliers.*
                                 FROM suppliers, items, itemcategories, supplier_items, movements, users, departments
                                 WHERE suppliers.id = supplier_items.supplier_id
                                 AND itemcategories.id = supplier_items.category_id
