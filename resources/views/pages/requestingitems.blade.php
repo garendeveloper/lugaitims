@@ -501,6 +501,7 @@
                             var userid = $("#_userid").val();
                             var dateRequest = $("#_date").val();
                             if(response.status){
+                                AutoReload();
                                 show_allRequestss(dateRequest, userid);
                                 $("#itemAll").prop('checked', false);
                                 $("#selected_itemtype").val("");
