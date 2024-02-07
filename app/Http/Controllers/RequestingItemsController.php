@@ -104,7 +104,7 @@ class RequestingItemsController extends Controller
             //      ])->update(['notification'=>0]);
             if($res->type != 7)
             {
-                $movement = Movement::find($res->id);
+                $movement = Movements::find($res->id);
                 $movement->notification = 0;
                 $movement->update;
             }
