@@ -58,10 +58,12 @@ class RequestingItemsController extends Controller
             if($releasedItems[$i]['totalReleased'] == $movement->qty) 
             {
                 $movement->type = 3; //Fully Released
+                $movement->notification = 0;
             }
             if($releasedItems[$i]['totalReleased'] != $movement->qty) 
             {
                 $movement->type = 7;//Partially Released
+                $movement->notification = 1;
             }
             $movement->totalReleased = $releasedItems[$i]['totalReleased'];
             $movement->dateReleased = Carbon::now();
@@ -97,9 +99,15 @@ class RequestingItemsController extends Controller
         $result = DB::select('select * from movements where date_format(movements.created_at, "%m-%d-%Y") = "'.$request->dateRequest.'" and notification = 1 and user_id = '.$request->user_id.'');
         foreach($result as $res)
         {
-             $r = DB::table('movements')->where([
-                    'id'=>$res->id,
-                 ])->update(['notification'=>0]);
+            //  $r = DB::table('movements')->where([
+            //         'id'=>$res->id,
+            //      ])->update(['notification'=>0]);
+            if($res->type != 7)
+            {
+                $movement = Movement::find($res->id);
+                $movement->notification = 0;
+                $movement->update;
+            }
         }
         return response()->json([
             'data'=>$result,
