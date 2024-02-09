@@ -95,6 +95,7 @@
                                             <th>DATE ACQUIRED</th>
                                             <th>ITEM</th>
                                             <th>QUANTITY</th>
+                                            <th>TOTAL RELEASED</th>
                                             <th>DATE RELEASED</th>
                                             <th>STATUS</th>
                                             <th>REASON OF CANCEL</th>
@@ -169,6 +170,7 @@
                         { data: 'dateTransact', name: 'dateTransact' },
                         { data: 'item', name: 'item' },
                         { data: 'qty', name: 'qty' },
+                        { data: 'totalReleased', name: 'totalReleased' },
                         { data: 'dateReleased', name: 'dateReleased' },
                         { data: 'status', name: 'status' },
                         { data: 'reasonforCancel', name: 'reasonforCancel' },

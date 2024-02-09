@@ -99,9 +99,6 @@ class RequestingItemsController extends Controller
         $result = DB::select('select * from movements where date_format(movements.created_at, "%m-%d-%Y") = "'.$request->dateRequest.'" and notification = 1 and user_id = '.$request->user_id.'');
         foreach($result as $res)
         {
-            //  $r = DB::table('movements')->where([
-            //         'id'=>$res->id,
-            //      ])->update(['notification'=>0]);
             if($res->type != 7)
             {
                 $movement = Movements::find($res->id);
