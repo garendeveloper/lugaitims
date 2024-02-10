@@ -67,6 +67,7 @@ class SupplierItemsController extends Controller
                 $movement = Movements::find($item_ids[$i]);
                 $movement->type = 5; 
                 $movement->totalReleased = 0;
+                $movement->notification = 0;
                 $movement->reasonforcancel = strtoupper($request->reasonforcancel);
                 $movement->dateCancelled = Carbon::now();
                 $movement->update();

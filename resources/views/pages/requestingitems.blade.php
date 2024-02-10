@@ -346,7 +346,7 @@
                         var option = "<option>--Please select an item here--</option>";
                         for(var i = 0; i<data.length; i++)
                         {
-                            option += "<option value = "+data[i].supplieritem_id+">"+data[i].item+" - "+data[i].name+"</option>";
+                            option += "<option value = "+data[i].supplieritem_id+">"+data[i].item+" | "+data[i].brand+" | "+data[i].stock+" - "+data[i].name+"</option>";
                         }
                         $("#supplieritem").html(option);
                     }
@@ -583,6 +583,7 @@
                                             $("#itemAll").prop('checked', false);
                                             $("#selected_itemtype").val("");
                                             alert(response.message);
+                                            AutoReload();
                                             show_allRequestss(dateRequest, userid);
                                         }
                                     },
@@ -720,7 +721,7 @@
                         while(j < length)
                         {
                             row += "<tr>";
-                            if(datas[j].type == 3)
+                            if(datas[j].type == 3 || datas[j].type == 5)
                             row += "<td style = 'text-align: center'><input data-qty = "+datas[j].qty+" data-type = "+datas[j].type+" data-supplieritem_id= "+datas[j].supplieritem_id+"  class = 'checkboxes' style = 'width: 20px; height: 20px;' type = 'checkbox' value = "+datas[j].movement_id+"  name = 'itemCheck1' id = 'itemCheck1' checked disabled readonly/></td>";
                             else 
                             row += "<td style = 'text-align: center'><input data-qty = "+datas[j].qty+" data-type = "+datas[j].type+" data-supplieritem_id= "+datas[j].supplieritem_id+"  class = 'checkboxes' style = 'width: 20px; height: 20px;' type = 'checkbox' value = "+datas[j].movement_id+"  name = 'itemCheck' id = 'itemCheck'/></td>";
