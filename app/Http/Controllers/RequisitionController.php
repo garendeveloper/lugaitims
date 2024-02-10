@@ -75,23 +75,31 @@ class RequisitionController extends Controller
             $message = "Sorry! Cannot process your request due to out of stock!";
             if($supplieritem->stock > 0)
             {
-                $supplieritem->stock = $supplieritem->stock-$request->qty;
-                $supplieritem->update();
-                
-                Movements::create([
-                    'supplieritem_id'=>$request->supplieritem,
-                    'user_id'=>$request->requestor,
-                    'qty'=>$request->qty,
-                    'notification'=>1,
-                    'status'=>1,
-                    'type'=>1,
-                ]);
-                $message='Request has been successfully processed!';
+                if($supplieritem->stock >= $request->qty)
+                {
+                    $supplieritem->stock = $supplieritem->stock-$request->qty;
+                    $supplieritem->update();
+                    Movements::create([
+                        'supplieritem_id'=>$request->supplieritem,
+                        'user_id'=>$request->requestor,
+                        'qty'=>$request->qty,
+                        'notification'=>1,
+                        'status'=>1,
+                        'type'=>1,
+                    ]);
+                    $message='Request has been successfully processed!';
+                    $status = true;
+                }
+                else
+                {
+                    $message = "Sorry Invalid Quantity! Quantity must not be greater than stock!";
+                    $status = false;
+                }
             }
         }
 
         return response()->json([
-            'status'=>true,
+            'status'=>$status,
             'messages'=>$message,
         ]);
     }
