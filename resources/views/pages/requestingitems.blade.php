@@ -403,13 +403,14 @@
                         dataType: 'json',
                         success: function(resp)
                         {
-                            if(resp.status)
+                            if(resp.status == 1)
                             {
                                 AutoReload();
                                 resetInputFields1();
                                 $("#req-modal").modal('hide');
                                 alert(resp.messages);
                             }
+                            if(resp.status == 2) alert(resp.messages)
                             else
                             {
                                 $.each(resp.messages, function(key,value) {

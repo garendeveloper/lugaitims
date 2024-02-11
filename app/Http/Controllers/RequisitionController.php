@@ -64,7 +64,7 @@ class RequisitionController extends Controller
             'qty'=>'required|min:1',
             'requestor'=>'required',
         ]);
-        $status=false; $message="";
+        $status=0; $message="";
         if($validator->fails())
         {
             $message = $validator->messages();
@@ -88,12 +88,12 @@ class RequisitionController extends Controller
                         'type'=>1,
                     ]);
                     $message='Request has been successfully processed!';
-                    $status = true;
+                    $status = 1;
                 }
                 else
                 {
                     $message = "Sorry Invalid Quantity! Quantity must not be greater than stock!";
-                    $status = false;
+                    $status = 2;
                 }
             }
         }

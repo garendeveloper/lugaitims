@@ -74,10 +74,26 @@
                             <div class="col-xl-12">
                                 <div class="card mb-4">
                                     <div class="card-header" style = "color: white">
-                                        <i class="fas fa-chart-area me-1"></i>
-                                        Bar Chart of Most Popular Item Released Per Requestor
+                                            <i class="fas fa-chart-area me-1"></i>
+                                            Bar Chart of Most Popular Items Released by Category per Requestor
+                                            &nbsp;
+                                            <select id="categorylist" class = "form-control" style="width: 30%; position: relative; display: inline-block">
+                                    
+                                            </select>
                                     </div>
-                                    <div class="card-body"><canvas id="chart_purchasedItems" width="100%" height="40"></canvas></div>
+                                    <div class="card-body"><p id = "showcanva" style ="text-align: center; font-size: 20px; font-family: Consolas">PLEASE SELECT A CATEGORY TO DISPLAY THE CHART</p><canvas id="chart_purchasedItems" width="100%" height="40"></canvas></div>
+                                </div>
+                            </div>
+                            <div class="col-xl-12">
+                                <div class="card mb-4">
+                                    <div class="card-header" style = "color: white">
+                                        <div class = 'col-md-8'>
+                                            <i class="fas fa-chart-area me-1"></i>
+                                            Bar Chart of Most Popular Item Released Per Requestor
+                                            &nbsp;
+                                        </div>
+                                    </div>
+                                    <div class="card-body"><canvas id="chart_purchasedItems1" width="100%" height="40"></canvas></div>
                                 </div>
                             </div>
                             <div class="col-xl-12">
@@ -101,10 +117,148 @@
     <script>
         $(document).ready(function(){
             $("#s_dashboard").addClass("active");
+            show_allCategoryList();
+            function show_allCategoryList()
+            {
+                $.ajax({
+                    type:'get',
+                    url: '{{ route("categorylist") }}',
+                    dataType: 'json',
+                    success: function(data)
+                    {
+                        var row = '<option value = "">--Select Category Here--</option>';
+                        for(var i = 0; i<data.length; i++)
+                        {
+                            row += '<option>'+data[i].category+'</option>'; 
+                        }    
+                        $("#categorylist").html(row);
+                    }
+                })
+            }
         });
     </script>
     <script>
     $(document).ready(function(){
+        $("#categorylist").change(function(){
+            var value = $(this).val();
+            $.ajax({
+                type: 'get',
+                url: '{{ route("categorizedChart") }}',
+                data: {
+                    category: value,
+                },
+                success: function(data)
+                {
+                    'use strict'
+                    var ticksStyle = {
+                        fontColor: '#495057',
+                        fontStyle: 'bold',
+                    }
+                    function argMax(array) {
+                        return array.map((x, i) => [x, i]).reduce((r, a) => (a[0] > r[0] ? a : r))[1];
+                    }
+                    var mode = 'index'
+                    var intersect = true
+                    var years_ofdeads = data.labels;
+                    var deaths_values = data.values;
+                    var salesChart = $('#chart_purchasedItems')
+
+                    const arrayOfObj = years_ofdeads.map(function(d, i) {
+                        return {
+                            label: d,
+                            data: deaths_values[i] || 0
+                        };
+                    });
+
+                    const sortedArrayOfObj = arrayOfObj.sort(function(a, b) {
+                        return b.data - a.data;
+                    });
+
+                    let newArrayLabel = [];
+                    let newArrayData = [];
+                    sortedArrayOfObj.forEach(function(d){
+                        newArrayLabel.push(d.label);
+                        newArrayData.push(d.data);
+                    });
+
+                    var color = newArrayData.map(x => '#2C4B5F');
+                    color[argMax(newArrayData)] = 'red';
+
+                    var salesChart = new Chart(salesChart, {
+                    type: 'horizontalBar',
+                    data: {
+                        labels: newArrayLabel,
+                        datasets: [
+                        {
+                            backgroundColor: color,
+                            borderColor: '#2C4B5F',
+                            data: newArrayData,
+                        },
+                        ]
+                    },
+                    responsive: true,
+                    options: {
+                        maintainAspectRatio: true,
+                        tooltips: {
+                        mode: mode,
+                        intersect: intersect
+                        },
+                        hover: {
+                        mode: mode,
+                        intersect: intersect
+                        },
+                        legend: {
+                        display: false,
+                        
+                        },
+                        title: {
+                            display: true, text: 'Items in '+value
+                        },
+                        scales: {
+                        yAxes: [{
+                            display: true,
+                            gridLines: {
+                            display: true,
+                            // lineWidth: '4px',
+                            // color: 'rgba(0, 0, 0, .2)',
+                            zeroLineColor: 'transparent'
+                            },
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Items'
+                            },
+                            ticks: $.extend({
+                            beginAtZero: true,
+
+                            // Include a dollar sign in the ticks
+                            callback: function (value) {
+                                if (value >= 1000) {
+                                    value /= 1000
+                                    value += ''
+                                }
+
+                                return value
+                            }
+                            }, ticksStyle)
+                        }],
+                        xAxes: [{
+                            display: true,
+                            gridLines: {
+                            display: false
+                            },
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Requesting Office'
+                            },
+                            ticks: ticksStyle
+                        }]
+                        }
+                    }
+                    })
+   
+                }
+            })
+        })
         'use strict'
         var ticksStyle = {
             fontColor: '#495057',
@@ -117,7 +271,7 @@
         var intersect = true
         var years_ofdeads = {{Js::From($years_ofPurchasedLabel)}};
         var deaths_values = {{Js::From($values_ofPurchased)}};
-        var salesChart = $('#chart_purchasedItems')
+        var salesChart = $('#chart_purchasedItems1')
 
         const arrayOfObj = years_ofdeads.map(function(d, i) {
             return {

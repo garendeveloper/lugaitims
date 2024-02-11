@@ -34,6 +34,7 @@ Route::group(['middleware'=>['prevent-back-history']], function(){
     
 
     Route::group(['middleware'=>['role']], function () {
+        Route::get('/get/categorizedChart', [HomeController::class, 'get_categorizedChart'])->name('categorizedChart');
         Route::get('/admin/request/savePartial', [RequestingItemsController::class, 'savePartial']);
         Route::get('/item/categories/list', [ItemcategoryController::class, 'countItems'])->name('categorylist');
         Route::get('/users/get_allUsers', [ItemController::class, 'get_allUsersByJson'])->name('users.get_allUsers');
@@ -84,6 +85,7 @@ Route::group(['middleware'=>['prevent-back-history']], function(){
         Route::get('/admin/get/categoriesbyjson', [ItemcategoryController::class, 'get_categoriesByJson'])->name('admin.get_categories');
        
         Route::get('/datatables/requesitions', [RequisitionController::class, 'get_datatable'])->name('datatables.requesitions');
+
     });
 
     Route::group(['middleware'=>['purchaser']], function(){
