@@ -8,6 +8,7 @@ use App\Models\Item;
 use App\Models\Supplier_Items;
 use App\Models\Movements;
 use App\Models\RequestingItems;
+use App\Models\ItemCategory;
 class HomeController extends Controller
 {
     /**
@@ -63,6 +64,39 @@ class HomeController extends Controller
         }
 
         return view('pages.home', compact('data', 'years_ofPurchasedLabel', 'values_ofPurchased', 'years_ofReleasedLabel', 'values_ofReleased'));       
+    }
+    public function get_categorizedChart(Request $request)
+    {
+        
+        if($request->ajax())
+        {
+            $category = ItemCategory::where('category',$request->category)->get();
+            $years = DB::select('select supplier_items.id, items.item, suppliers.name from items, supplier_items, suppliers where items.id = supplier_items.item_id and suppliers.id = supplier_items.supplier_id and supplier_items.category_id = '.$category[0]->id.'');
+            $years_ofPurchasedLabel = [];
+            $values_ofPurchased = [];
+            
+            foreach($years as $year)
+            {
+                $years_ofPurchasedLabel[] = $year->item." - ".$year->name;
+                $values = DB::select('select count(movements.user_id) as total
+                                    from users, movements, supplier_items, items
+                                    where items.id = supplier_items.item_id
+                                    and supplier_items.id = movements.supplieritem_id
+                                    and movements.user_id = users.id
+                                    and supplier_items.id = '.$year->id.' order by total desc');
+
+                $values_ofPurchased[] = $values[0]->total;
+            }
+            return response()->json([
+                'labels'=>$years_ofPurchasedLabel,
+                'values'=>$values_ofPurchased,
+            ]);
+        }
+    }
+    public function categorizedMostRequestedItems()
+    {
+        $sql = DB::select('SELECT supplier_items.* from supplier_items');
+        return $sql;
     }
     public function get_allYears()
     {
