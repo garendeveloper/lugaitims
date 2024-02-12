@@ -83,7 +83,7 @@ class HomeController extends Controller
                                     where items.id = supplier_items.item_id
                                     and supplier_items.id = movements.supplieritem_id
                                     and movements.user_id = users.id
-                                    and supplier_items.id = '.$year->id.' order by total desc');
+                                    and supplier_items.id = '.$year->id.' and supplier_items.category_id = '.$category[0]->id.' order by total desc');
 
                 $values_ofPurchased[] = $values[0]->total;
             }
