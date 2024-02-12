@@ -78,7 +78,7 @@ class HomeController extends Controller
             foreach($years as $year)
             {
                 $years_ofPurchasedLabel[] = $year->item." - ".$year->name;
-                $values = DB::select('select count(movements.user_id) as total
+                $values = DB::select('select distinct count(users.id) as total
                                     from users, movements, supplier_items, items
                                     where items.id = supplier_items.item_id
                                     and supplier_items.id = movements.supplieritem_id
