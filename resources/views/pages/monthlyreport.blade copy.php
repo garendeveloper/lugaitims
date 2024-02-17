@@ -28,10 +28,27 @@
                                 <div class="row">
                                     <div class="col-md-3">
                                         <select name="month" id="month" class = "form-control">
-                                            <option value="N">--SELECT HERE --</option>
+                                            <option value="">--SELECT HERE --</option>
+                                            <option value="N"> -- SELECT FOR YEARLY --</option>
                                             <option value="WEEKLY">--SELECT WEEKLY--</option>
-                                            <option value="M"> -- SELECT BY MONTH --</option>
-                                            <option value="Q"> -- SELECT BY QUARTER -- </option>
+                                            <option value=""> -- SELECT BY MONTH --</option>
+                                            <option value="1">JANUARY</option>
+                                            <option value="2">FEBRUARY</option>
+                                            <option value="3">MARCH</option>
+                                            <option value="4">APRIL</option>
+                                            <option value="5">MAY</option>
+                                            <option value="6">JUNE</option>
+                                            <option value="7">JULY</option>
+                                            <option value="8">AUGUST</option>
+                                            <option value="9">SEPTEMBER</option>
+                                            <option value="10">OCTOBER</option>
+                                            <option value="11">NOVEMBER</option>
+                                            <option value="12">DECEMBER</option>
+                                            <option value=""> -- SELECT BY QUARTER -- </option>
+                                            <option value="Q1">1ST</option>
+                                            <option value="Q2">2ND</option>
+                                            <option value="Q3">THIRD</option>
+                                            <option value="Q4">FOURTH</option>
                                         </select>
                                         <select name="" id=""></select>
                                     </div>
@@ -100,41 +117,8 @@
         $("#tbl_report").hide();
         $("#a_print").hide();
         $('#month').change(function(){
-            $('label').remove();
             if($('#month option:selected').val() == "WEEKLY"){
                 $('html #month').after("<label>Enter the week<input id = 'weeknumber'></input></label>");
-            }
-            else if($('#month option:selected').val() == "Q")
-            {
-                var html = '<label>';
-                    html  += '<select class="form-control" style = "width: 300px" id = "_quarter">';
-                    html += '<option value="Q1">1st Quarter</option>'
-                    html += '<option value="Q2">2nd Quarter</option>'
-                    html += '<option value="Q3">3rd Quarter</option>';
-                    html += '<option value="Q4">4th Quarter</option>';
-                    html += '</select>';
-                    html += "</label>";
-                $('html #month').after(html);
-                
-            }
-            else if($('#month option:selected').val() == "M"){
-                var html = '<label>';
-                    html  += '<select class="form-control" style = "width: 300px" id = "_month">';
-                    html += '<option value="1">JANUARY</option>'
-                    html += '<option value="2">FEBRUARY</option>'
-                    html += '<option value="3">MARCH</option>';
-                    html += '<option value="4">APRIL</option>';
-                    html += '<option value="5">MAY</option>';
-                    html += '<option value="6">JUNE</option>';
-                    html += '<option value="7">JULY</option>';
-                    html += '<option value="8">AUGUST</option>';
-                    html += '<option value="9">SEPTEMBER</option>';
-                    html += '<option value="10">OCTOBER</option>';
-                    html +=  '<option value="11">NOVEMBER</option>';
-                    html += '<option value="12">DECEMBER</option>';
-                    html += '</select>';
-                    html += "</label>";
-                $('html #month').after(html);
             }
             else{
                 $('label').remove();
@@ -147,11 +131,8 @@
         }
         $("#a_print").click(function(e){
             e.preventDefault();
-            var month = $("#month").val();
-            if(month === "WEEKLY")
-                month = "W"+$("#weeknumber").val();
-            if(month === "M")
-                month = $("#_month").val();
+            var week = $("#weeknumber").val();
+            var month = $("#month").val() == "weekly" ? "W"+week : $("#month").val();
             var year = $("#year").val();
             var category = $("#category").val();
             window.open("/admin/monthly/report/print/"+month+"/"+year+"/"+category, "_blank");
@@ -161,13 +142,8 @@
             var month = $("#month").val();
             var year = $("#year").val();
             var category = $("#category").val();
-            if(month === "M")
-                month = $("#_month").val();
-            if(month === "WEEKLY")
+            if(month == "weekly")
                 month = "W"+$("#weeknumber").val();
-            if(month === "Q")
-                month = $("#_quarter").val();
-
             if(month !== "" && year !== "" && category !== "")
             {
                 $("#a_print").show();
@@ -178,7 +154,7 @@
             {
                 $("#tbl_report").hide();
                 $("#a_print").hide();
-                alert("Please select month / quarter / weekly, category and year");
+                alert("Please select month/quarter, category and year");
             }
         })
         function showCategory()
