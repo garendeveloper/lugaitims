@@ -116,6 +116,116 @@
     @include('navigation/footer')
     <script>
         $(document).ready(function(){
+            'use strict'
+        var ticksStyle = {
+            fontColor: '#495057',
+            fontStyle: 'bold',
+        }
+        function argMax(array) {
+            return array.map((x, i) => [x, i]).reduce((r, a) => (a[0] > r[0] ? a : r))[1];
+        }
+        var mode = 'index'
+        var intersect = true
+        var years_ofdeads = {{Js::From($years_ofPurchasedLabel)}};
+        var deaths_values = {{Js::From($values_ofPurchased)}};
+        var salesChart = $('#chart_purchasedItems1')
+
+        const arrayOfObj = years_ofdeads.map(function(d, i) {
+            return {
+                label: d,
+                data: deaths_values[i] || 0
+            };
+        });
+
+        const sortedArrayOfObj = arrayOfObj.sort(function(a, b) {
+            return b.data - a.data;
+        });
+
+        let newArrayLabel = [];
+        let newArrayData = [];
+        sortedArrayOfObj.forEach(function(d){
+            newArrayLabel.push(d.label);
+            newArrayData.push(d.data);
+        });
+
+        var color = newArrayData.map(x => '#2C4B5F');
+        color[argMax(newArrayData)] = 'red';
+
+        var salesChart = new Chart(salesChart, {
+        type: 'horizontalBar',
+        data: {
+            labels: newArrayLabel,
+            datasets: [
+            {
+                backgroundColor: color,
+                borderColor: '#2C4B5F',
+                data: newArrayData,
+            },
+            ]
+        },
+        responsive: true,
+        options: {
+            maintainAspectRatio: true,
+            tooltips: {
+            mode: mode,
+            intersect: intersect
+            },
+            hover: {
+            mode: mode,
+            intersect: intersect
+            },
+            legend: {
+            display: false,
+            
+            },
+            title: {
+                display: true, text: 'Items in Requesitioning Office'
+            },
+            scales: {
+            yAxes: [{
+                display: true,
+                gridLines: {
+                display: true,
+                // lineWidth: '4px',
+                // color: 'rgba(0, 0, 0, .2)',
+                zeroLineColor: 'transparent'
+                },
+                scaleLabel: {
+                    display: true,
+                    labelString: 'Items'
+                },
+                ticks: $.extend({
+                beginAtZero: true,
+
+                // Include a dollar sign in the ticks
+                callback: function (value) {
+                    if (value >= 1000) {
+                        value /= 1000
+                        value += ''
+                    }
+
+                    return value
+                }
+                }, ticksStyle)
+            }],
+            xAxes: [{
+                display: true,
+                gridLines: {
+                display: false
+                },
+                scaleLabel: {
+                    display: true,
+                    labelString: 'Requesting Office'
+                },
+                ticks: ticksStyle
+            }]
+            }
+        }
+        })
+    })
+    </script>
+    <script>
+        $(document).ready(function(){
             $("#s_dashboard").addClass("active");
             show_allCategoryList();
             function show_allCategoryList()
@@ -139,7 +249,8 @@
     </script>
     <script>
     $(document).ready(function(){
-        $("#categorylist").change(function(){
+        $("#categorylist").on('change', function(e){
+            e.preventDefault();
             var value = $(this).val();
             $.ajax({
                 type: 'get',
@@ -258,112 +369,6 @@
    
                 }
             })
-        })
-        'use strict'
-        var ticksStyle = {
-            fontColor: '#495057',
-            fontStyle: 'bold',
-        }
-        function argMax(array) {
-            return array.map((x, i) => [x, i]).reduce((r, a) => (a[0] > r[0] ? a : r))[1];
-        }
-        var mode = 'index'
-        var intersect = true
-        var years_ofdeads = {{Js::From($years_ofPurchasedLabel)}};
-        var deaths_values = {{Js::From($values_ofPurchased)}};
-        var salesChart = $('#chart_purchasedItems1')
-
-        const arrayOfObj = years_ofdeads.map(function(d, i) {
-            return {
-                label: d,
-                data: deaths_values[i] || 0
-            };
-        });
-
-        const sortedArrayOfObj = arrayOfObj.sort(function(a, b) {
-            return b.data - a.data;
-        });
-
-        let newArrayLabel = [];
-        let newArrayData = [];
-        sortedArrayOfObj.forEach(function(d){
-            newArrayLabel.push(d.label);
-            newArrayData.push(d.data);
-        });
-
-        var color = newArrayData.map(x => '#2C4B5F');
-        color[argMax(newArrayData)] = 'red';
-
-        var salesChart = new Chart(salesChart, {
-        type: 'horizontalBar',
-        data: {
-            labels: newArrayLabel,
-            datasets: [
-            {
-                backgroundColor: color,
-                borderColor: '#2C4B5F',
-                data: newArrayData,
-            },
-            ]
-        },
-        responsive: true,
-        options: {
-            maintainAspectRatio: true,
-            tooltips: {
-            mode: mode,
-            intersect: intersect
-            },
-            hover: {
-            mode: mode,
-            intersect: intersect
-            },
-            legend: {
-            display: false,
-            
-            },
-            title: {
-                display: true, text: 'Items in Requesitioning Office'
-            },
-            scales: {
-            yAxes: [{
-                display: true,
-                gridLines: {
-                display: true,
-                // lineWidth: '4px',
-                // color: 'rgba(0, 0, 0, .2)',
-                zeroLineColor: 'transparent'
-                },
-                scaleLabel: {
-                    display: true,
-                    labelString: 'Items'
-                },
-                ticks: $.extend({
-                beginAtZero: true,
-
-                // Include a dollar sign in the ticks
-                callback: function (value) {
-                    if (value >= 1000) {
-                        value /= 1000
-                        value += ''
-                    }
-
-                    return value
-                }
-                }, ticksStyle)
-            }],
-            xAxes: [{
-                display: true,
-                gridLines: {
-                display: false
-                },
-                scaleLabel: {
-                    display: true,
-                    labelString: 'Requesting Office'
-                },
-                ticks: ticksStyle
-            }]
-            }
-        }
         })
     })
     </script>

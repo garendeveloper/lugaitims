@@ -67,7 +67,6 @@ class HomeController extends Controller
     }
     public function get_categorizedChart(Request $request)
     {
-        
         if($request->ajax())
         {
             $category = ItemCategory::where('category',$request->category)->get();
