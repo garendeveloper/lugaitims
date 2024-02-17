@@ -81,7 +81,7 @@ class PrintController extends Controller
                         AND supplier_items.id = movements.supplieritem_id
                         AND movements.user_id = users.id
                         AND departments.id = users.department_id
-                        AND movements.type != 5
+                        AND movements.type > 1 AND movements.type < 5
                         AND users.id = '.$supplier.' AND DATE(movements.created_at) = "'.$datefrom.'" AND movements.type = '.$itemtype.'');
         return $sql;
     } 
@@ -151,7 +151,7 @@ class PrintController extends Controller
                                 AND supplier_items.id = movements.supplieritem_id
                                 AND departments.id = users.department_id
                                 AND movements.user_id = users.id
-                                AND movements.type != 5
+                                AND movements.type > 1 AND movements.type < 5
                                 AND MONTH(movements.created_at) = "'.$month.'" AND YEAR(movements.created_at) =  "'.$year.'" AND itemcategories.id = '.$category.' AND supplier_items.status != 0');
         return $sql;
     }
@@ -165,7 +165,7 @@ class PrintController extends Controller
                         AND supplier_items.id = movements.supplieritem_id
                         AND departments.id = users.department_id
                         AND movements.user_id = users.id
-                        AND movements.type != 5
+                        AND movements.type > 1 AND movements.type < 5
                         AND YEAR(movements.created_at) =  "'.$year.'" AND itemcategories.id = '.$category.' AND supplier_items.status != 0');
         return $sql;
     }
@@ -179,7 +179,7 @@ class PrintController extends Controller
                                 AND supplier_items.id = movements.supplieritem_id
                                 AND movements.user_id = users.id
                                 AND departments.id = users.department_id
-                                AND movements.type != 5
+                                AND movements.type > 1 AND movements.type < 5
                                 AND QUARTER(movements.created_at) = "'.$quarter.'" AND YEAR(movements.created_at) =  "'.$year.'" AND itemcategories.id = '.$category.' AND supplier_items.status = 0');
         return $sql;
     }
@@ -198,7 +198,7 @@ class PrintController extends Controller
                                 AND supplier_items.id = movements.supplieritem_id
                                 AND departments.id = users.department_id
                                 AND movements.user_id = users.id
-                                AND movements.type != 5
+                                AND movements.type > 1 AND movements.type < 5
                                 AND WEEK(movements.created_at) = '.$week.' AND YEAR(movements.created_at) =  '.$year.' AND itemcategories.id = '.$category.' AND supplier_items.status != 0');
         return $sql;
     }
