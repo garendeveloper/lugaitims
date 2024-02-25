@@ -6,7 +6,7 @@ use App\Models\Department;
 use Illuminate\Http\Request;
 use Yajra\Datatables\DataTables;
 use Illuminate\Support\Facades\Validator;
-
+use App\Models\User;
 class DepartmentController extends Controller
 {
     /**
@@ -19,6 +19,10 @@ class DepartmentController extends Controller
     public function get_allDataInDatatables()
     {
         return DataTables::of($this->get_alldepartments())
+                        ->addColumn('department_name', function($row){
+                            $totalUsers = User::where('department_id', $row->id)->count();
+                            return $row->department_name."&nbsp;&nbsp;<i class='fas fa-users'></i>&nbsp;&nbsp;".$totalUsers;
+                        })
                         ->addColumn('actions', function($row){
                             $html = "<td align='center'>";
                             $html .= '<button type = "button" data-id = '.$row->id.' class = "btn  btn-primary btn-sm edit"><i class = "fas fa-edit"></i>&nbsp;</button>&nbsp;&nbsp;';
@@ -26,7 +30,7 @@ class DepartmentController extends Controller
                             $html .= "</td>";
                             return $html;
                         })      
-                        ->rawColumns(['actions'])
+                        ->rawColumns(['department_name', 'actions'])
                         ->make(true);
     }
     public function get_alldepartments()

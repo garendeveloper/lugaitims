@@ -251,7 +251,9 @@
     $(document).ready(function(){
         $("#categorylist").on('change', function(e){
             e.preventDefault();
+            $("#chart_purchasedItems").remove();
             var value = $(this).val();
+            $('#showcanva').append('<canvas id="chart_purchasedItems"><canvas>');
             $.ajax({
                 type: 'get',
                 url: '{{ route("categorizedChart") }}',
@@ -366,6 +368,7 @@
                         }
                     }
                     })
+
    
                 }
             })
