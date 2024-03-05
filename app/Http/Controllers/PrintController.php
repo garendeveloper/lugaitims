@@ -85,13 +85,13 @@ class PrintController extends Controller
                         AND users.id = '.$supplier.' AND DATE(movements.created_at) = "'.$datefrom.'" AND movements.type = '.$itemtype.'');
         return $sql;
     } 
-    public function get_report($month, $year, $category)
+    public function get_report($month, $year, $category, $week_number)
     {
         $m = $month[0];
         $sql = $this->get_monthlyFromDB($month, $year, $category);
       
         if($m === "W" AND $year !== "")
-            $sql = $this->get_weeklyFromDB($year, $category, $month);
+            $sql = $this->get_weeklyFromDB($year, $category, $month, $week_number);
         else
         {
             if($month == "Q1" || $month == "Q2" || $month == "Q3" || $month == "Q4")
@@ -104,12 +104,12 @@ class PrintController extends Controller
         }
         return response()->json($sql);
     }
-    public function get_reportPrint($month, $year, $category)
+    public function get_reportPrint($month, $year, $category, $week_number)
     {
         $m = $month[0]; $q = $month;
         $data = $this->get_monthlyFromDB($month, $year, $category);
         if($m === "W" AND $year !== "")
-            $data = $this->get_weeklyFromDB($year, $category, $month);
+            $data = $this->get_weeklyFromDB($year, $category, $month, $week_number);
         else
         {
             if($month == "Q1" || $month == "Q2" || $month == "Q3" || $month == "Q4")
@@ -183,13 +183,8 @@ class PrintController extends Controller
                                 AND QUARTER(movements.created_at) = "'.$quarter.'" AND YEAR(movements.created_at) =  "'.$year.'" AND itemcategories.id = '.$category.' AND supplier_items.status != 0');
         return $sql;
     }
-    public function get_weeklyFromDB($year, $category, $month)
+    public function get_weeklyFromDB($year, $category, $month, $week_number)
     {
-        $week = $month[1];
-        if(strlen($month) > 2)
-        {
-            $week = $month[1]."".$month[2];
-        }
         $sql = DB::select('SELECT distinct date_format(movements.created_at, "%m-%d-%Y") as dateRequest,movements.*, itemcategories.*, items.*, users.*, departments.*, supplier_items.*, suppliers.*
                                 FROM suppliers, items, itemcategories, supplier_items, movements, users, departments
                                 WHERE suppliers.id = supplier_items.supplier_id
@@ -199,7 +194,7 @@ class PrintController extends Controller
                                 AND departments.id = users.department_id
                                 AND movements.user_id = users.id
                                 AND movements.type > 1 AND movements.type < 5
-                                AND WEEK(movements.created_at) = '.$week.' AND YEAR(movements.created_at) =  '.$year.' AND itemcategories.id = '.$category.' AND supplier_items.status != 0');
+                                AND WEEK(movements.created_at) = '.$week_number.' AND MONTH(movements.created_at) = '.$month.' AND YEAR(movements.created_at) =  '.$year.' AND itemcategories.id = '.$category.' AND supplier_items.status != 0');
         return $sql;
     }
     public function monthlyreport_page()
