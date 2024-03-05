@@ -33,7 +33,7 @@
                                             <option value="M"> -- SELECT BY MONTH --</option>
                                             <option value="Q"> -- SELECT BY QUARTER -- </option>
                                         </select>
-                                        <select name="" id=""></select>
+                                        <p id = "afterElement"></p>
                                     </div>
                                     <div class="col-md-3">
                                         <select name="year" id="year" class = "form-control">
@@ -94,158 +94,190 @@
         </div>
 
     @include('navigation/footer')
-   <script>
-        showCategory();
-        $("#s_mr").addClass('active');
-        $("#tbl_report").hide();
-        $("#a_print").hide();
-        $('#month').change(function(){
-            $('label').remove();
-            if($('#month option:selected').val() == "WEEKLY"){
-                $('html #month').after("<label>Enter the week<input id = 'weeknumber'></input></label>");
+    <script>
+    document.title = "LSHS Reports";
+    showCategory();
+    $("#s_mr").addClass('active');
+    $("#tbl_report").hide();
+    $("#a_print").hide();
+    
+    $('#month').change(function(){
+        $('label').remove();
+        if($('#month option:selected').val() == "WEEKLY"){
+   
+            var html = '<label>Select Month</label>';
+            html += '<select id="week_month" class="form-control">';
+            html += '<option value="1">January</option>';
+            html += '<option value="2">February</option>';
+            html += '<option value="3">March</option>';
+            html += '<option value="4">April</option>';
+            html += '<option value="5">May</option>';
+            html += '<option value="6">June</option>';
+            html += '<option value="7">July</option>';
+            html += '<option value="8">August</option>';
+            html += '<option value="9">September</option>';
+            html += '<option value="10">October</option>';
+            html += '<option value="11">November</option>';
+            html += '<option value="12">December</option>';
+            html += '</select>';
+            html += '<label>Select Week</label>';
+            html += '<select id="week_number" class="form-control">';
+            for (var i = 1; i <= 5; i++) {
+                html += '<option value="' + i + '">Week ' + i + '</option>';
             }
-            else if($('#month option:selected').val() == "Q")
-            {
-                var html = '<label>';
-                    html  += '<select class="form-control" style = "width: 300px" id = "_quarter">';
-                    html += '<option value="Q1">1st Quarter</option>'
-                    html += '<option value="Q2">2nd Quarter</option>'
-                    html += '<option value="Q3">3rd Quarter</option>';
-                    html += '<option value="Q4">4th Quarter</option>';
-                    html += '</select>';
-                    html += "</label>";
-                $('html #month').after(html);
-                
-            }
-            else if($('#month option:selected').val() == "M"){
-                var html = '<label>';
-                    html  += '<select class="form-control" style = "width: 300px" id = "_month">';
-                    html += '<option value="1">JANUARY</option>'
-                    html += '<option value="2">FEBRUARY</option>'
-                    html += '<option value="3">MARCH</option>';
-                    html += '<option value="4">APRIL</option>';
-                    html += '<option value="5">MAY</option>';
-                    html += '<option value="6">JUNE</option>';
-                    html += '<option value="7">JULY</option>';
-                    html += '<option value="8">AUGUST</option>';
-                    html += '<option value="9">SEPTEMBER</option>';
-                    html += '<option value="10">OCTOBER</option>';
-                    html +=  '<option value="11">NOVEMBER</option>';
-                    html += '<option value="12">DECEMBER</option>';
-                    html += '</select>';
-                    html += "</label>";
-                $('html #month').after(html);
-            }
-            else{
-                $('label').remove();
-            }
-        })
-        function numberWithCommas(number) {
-            var parts = number.toString().split(".");
-            parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-            return parts.join(".");
+            html += '</select>';
+            $('#afterElement').html(html);
         }
-        $("#a_print").click(function(e){
-            e.preventDefault();
-            var month = $("#month").val();
-            if(month === "WEEKLY")
-                month = "W"+$("#weeknumber").val();
-            if(month === "M")
-                month = $("#_month").val();
-            var year = $("#year").val();
-            var category = $("#category").val();
-            window.open("/admin/monthly/report/print/"+month+"/"+year+"/"+category, "_blank");
-        })
-        $("#btn-search").click(function(e){
-            e.preventDefault();
-            var month = $("#month").val();
-            var year = $("#year").val();
-            var category = $("#category").val();
-            if(month === "M")
-                month = $("#_month").val();
-            if(month === "WEEKLY")
-                month = "W"+$("#weeknumber").val();
-            if(month === "Q")
-                month = $("#_quarter").val();
+        else if($('#month option:selected').val() == "Q") {
+   
+            var html = '<label>Select Quarter</label>';
+            html += '<select class="form-control" style="width: 300px" id="_quarter">';
+            html += '<option value="Q1">1st Quarter</option>'
+            html += '<option value="Q2">2nd Quarter</option>'
+            html += '<option value="Q3">3rd Quarter</option>';
+            html += '<option value="Q4">4th Quarter</option>';
+            html += '</select>';
+            $('#afterElement').html(html);
+        }
+        else if($('#month option:selected').val() == "M") {
+   
+            var html = '<label>Select Month</label>';
+            html += '<select class="form-control" style="width: 300px" id="_month">';
+            html += '<option value="1">JANUARY</option>'
+            html += '<option value="2">FEBRUARY</option>'
+            html += '<option value="3">MARCH</option>';
+            html += '<option value="4">APRIL</option>';
+            html += '<option value="5">MAY</option>';
+            html += '<option value="6">JUNE</option>';
+            html += '<option value="7">JULY</option>';
+            html += '<option value="8">AUGUST</option>';
+            html += '<option value="9">SEPTEMBER</option>';
+            html += '<option value="10">OCTOBER</option>';
+            html += '<option value="11">NOVEMBER</option>';
+            html += '<option value="12">DECEMBER</option>';
+            html += '</select>';
+            $('#afterElement').html(html);
+        }
+        else{
+            $("#afterElement").html("");
+        }
+    });
 
-            if(month !== "" && year !== "" && category !== "")
-            {
-                $("#a_print").show();
-                $("#tbl_report").show();
-                showReport(month, year, category);
-            }
-            else 
-            {
-                $("#tbl_report").hide();
-                $("#a_print").hide();
-                alert("Please select month / quarter / weekly, category and year");
-            }
-        })
-        function showCategory()
+    function numberWithCommas(number) {
+        var parts = number.toString().split(".");
+        parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        return parts.join(".");
+    }
+
+    $("#a_print").click(function(e){
+        e.preventDefault();
+        var month = $("#month").val();
+        var week_number = 0;
+        if(month === "WEEKLY")
+            month = $("#week_month").val();
+        if(month === "M")
         {
-            $.ajax({
-                type: 'get',
-                url: '{{ route("admin.get_categories") }}',
-                dataType: 'json',
-                success: function(data){
-                    var html = "<option value = ''> -- SELECT CATEGORY HERE --</option>";
-                    if(data.length>0)
-                    {
-                        for(var i=0; i<data.length; i++)
-                        {
-                           html += "<option value = "+data[i].id+">"+data[i].category+"</option>";
-                        }
-                    }
-                        
-                    $("#category").html(html);
-                }
-            })
+            month = $("#week_month").val();
+            week_number = $("#week_number").val();
         }
-        function showReport(month, year, category)
+        var year = $("#year").val();
+        var category = $("#category").val();
+        window.open("/admin/monthly/report/print/"+month+"/"+year+"/"+category+"/"+week_number, "_blank");
+    });
+
+    $("#btn-search").click(function(e){
+        e.preventDefault();
+        var month = $("#month").val();
+        var year = $("#year").val();
+        var category = $("#category").val();
+        var week_number = 0;
+        if(month === "M")
+            month = $("#_month").val();
+        if(month === "WEEKLY")
         {
-            $.ajax({
-                type: 'get',
-                url: '/admin/monthly/report/'+month+'/'+year+'/'+category,
-                dataType: 'json',
-                success: function(data){
-                    var html = "";
-                    var unitvalue = 0;
-                    var totalCost = 0;
-                    if(data.length>0)
-                    {
-                        for(var i=0; i<data.length; i++)
-                        {
-                            html += "<tr>";
-                            html += "<td align='center'>N/A</td>";
-                            html += "<td>"+data[i].item+"</td>";
-                            html += "<td >"+data[i].dateRequest+"</td>";
-                            html += "<td align='center'>"+data[i].qty+"</td>";
-                            html += "<td align='center'>"+data[i].unit+"</td>";
-                            html += "<td align='right'>&#8369;&nbsp;"+numberWithCommas(data[i].cost)+"</td>";
-                            html += "<td align='right'>&#8369;&nbsp;"+numberWithCommas(data[i].cost*data[i].qty)+"</td>";
-                            html += "<td align='center'>N/A</td>";
-                            html += "<td align='center'>"+data[i].category+"</td>";
-                            html += "<td align='center'>N/A</td>";
-                            html += "<td>"+data[i].department_name+"</td>";
-                            html += "<td align='center'>"+data[i].fullname+"</td>";
-                            html += "<td align='center'>N/A</td>";
-                            html += "<td align='center'>"+data[i].remarks+"</td>";
-                            html += "</tr>";
-                            unitvalue += data[i].cost;
-                            totalCost += data[i].cost*data[i].qty;
-                        }
-                    }
-                    else
-                    {
-                        $("#a_print").hide();
-                        html += "<tr><td colspan = '14'>Sorry no transaction on this date.</td></tr>";
-                    }
-                    var tfoot = "<td colspan = '5'>TOTAL </td>";
-                        tfoot += "<td align='right'>&#8369;&nbsp;"+numberWithCommas(unitvalue)+"</td>";
-                        tfoot += "<td align='right' >&#8369;&nbsp;"+numberWithCommas(totalCost)+"</td>";
-                    $("#total_res").html(tfoot);
-                    $("#tbl_report tbody").html(html);
-                }
-            })
+            month = $("#week_month").val();
+            week_number = $("#week_number").val();
         }
-   </script>
+        if(month === "Q")
+            month = $("#_quarter").val();
+
+        if(month !== "" && year !== "" && category !== "")
+        {
+            $("#a_print").show();
+            $("#tbl_report").show();
+            showReport(month, year, category, week_number);
+        }
+        else 
+        {
+            $("#tbl_report").hide();
+            $("#a_print").hide();
+            alert("Please select month/quarter/weekly, category, and year");
+        }
+    });
+
+    function showCategory() {
+        $.ajax({
+            type: 'get',
+            url: '{{ route("admin.get_categories") }}',
+            dataType: 'json',
+            success: function(data){
+                var html = "<option value=''> -- SELECT CATEGORY HERE --</option>";
+                if(data.length>0)
+                {
+                    for(var i=0; i<data.length; i++)
+                    {
+                        html += "<option value="+data[i].id+">"+data[i].category+"</option>";
+                    }
+                }
+                $("#category").html(html);
+            }
+        });
+    }
+
+    function showReport(month, year, category, week_number) {
+        $.ajax({
+            type: 'get',
+            url: '/admin/monthly/report/'+month+'/'+year+'/'+category+'/'+week_number,
+            dataType: 'json',
+            success: function(data){
+                var html = "";
+                var unitvalue = 0;
+                var totalCost = 0;
+                if(data.length>0)
+                {
+                    for(var i=0; i<data.length; i++)
+                    {
+                        html += "<tr>";
+                        html += "<td align='center'>N/A</td>";
+                        html += "<td>"+data[i].item+"</td>";
+                        html += "<td>"+data[i].dateRequest+"</td>";
+                        html += "<td align='center'>"+data[i].qty+"</td>";
+                        html += "<td align='center'>"+data[i].unit+"</td>";
+                        html += "<td align='right'>&#8369;&nbsp;"+ numberWithCommas(data[i].cost.toFixed(2)) +"</td>";
+                        html += "<td align='right'>&#8369;&nbsp;"+ numberWithCommas((data[i].cost*data[i].qty).toFixed(2)) +"</td>";
+                        html += "<td align='center'>N/A</td>";
+                        html += "<td align='center'>"+data[i].category+"</td>";
+                        html += "<td align='center'>N/A</td>";
+                        html += "<td>"+data[i].department_name+"</td>";
+                        html += "<td align='center'>"+data[i].fullname+"</td>";
+                        html += "<td align='center'>N/A</td>";
+                        html += "<td align='center'>"+data[i].remarks+"</td>";
+                        html += "</tr>";
+                        unitvalue += data[i].cost;
+                        totalCost += data[i].cost*data[i].qty;
+                    }
+                }
+                else
+                {
+                    $("#a_print").hide();
+                    html += "<tr><td colspan='14'>Sorry no transaction on this date.</td></tr>";
+                }
+                var tfoot = "<td colspan='5'>TOTAL</td>";
+                tfoot += "<td align='right'>&#8369;&nbsp;"+ numberWithCommas(unitvalue.toFixed(2)) +"</td>";
+                tfoot += "<td align='right'>&#8369;&nbsp;"+ numberWithCommas(totalCost.toFixed(2)) +"</td>";
+                $("#total_res").html(tfoot);
+                $("#tbl_report tbody").html(html);
+            }
+        });
+    }
+</script>
