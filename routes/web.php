@@ -80,8 +80,8 @@ Route::group(['middleware'=>['prevent-back-history']], function(){
         Route::post('/admin/user/changePass', [UserController::class, 'admin_changePass'])->name("users.admin_changePass");
         Route::get('/admin/requesting/report/{date}/{id}', [RequestingItemsController::class, 'requesteditems_report']);
         Route::get('/admin/monthly/report', [PrintController::class, 'monthlyreport_page'])->name('admin.monthlyreport');
-        Route::get('/admin/monthly/report/{month}/{year}/{category}/{week_number}', [PrintController::class, 'get_report']);
-        Route::get('/admin/monthly/report/print/{month}/{year}/{category}/{week_number}', [PrintController::class, 'get_reportPrint']);
+        Route::get('/admin/monthly/report/{month}/{year}/{category}/{weeknumber}', [PrintController::class, 'get_report']);
+        Route::get('/admin/monthly/report/print/{month}/{year}/{category}/{weeknumber}', [PrintController::class, 'get_reportPrint']);
         Route::get('/admin/get/categoriesbyjson', [ItemcategoryController::class, 'get_categoriesByJson'])->name('admin.get_categories');
        
         Route::get('/datatables/requesitions', [RequisitionController::class, 'get_datatable'])->name('datatables.requesitions');

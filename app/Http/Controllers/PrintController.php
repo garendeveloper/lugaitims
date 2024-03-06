@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use DB;
 use App\Models\ItemCategory;
+use App\Models\Movements;
 class PrintController extends Controller
 {
     public function inspectionReport($item_id)
@@ -90,7 +91,7 @@ class PrintController extends Controller
         $m = $month[0];
         $sql = $this->get_monthlyFromDB($month, $year, $category);
       
-        if($m === "W" AND $year !== "")
+        if($week_number != 0)
             $sql = $this->get_weeklyFromDB($year, $category, $month, $week_number);
         else
         {
@@ -108,7 +109,7 @@ class PrintController extends Controller
     {
         $m = $month[0]; $q = $month;
         $data = $this->get_monthlyFromDB($month, $year, $category);
-        if($m === "W" AND $year !== "")
+        if($week_number != 0)
             $data = $this->get_weeklyFromDB($year, $category, $month, $week_number);
         else
         {
@@ -185,6 +186,17 @@ class PrintController extends Controller
     }
     public function get_weeklyFromDB($year, $category, $month, $week_number)
     {
+        $dbWeekNumber = Movements::selectRaw('WEEK(movements.created_at, ?) AS week_number', [$week_number])
+                                ->join('supplier_items', 'supplier_items.id', '=', 'movements.supplieritem_id')
+                                ->join('itemcategories', 'itemcategories.id', '=', 'supplier_items.category_id')
+                                ->where('movements.type', '>', 1)
+                                ->where('movements.type', '<', 5)
+                                ->whereMonth('movements.created_at', $month)
+                                ->whereYear('movements.created_at', $year)
+                                ->where('itemcategories.id', $category)
+                                ->where('supplier_items.status', '!=', 0)
+                                ->get();
+
         $sql = DB::select('SELECT distinct date_format(movements.created_at, "%m-%d-%Y") as dateRequest,movements.*, itemcategories.*, items.*, users.*, departments.*, supplier_items.*, suppliers.*
                                 FROM suppliers, items, itemcategories, supplier_items, movements, users, departments
                                 WHERE suppliers.id = supplier_items.supplier_id
@@ -194,7 +206,7 @@ class PrintController extends Controller
                                 AND departments.id = users.department_id
                                 AND movements.user_id = users.id
                                 AND movements.type > 1 AND movements.type < 5
-                                AND WEEK(movements.created_at) = '.$week_number.' AND MONTH(movements.created_at) = '.$month.' AND YEAR(movements.created_at) =  '.$year.' AND itemcategories.id = '.$category.' AND supplier_items.status != 0');
+                                AND WEEK(movements.created_at) = '.$dbWeekNumber[0]->week_number.' AND MONTH(movements.created_at) = '.$month.' AND YEAR(movements.created_at) =  '.$year.' AND itemcategories.id = '.$category.' AND supplier_items.status != 0');
         return $sql;
     }
     public function monthlyreport_page()
