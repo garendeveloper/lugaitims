@@ -174,12 +174,12 @@
         var month = $("#month").val();
         var week_number = 0;
         if(month === "WEEKLY")
-            month = $("#week_month").val();
-        if(month === "M")
         {
             month = $("#week_month").val();
             week_number = $("#week_number").val();
         }
+        if(month === "M")
+            month = $("#_month").val();
         var year = $("#year").val();
         var category = $("#category").val();
         window.open("/admin/monthly/report/print/"+month+"/"+year+"/"+category+"/"+week_number, "_blank");
@@ -192,14 +192,18 @@
         var category = $("#category").val();
         var week_number = 0;
         if(month === "M")
+        {
             month = $("#_month").val();
+        }
         if(month === "WEEKLY")
         {
             month = $("#week_month").val();
             week_number = $("#week_number").val();
         }
         if(month === "Q")
+        {
             month = $("#_quarter").val();
+        }
 
         if(month !== "" && year !== "" && category !== "")
         {
